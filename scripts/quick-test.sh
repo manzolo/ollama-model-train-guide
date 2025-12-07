@@ -30,7 +30,9 @@ BASE_MODEL="llama3.2:1b"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📝 Step 1/3: Creating test model '$TEST_MODEL_NAME'"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📝 Step 1/4: Creating test model '$TEST_MODEL_NAME'"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Test Details:"
@@ -43,7 +45,7 @@ bash scripts/create-custom-model.sh "$TEST_MODEL_NAME" "$TEST_MODELFILE"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "💬 Step 2/3: Testing model with a prompt"
+echo "💬 Step 2/4: Testing model with a prompt"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Sending test prompt: 'Hello! Can you introduce yourself in one sentence?'"
@@ -70,7 +72,93 @@ echo "────────────────────────�
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🗑️  Step 3/3: Cleaning up test model"
+echo "🔌 Step 3/4: Testing API Endpoints"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+echo "Testing /api/models..."
+if curl -s -f http://localhost:8080/api/models > /dev/null; then
+    echo "  ✓ /api/models is reachable"
+else
+    echo "  ❌ /api/models failed"
+    exit 1
+fi
+
+echo "Testing /api/pull-model (Validation)..."
+# Expect 400 Bad Request for missing name
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/pull-model -H "Content-Type: application/json" -d '{}')
+if [ "$HTTP_CODE" -eq 400 ]; then
+    echo "  ✓ /api/pull-model correctly returns 400 for missing input"
+else
+    echo "  ❌ /api/pull-model failed validation check (Code: $HTTP_CODE)"
+    exit 1
+fi
+
+echo "Testing /api/converter/convert (Validation)..."
+# Expect 400 Bad Request for missing file
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/converter/convert)
+if [ "$HTTP_CODE" -eq 400 ]; then
+    echo "  ✓ /api/converter/convert correctly returns 400 for missing file"
+else
+    echo "  ❌ /api/converter/convert failed validation check (Code: $HTTP_CODE)"
+    exit 1
+fi
+
+echo "Testing /api/modelfile (Create & Delete)..."
+# Create a temporary Modelfile
+TEST_MF_NAME="api-test-bot"
+TEST_MF_CONTENT="FROM llama3.2:1b\nSYSTEM You are a test bot."
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/modelfile -H "Content-Type: application/json" -d "{\"name\": \"$TEST_MF_NAME\", \"content\": \"$TEST_MF_CONTENT\"}")
+
+# Retrieve path for deletion
+MF_PATH="/models/custom/$TEST_MF_NAME/Modelfile"
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+    echo "  ✓ /api/modelfile (POST) created a Modelfile"
+    
+    # Clean it up via API
+    DEL_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE "http://localhost:8080/api/modelfile?path=${MF_PATH}")
+    if [ "$DEL_CODE" -eq 200 ]; then
+        echo "  ✓ /api/modelfile (DELETE) deleted the Modelfile"
+    else
+        echo "  ❌ /api/modelfile (DELETE) failed (Code: $DEL_CODE)"
+        exit 1
+    fi
+else
+    # 409 is acceptable if it exists from a previous failed run, try to delete it to be clean
+    if [ "$HTTP_CODE" -eq 409 ]; then
+         echo "  ⚠️ /api/modelfile (POST) returned 409 (already exists), attempting cleanup..."
+         curl -s -X DELETE "http://localhost:8080/api/modelfile?path=${MF_PATH}" > /dev/null
+    else
+        echo "  ❌ /api/modelfile (POST) failed (Code: $HTTP_CODE)"
+        exit 1
+    fi
+fi
+
+echo "Testing /api/create-model (Validation)..."
+# Expect 400 for missing path
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/create-model -H "Content-Type: application/json" -d "{\"name\": \"test-model-api\"}")
+if [ "$HTTP_CODE" -eq 400 ]; then
+    echo "  ✓ /api/create-model correctly returns 400 for missing path"
+else
+     echo "  ❌ /api/create-model failed validation check (Code: $HTTP_CODE)"
+     exit 1
+fi
+
+echo "Testing /api/delete-model (Validation)..."
+# Expect 400 for missing name
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE http://localhost:8080/api/delete-model)
+if [ "$HTTP_CODE" -eq 400 ]; then
+    echo "  ✓ /api/delete-model correctly returns 400 for missing name"
+else
+     echo "  ❌ /api/delete-model failed validation check (Code: $HTTP_CODE)"
+     exit 1
+fi
+
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🗑️  Step 4/4: Cleaning up test model"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
