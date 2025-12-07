@@ -32,10 +32,12 @@ A comprehensive Docker Compose project for training, customizing, and managing O
 - **RAM**: Minimum 8GB (16GB recommended)
 - **Optional**: NVIDIA GPU with Container Toolkit for GPU acceleration
 
+## 🚀 Quick Start
+
 <a href="https://www.buymeacoffee.com/manzolo">
   <img src=".github/blue-button.png" alt="Buy Me A Coffee" width="200">
 </a>
-## 🚀 Quick Start
+
 
 1. **Clone or navigate to the project directory**:
    ```bash
