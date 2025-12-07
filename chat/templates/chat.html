@@ -32,6 +32,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
         }
 
         .chat-header {
@@ -52,66 +53,82 @@
 
         .header-controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .model-selector {
             display: flex;
             gap: 10px;
             align-items: center;
+            padding-right: 12px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            margin-right: 4px;
         }
 
         .model-selector select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            padding: 8px 30px 8px 12px; /* Adjusted padding for arrow */
+            padding: 8px 30px 8px 12px;
+            /* Adjusted padding for arrow */
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             font-size: 14px;
-            background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
-            color: white; /* White text */
-            cursor: pointer;
-            min-width: 180px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            transition: all 0.3s ease;
+            background: transparent;
+            color: white;
+            /* White text */
         }
 
         .model-selector select:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
 
         .model-selector select:focus {
             outline: none;
             border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
         }
 
         .model-selector select option {
-            background: #2c2c2c; /* Dark background for options */
+            background: #2c2c2c;
+            /* Dark background for options */
             color: white;
         }
 
         .btn {
-            padding: 8px 16px;
-            border: none;
+            padding: 8px 14px;
+            border: 1px solid transparent;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.2);
+            background: transparent;
             color: white;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.3s;
+            font-weight: 500;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            white-space: nowrap;
         }
 
         .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-primary {
@@ -243,6 +260,159 @@
         .send-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .side-panel-content .btn {
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            font-weight: 500;
+        }
+
+        .side-panel-content .btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(200, 200, 200, 0.5);
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container.side-panel-open .side-panel {
+            transform: translateX(0);
+        }
+
+        .chat-container.side-panel-open .overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-panel-header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .side-panel-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #212529;
+        }
+
+        .btn-close-panel {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .side-panel-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .side-panel-content .model-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .side-panel-content .model-selector label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .side-panel-content .model-selector select {
+            width: 100%;
+            color: #343a40;
+            background-color: white;
+            border: 1px solid #ced4da;
+            padding: 8px 12px;
+            -webkit-appearance: listbox;
+            -moz-appearance: listbox;
+            appearance: listbox;
+            background-image: none;
+        }
+
+        .side-panel-content .panel-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 1px solid rgba(200, 200, 200, 0.3);
+            padding-top: 24px;
+            margin-top: 20px;
+        }
+
+
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .header-controls-placeholder {
+            width: 42px;
+            /* Balance the menu button */
+        }
+
+        .chat-header {
+            justify-content: space-between;
         }
 
         /* Modal Styles */
@@ -533,6 +703,7 @@
                 transform: translateX(400px);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -544,6 +715,7 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(400px);
                 opacity: 0;
@@ -583,6 +755,7 @@
                 transform: scale(0.9);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -655,6 +828,40 @@
             background: #e62e24;
             box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
         }
+
+        @media (max-width: 768px) {
+            .modal {
+                width: 95%;
+                padding: 16px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal.large {
+                width: 95%;
+            }
+
+            .modelfile-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .modelfile-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .modelfile-name {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .btn-sm {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 
@@ -672,24 +879,45 @@
             <div class="confirm-dialog-message" id="confirmMessage"></div>
             <div class="confirm-dialog-footer">
                 <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmDialog(false)">Cancel</button>
-                <button class="confirm-btn confirm-btn-confirm" onclick="closeConfirmDialog(true)" id="confirmButton">Delete</button>
+                <button class="confirm-btn confirm-btn-confirm" onclick="closeConfirmDialog(true)"
+                    id="confirmButton">Delete</button>
             </div>
         </div>
     </div>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>🤖 Ollama Chat</h1>
-            <div class="header-controls">
+    <div class="chat-container" id="chatContainer">
+        <div class="side-panel" id="sidePanel">
+            <div class="side-panel-header">
+                <h3>Model Actions</h3>
+                <button class="btn-close-panel" id="closeSidePanel">×</button>
+            </div>
+            <div class="side-panel-content">
                 <div class="model-selector">
+                    <label for="modelSelect">Active Model</label>
                     <select id="modelSelect">
                         <option value="">Loading models...</option>
                     </select>
                 </div>
-                <button class="btn" onclick="openManageModelsModal()">🗂️ Manage Models</button>
-                <button class="btn" onclick="openManageModelfilesModal()">📁 Manage Modelfiles</button>
-                <button class="btn" onclick="loadModels()">🔄 Refresh</button>
+                <div class="panel-actions">
+                    <button class="btn" onclick="openManageModelsModal()">🗂️ Manage Models</button>
+                    <button class="btn" onclick="openManageModelfilesModal()">📁 Manage Modelfiles</button>
+                    <button class="btn" onclick="loadModels()">🔄 Refresh Models</button>
+                    <a href="/converter" class="btn">📊 Spreadsheet Converter</a>
+                </div>
             </div>
+        </div>
+
+        <div class="chat-header">
+            <button class="menu-btn" id="menuToggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <h1>🤖 Ollama Chat</h1>
+            <div class="header-controls-placeholder"></div>
         </div>
 
         <div class="chat-messages" id="chatMessages">
@@ -709,6 +937,7 @@
                 onkeypress="handleKeyPress(event)"></textarea>
             <button class="send-btn" onclick="sendMessage()" id="sendButton">Send</button>
         </div>
+        <div class="overlay" id="overlay"></div>
     </div>
 
     <!-- Create Model Modal -->
@@ -800,7 +1029,8 @@
                     <input type="text" id="modelfileName" placeholder="e.g., my-custom-bot">
                 </div>
                 <div class="editor-container">
-                    <label style="display: block; margin-bottom: 5px; color: #555; font-weight: 500;">Modelfile Content</label>
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-weight: 500;">Modelfile
+                        Content</label>
                     <textarea class="editor-textarea" id="modelfileContent" placeholder="FROM llama3.2:1b
 
 PARAMETER temperature 0.7
@@ -812,8 +1042,7 @@ You are a helpful assistant.
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" style="background: #ccc; color: #333;"
-                    onclick="closeEditorModal()">Cancel</button>
+                <button class="btn" style="background: #ccc; color: #333;" onclick="closeEditorModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveModelfile()" id="saveBtn">Save</button>
             </div>
         </div>
@@ -873,8 +1102,8 @@ You are a helpful assistant.
         }
 
         // Close dialog when clicking outside
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('confirmDialog').addEventListener('click', function(e) {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('confirmDialog').addEventListener('click', function (e) {
                 if (e.target.id === 'confirmDialog') {
                     closeConfirmDialog(false);
                 }
@@ -1029,9 +1258,9 @@ You are a helpful assistant.
                     }
                 }
             } catch (error) {
-                typing.style.display = 'none';
                 addSystemMessage('Error: ' + error.message);
             } finally {
+                typing.style.display = 'none';
                 sendBtn.disabled = false;
                 input.focus();
             }
@@ -1613,6 +1842,19 @@ You are a helpful assistant.
 
         // Load models on page load
         loadModels();
+
+        // Side Panel Toggle
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('chatContainer').classList.add('side-panel-open');
+        });
+
+        document.getElementById('closeSidePanel').addEventListener('click', () => {
+            document.getElementById('chatContainer').classList.remove('side-panel-open');
+        });
+
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('chatContainer').classList.remove('side-panel-open');
+        });
     </script>
 </body>
 

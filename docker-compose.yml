@@ -20,19 +20,6 @@ services:
     #           count: 1
     #           capabilities: [gpu]
 
-  converter:
-    build:
-      context: ./converter
-      dockerfile: Dockerfile
-    container_name: spreadsheet-converter
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./data:/data
-    restart: unless-stopped
-    environment:
-      - FLASK_ENV=production
-
   chat:
     build:
       context: ./chat
@@ -47,7 +34,8 @@ services:
       - OLLAMA_API=http://ollama:11434
     volumes:
       - ./models:/models
-      - /var/run/docker.sock:/var/run/docker.sock  # Allow docker commands from inside container
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock # Allow docker commands from inside container
 
 volumes:
   ollama_data:

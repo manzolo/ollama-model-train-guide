@@ -15,34 +15,175 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .container {
+        .chat-container {
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 700px;
+            max-width: 900px;
             width: 100%;
-            padding: 40px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
-        h1 {
+        .chat-header {
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        /* Overlay & Sidebar */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(200, 200, 200, 0.5);
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container.side-panel-open .side-panel {
+            transform: translateX(0);
+        }
+
+        .chat-container.side-panel-open .overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-panel-header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .side-panel-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #212529;
+        }
+
+        .btn-close-panel {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .side-panel-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .side-panel-content .btn {
+            background: rgba(255, 255, 255, 0.7);
             color: #333;
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            font-weight: 500;
             margin-bottom: 10px;
-            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .side-panel-content .btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(4px);
+        }
+
+        /* Converter Content Area */
+        .converter-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .inner-container {
+            max-width: 700px;
+            width: 100%;
         }
 
         .subtitle {
+            text-align: center;
             color: #666;
             margin-bottom: 30px;
-            font-size: 14px;
         }
 
+        /* Upload Area */
         .upload-area {
             border: 3px dashed #667eea;
             border-radius: 12px;
@@ -51,6 +192,7 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-bottom: 20px;
+            background: #fff;
         }
 
         .upload-area:hover {
@@ -73,6 +215,7 @@
             display: none;
         }
 
+        /* Form & Inputs */
         .form-group {
             margin-bottom: 20px;
         }
@@ -99,7 +242,8 @@
             border-color: #667eea;
         }
 
-        .btn {
+        /* Action Buttons */
+        .btn-action {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -112,17 +256,18 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn:hover {
+        .btn-action:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn:disabled {
+        .btn-action:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
 
+        /* Feedback Elements */
         .message {
             padding: 15px;
             border-radius: 8px;
@@ -148,18 +293,13 @@
             background: #f8f9fa;
             border-radius: 8px;
             display: none;
+            overflow-x: auto;
         }
 
         .preview h3 {
             margin-bottom: 10px;
             color: #333;
             font-size: 16px;
-        }
-
-        .preview-table {
-            width: 100%;
-            font-size: 13px;
-            overflow-x: auto;
         }
 
         .file-info {
@@ -190,48 +330,100 @@
                 transform: rotate(360deg);
             }
         }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .converter-content {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>📊 Spreadsheet to JSONL Converter</h1>
-        <p class="subtitle">Convert Excel or CSV files to JSONL format for model training</p>
-
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📁</div>
-            <p><strong>Click to upload</strong> or drag and drop</p>
-            <p style="font-size: 12px; color: #999; margin-top: 5px;">
-                Supported: .xlsx, .xls, .csv (max 16MB)
-            </p>
-            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <div class="overlay" onclick="toggleSidePanel()"></div>
+        <div class="side-panel">
+            <div class="side-panel-header">
+                <h3>Menu</h3>
+                <button class="btn-close-panel" onclick="toggleSidePanel()">×</button>
+            </div>
+            <div class="side-panel-content">
+                <a href="/" class="btn">
+                    💬 Return to Chat
+                </a>
+                <button class="btn" onclick="location.reload()">
+                    🔄 Refresh Page
+                </button>
+            </div>
         </div>
 
-        <div class="file-info" id="fileInfo"></div>
-
-        <div class="preview" id="preview"></div>
-
-        <form id="convertForm">
-            <div class="form-group">
-                <label for="instructionCol">Question/Instruction Column Name:</label>
-                <input type="text" id="instructionCol" name="instruction_col" value="instruction"
-                    placeholder="e.g., question, instruction, input">
+        <!-- Header -->
+        <div class="chat-header">
+            <div style="display: flex; align-items: center;">
+                <button class="menu-btn" onclick="toggleSidePanel()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h1>📊 Spreadsheet Converter</h1>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="outputCol">Answer/Output Column Name:</label>
-                <input type="text" id="outputCol" name="output_col" value="output"
-                    placeholder="e.g., answer, output, response">
+        <!-- Main Content -->
+        <div class="converter-content">
+            <div class="inner-container">
+                <p class="subtitle">Convert Excel or CSV files to JSONL format for model training</p>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p><strong>Click to upload</strong> or drag and drop</p>
+                    <p style="font-size: 12px; color: #999; margin-top: 5px;">
+                        Supported: .xlsx, .xls, .csv (max 500MB)
+                    </p>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+                </div>
+
+                <div class="file-info" id="fileInfo"></div>
+                <div class="preview" id="preview"></div>
+
+                <form id="convertForm">
+                    <div class="form-group">
+                        <label for="instructionCol">Question/Instruction Column Name:</label>
+                        <input type="text" id="instructionCol" name="instruction_col" value="instruction"
+                            placeholder="e.g., question, instruction, input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="outputCol">Answer/Output Column Name:</label>
+                        <input type="text" id="outputCol" name="output_col" value="output"
+                            placeholder="e.g., answer, output, response">
+                    </div>
+
+                    <button type="submit" class="btn-action" id="convertBtn" disabled>Convert to JSONL</button>
+                </form>
+
+                <div class="spinner" id="spinner"></div>
+                <div class="message" id="message"></div>
             </div>
-
-            <button type="submit" class="btn" id="convertBtn" disabled>Convert to JSONL</button>
-        </form>
-
-        <div class="spinner" id="spinner"></div>
-        <div class="message" id="message"></div>
+        </div>
     </div>
 
     <script>
+        // Sidebar Toggle
+        function toggleSidePanel() {
+            document.querySelector('.chat-container').classList.toggle('side-panel-open');
+        }
+
+        // Converter Logic
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const convertForm = document.getElementById('convertForm');
@@ -243,10 +435,8 @@
 
         let selectedFile = null;
 
-        // Upload area click
         uploadArea.addEventListener('click', () => fileInput.click());
 
-        // Drag and drop
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
@@ -262,20 +452,15 @@
             handleFile(e.dataTransfer.files[0]);
         });
 
-        // File input change
         fileInput.addEventListener('change', (e) => {
             handleFile(e.target.files[0]);
         });
 
         function handleFile(file) {
             if (!file) return;
-
             selectedFile = file;
             fileInfo.style.display = 'block';
             fileInfo.innerHTML = `<strong>Selected:</strong> ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-            convertBtn.disabled = false;
-
-            // Preview file
             previewFile(file);
         }
 
@@ -283,13 +468,25 @@
             const formData = new FormData();
             formData.append('file', file);
 
+            spinner.style.display = 'block';
+            message.style.display = 'none';
+            preview.style.display = 'none';
+            convertBtn.disabled = true;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
             try {
-                const response = await fetch('/preview', {
+                const response = await fetch('/api/converter/preview?t=' + Date.now(), {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: { 'Cache-Control': 'no-store' },
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
 
                 const data = await response.json();
+                if (data.error) throw new Error(data.error);
 
                 if (data.columns) {
                     preview.style.display = 'block';
@@ -303,7 +500,6 @@
                         </div>
                     `;
 
-                    // Auto-detect columns
                     if (data.columns.includes('instruction') || data.columns.includes('question')) {
                         document.getElementById('instructionCol').value =
                             data.columns.includes('instruction') ? 'instruction' : 'question';
@@ -312,16 +508,19 @@
                         document.getElementById('outputCol').value =
                             data.columns.includes('output') ? 'output' : 'answer';
                     }
+                    convertBtn.disabled = false;
                 }
             } catch (error) {
                 console.error('Preview error:', error);
+                showMessage('Preview failed: ' + error.message, 'error');
+                convertBtn.disabled = true;
+            } finally {
+                spinner.style.display = 'none';
             }
         }
 
-        // Form submit
         convertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             if (!selectedFile) {
                 showMessage('Please select a file first', 'error');
                 return;
@@ -337,16 +536,13 @@
             message.style.display = 'none';
 
             try {
-                const response = await fetch('/convert', {
+                const response = await fetch('/api/converter/convert', {
                     method: 'POST',
                     body: formData
                 });
 
-                // Check if response is a file download
                 const contentType = response.headers.get('content-type');
-
                 if (contentType && contentType.includes('application/jsonl')) {
-                    // Handle file download
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -357,12 +553,7 @@
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
 
-                    showMessage(
-                        `✅ Conversion successful!<br>File downloaded: ${a.download}<br>Check your Downloads folder`,
-                        'success'
-                    );
-
-                    // Reset form
+                    showMessage(`✅ Conversion successful!<br>File downloaded: ${a.download}<br>Check your Downloads folder`, 'success');
                     setTimeout(() => {
                         selectedFile = null;
                         fileInput.value = '';
@@ -371,14 +562,9 @@
                         convertBtn.disabled = false;
                     }, 2000);
                 } else {
-                    // Handle JSON response (save to server mode)
                     const data = await response.json();
-
                     if (data.success) {
-                        showMessage(
-                            `✅ ${data.message}<br>Converted ${data.rows_converted} rows<br>File saved to: /data/training/${data.output_file}`,
-                            'success'
-                        );
+                        showMessage(`✅ ${data.message}<br>Converted ${data.rows_converted} rows<br>File saved to: /data/training/${data.output_file}`, 'success');
                         setTimeout(() => {
                             selectedFile = null;
                             fileInput.value = '';
@@ -404,6 +590,11 @@
             message.innerHTML = text;
             message.style.display = 'block';
         }
+
+        window.addEventListener('pageshow', () => {
+            spinner.style.display = 'none';
+            if (!selectedFile) convertBtn.disabled = true;
+        });
     </script>
 </body>
 

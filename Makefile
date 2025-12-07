@@ -1,12 +1,12 @@
 .PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
-.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean converter build
+.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean build
 
 # Default target
 help:
 	@echo "Ollama Model Training Guide - Available Commands:"
 	@echo ""
 	@echo "  make setup        - Initial setup (copy .env.example to .env)"
-	@echo "  make up           - Start all services (Ollama + Converter + Chat)"
+	@echo "  make up           - Start all services (Ollama + Chat)"
 	@echo "  make down         - Stop all services"
 	@echo "  make restart      - Restart all services"
 	@echo "  make logs         - View Ollama logs"
@@ -23,7 +23,6 @@ help:
 	@echo "  make clean        - Stop services and remove volumes"
 	@echo ""
 	@echo "  Web Services:"
-	@echo "  make converter    - Open converter web interface (port 5000)"
 	@echo "  make chat-web     - Open chat web interface (port 8080)"
 	@echo "  make build        - Build/rebuild all services"
 	@echo ""
@@ -44,7 +43,7 @@ setup:
 	@echo "Next steps:"
 	@echo "  1. Run 'make up' to start services"
 	@echo "  2. Run 'make pull-base' to download base models"
-	@echo "  3. Visit http://localhost:5000 for the spreadsheet converter"
+	@echo "  3. Visit http://localhost:8080/converter for the spreadsheet converter"
 
 build:
 	@echo "🔨 Building services..."
@@ -55,8 +54,8 @@ up:
 	@docker compose up -d
 	@echo "✅ Services are running:"
 	@echo "  - Ollama: http://localhost:11434"
-	@echo "  - Converter: http://localhost:5000"
 	@echo "  - Chat: http://localhost:8080"
+	@echo "  - Converter: http://localhost:8080/converter"
 
 chat-web:
 	@echo "🌐 Opening chat web interface..."
@@ -64,11 +63,7 @@ chat-web:
 	 command -v open > /dev/null && open http://localhost:8080 || \
 	 echo "Please visit: http://localhost:8080"
 
-converter:
-	@echo "🌐 Opening converter web interface..."
-	@command -v xdg-open > /dev/null && xdg-open http://localhost:5000 || \
-	 command -v open > /dev/null && open http://localhost:5000 || \
-	 echo "Please visit: http://localhost:5000"
+
 
 down:
 	@echo "🛑 Stopping Ollama service..."

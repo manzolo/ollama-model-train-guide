@@ -21,6 +21,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY templates/ templates/
 
+# Create upload directory and output directory for converter
+RUN mkdir -p /tmp/uploads && mkdir -p /data/training
+
 # Expose port
 EXPOSE 8080
 
