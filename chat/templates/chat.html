@@ -31,6 +31,7 @@
             height: 90vh;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .chat-header {
@@ -39,11 +40,20 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .chat-header h1 {
             font-size: 24px;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .model-selector {
@@ -53,16 +63,40 @@
         }
 
         .model-selector select {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 8px 30px 8px 12px; /* Adjusted padding for arrow */
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             font-size: 14px;
-            background: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+            color: white; /* White text */
             cursor: pointer;
+            min-width: 180px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all 0.3s ease;
         }
 
-        .model-selector button {
+        .model-selector select:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .model-selector select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .model-selector select option {
+            background: #2c2c2c; /* Dark background for options */
+            color: white;
+        }
+
+        .btn {
             padding: 8px 16px;
             border: none;
             border-radius: 8px;
@@ -71,10 +105,22 @@
             cursor: pointer;
             font-size: 14px;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .model-selector button:hover {
+        .btn:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
         }
 
         .chat-messages {
@@ -177,7 +223,7 @@
             border-color: #667eea;
         }
 
-        .chat-input button {
+        .send-btn {
             padding: 12px 24px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -189,27 +235,460 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .chat-input button:hover:not(:disabled) {
+        .send-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .chat-input button:disabled {
+        .send-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .logs-container {
+            background: #1e1e1e;
+            color: #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 150px;
+            overflow-y: auto;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Modelfile List Styles */
+        .modelfile-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .modelfile-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        .modelfile-item:hover {
+            background: #f0f0f0;
+            border-color: #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .modelfile-name {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+
+        .modelfile-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-edit {
+            background: #4cd964;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #3dc653;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 217, 100, 0.3);
+        }
+
+        .btn-delete {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #e62e24;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-build {
+            background: #ff9500;
+            color: white;
+        }
+
+        .btn-build:hover {
+            background: #e68600;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3);
+        }
+
+        /* Editor Styles */
+        .editor-container {
+            margin-top: 15px;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .modal.large {
+            max-width: 800px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid #667eea;
+        }
+
+        .toast.error {
+            border-left-color: #ff3b30;
+        }
+
+        .toast.success {
+            border-left-color: #4cd964;
+        }
+
+        .toast.warning {
+            border-left-color: #ff9500;
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: #666;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.removing {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        /* Confirmation Dialog */
+        .confirm-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .confirm-dialog {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: dialogSlideIn 0.3s ease-out;
+        }
+
+        @keyframes dialogSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .confirm-dialog-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .confirm-dialog-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff3cd;
+            color: #ff9500;
+        }
+
+        .confirm-dialog-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .confirm-dialog-message {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .confirm-dialog-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .confirm-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .confirm-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .confirm-btn-confirm {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .confirm-btn-confirm:hover {
+            background: #e62e24;
+            box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
         }
     </style>
 </head>
 
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog-overlay" id="confirmDialog">
+        <div class="confirm-dialog">
+            <div class="confirm-dialog-header">
+                <div class="confirm-dialog-icon">⚠</div>
+                <div class="confirm-dialog-title" id="confirmTitle">Confirm Action</div>
+            </div>
+            <div class="confirm-dialog-message" id="confirmMessage"></div>
+            <div class="confirm-dialog-footer">
+                <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmDialog(false)">Cancel</button>
+                <button class="confirm-btn confirm-btn-confirm" onclick="closeConfirmDialog(true)" id="confirmButton">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <div class="chat-container">
         <div class="chat-header">
             <h1>🤖 Ollama Chat</h1>
-            <div class="model-selector">
-                <select id="modelSelect">
-                    <option value="">Loading models...</option>
-                </select>
-                <button onclick="loadModels()">🔄 Refresh</button>
+            <div class="header-controls">
+                <div class="model-selector">
+                    <select id="modelSelect">
+                        <option value="">Loading models...</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="openManageModelsModal()">🗂️ Manage Models</button>
+                <button class="btn" onclick="openManageModelfilesModal()">📁 Manage Modelfiles</button>
+                <button class="btn" onclick="loadModels()">🔄 Refresh</button>
             </div>
         </div>
 
@@ -228,12 +707,214 @@
         <div class="chat-input">
             <textarea id="messageInput" placeholder="Type your message here..."
                 onkeypress="handleKeyPress(event)"></textarea>
-            <button onclick="sendMessage()" id="sendButton">Send</button>
+            <button class="send-btn" onclick="sendMessage()" id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <!-- Create Model Modal -->
+    <div class="modal-overlay" id="createModelModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Custom Model</h2>
+                <button class="modal-close" onclick="closeCreateModelModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modelfileSelect">Select Base Modelfile</label>
+                    <select id="modelfileSelect">
+                        <option value="">Loading Modelfiles...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newModelName">New Model Name</label>
+                    <input type="text" id="newModelName" placeholder="e.g., my-assistant">
+                </div>
+                <div class="logs-container" id="creationLogs"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #ccc; color: #333;"
+                    onclick="closeCreateModelModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createModel()" id="createBtn">Create Model</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Models Modal -->
+    <div class="modal-overlay" id="manageModelsModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h2>Manage Ollama Models</h2>
+                <button class="modal-close" onclick="closeManageModelsModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
+                    These are the models currently built and available in Ollama
+                </p>
+                <div class="modelfile-list" id="modelsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤖</div>
+                        <p>Loading models...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #ccc; color: #333;"
+                    onclick="closeManageModelsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Modelfiles Modal -->
+    <div class="modal-overlay" id="manageModelfilesModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h2>Manage Modelfiles</h2>
+                <button class="modal-close" onclick="closeManageModelfilesModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-primary" onclick="openEditorModal()">➕ Create New Modelfile</button>
+                <div class="modelfile-list" id="modelfilesList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📂</div>
+                        <p>Loading Modelfiles...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #ccc; color: #333;"
+                    onclick="closeManageModelfilesModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor Modal -->
+    <div class="modal-overlay" id="editorModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h2 id="editorTitle">Create New Modelfile</h2>
+                <button class="modal-close" onclick="closeEditorModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modelfileName">Modelfile Name</label>
+                    <input type="text" id="modelfileName" placeholder="e.g., my-custom-bot">
+                </div>
+                <div class="editor-container">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-weight: 500;">Modelfile Content</label>
+                    <textarea class="editor-textarea" id="modelfileContent" placeholder="FROM llama3.2:1b
+
+PARAMETER temperature 0.7
+PARAMETER num_ctx 4096
+
+SYSTEM &quot;&quot;&quot;
+You are a helpful assistant.
+&quot;&quot;&quot;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #ccc; color: #333;"
+                    onclick="closeEditorModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveModelfile()" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Build Model Modal -->
+    <div class="modal-overlay" id="buildModelModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Build Model from Modelfile</h2>
+                <button class="modal-close" onclick="closeBuildModelModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="buildModelfilePath">Modelfile</label>
+                    <input type="text" id="buildModelfilePath" disabled style="background: #f5f5f5;">
+                </div>
+                <div class="form-group">
+                    <label for="buildModelName">Model Name</label>
+                    <input type="text" id="buildModelName" placeholder="e.g., manzolo-assistant">
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        Use the same name to update an existing model, or a new name to create a new version
+                    </small>
+                </div>
+                <div class="logs-container" id="buildLogs"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #ccc; color: #333;"
+                    onclick="closeBuildModelModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="executeBuildModel()" id="buildBtn">Build Model</button>
+            </div>
         </div>
     </div>
 
     <script>
         let currentModel = '';
+        let editingModelfilePath = null;
+        let confirmCallback = null;
+
+        // Confirmation Dialog
+        function showConfirmDialog(title, message, confirmText = 'Delete') {
+            return new Promise((resolve) => {
+                confirmCallback = resolve;
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmButton').textContent = confirmText;
+                document.getElementById('confirmDialog').style.display = 'flex';
+            });
+        }
+
+        function closeConfirmDialog(confirmed) {
+            document.getElementById('confirmDialog').style.display = 'none';
+            if (confirmCallback) {
+                confirmCallback(confirmed);
+                confirmCallback = null;
+            }
+        }
+
+        // Close dialog when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('confirmDialog').addEventListener('click', function(e) {
+                if (e.target.id === 'confirmDialog') {
+                    closeConfirmDialog(false);
+                }
+            });
+        });
+
+        // Toast Notification System
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type] || icons.info}</div>
+                <div class="toast-content">${message}</div>
+                <button class="toast-close" onclick="removeToast(this.parentElement)">×</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto-remove after duration
+            setTimeout(() => removeToast(toast), duration);
+        }
+
+        function removeToast(toast) {
+            if (!toast || !toast.parentElement) return;
+            toast.classList.add('removing');
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 300);
+        }
 
         // Load available models
         async function loadModels() {
@@ -242,6 +923,7 @@
                 const data = await response.json();
 
                 const select = document.getElementById('modelSelect');
+                const currentVal = select.value;
                 select.innerHTML = '';
 
                 if (data.models && data.models.length > 0) {
@@ -251,15 +933,20 @@
                         option.textContent = model.name;
                         select.appendChild(option);
                     });
-                    currentModel = data.models[0].name;
-                    select.value = currentModel;
+
+                    if (currentVal && data.models.some(m => m.name === currentVal)) {
+                        select.value = currentVal;
+                        currentModel = currentVal;
+                    } else {
+                        currentModel = data.models[0].name;
+                        select.value = currentModel;
+                    }
                 } else {
                     select.innerHTML = '<option value="">No models available</option>';
-                    addSystemMessage('No models found. Please pull a model first.');
+                    addSystemMessage('No models found. Please pull or create a model.');
                 }
             } catch (error) {
-                console.error('Error loading models:', error);
-                addSystemMessage('Error loading models: ' + error.message);
+                showToast('Error loading models: ' + error.message, 'error');
             }
         }
 
@@ -284,7 +971,7 @@
 
             if (!message) return;
             if (!currentModel) {
-                alert('Please select a model first');
+                showToast('Please select a model first', 'warning');
                 return;
             }
 
@@ -370,6 +1057,558 @@
         function scrollToBottom() {
             const messagesDiv = document.getElementById('chatMessages');
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // --- Model Creation Functions ---
+
+        async function openCreateModelModal() {
+            document.getElementById('createModelModal').style.display = 'flex';
+            await loadModelfiles();
+        }
+
+        function closeCreateModelModal() {
+            document.getElementById('createModelModal').style.display = 'none';
+            document.getElementById('logsContainer').style.display = 'none';
+            document.getElementById('creationLogs').innerHTML = '';
+        }
+
+        async function loadModelfiles() {
+            const select = document.getElementById('modelfileSelect');
+            select.innerHTML = '<option value="">Loading...</option>';
+
+            try {
+                const response = await fetch('/api/modelfiles');
+                const data = await response.json();
+
+                select.innerHTML = '';
+                if (data.modelfiles && data.modelfiles.length > 0) {
+                    data.modelfiles.forEach(pf => {
+                        const option = document.createElement('option');
+                        option.value = pf.path;
+                        option.textContent = pf.name;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No Modelfiles found</option>';
+                }
+            } catch (error) {
+                select.innerHTML = '<option value="">Error loading Modelfiles</option>';
+                console.error(error);
+            }
+        }
+
+        async function createModel() {
+            const nameInput = document.getElementById('newModelName');
+            const modelfileSelect = document.getElementById('modelfileSelect');
+            const createBtn = document.getElementById('createBtn');
+            const logsContainer = document.getElementById('creationLogs');
+
+            const name = nameInput.value.trim();
+            const path = modelfileSelect.value;
+
+            if (!name || !path) {
+                showToast('Please enter a name and select a Modelfile', 'warning');
+                return;
+            }
+
+            createBtn.disabled = true;
+            logsContainer.style.display = 'block';
+            logsContainer.innerHTML = 'Starting creation...\n';
+
+            try {
+                const response = await fetch('/api/create-model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, path })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n').filter(line => line.trim());
+
+                    for (const line of lines) {
+                        try {
+                            const data = JSON.parse(line);
+                            if (data.status) {
+                                logsContainer.innerHTML += `<div>${data.status}</div>`;
+                                logsContainer.scrollTop = logsContainer.scrollHeight;
+                            }
+                        } catch (e) {
+                            // Ignore JSON parse errors
+                        }
+                    }
+                }
+
+                logsContainer.innerHTML += '<div style="color: #4cd964">✅ Model created successfully!</div>';
+                setTimeout(() => {
+                    closeCreateModelModal();
+                    loadModels();
+                    // Auto-select the new model
+                    document.getElementById('modelSelect').value = name;
+                    currentModel = name;
+                    addSystemMessage(`Created and switched to model: ${name}`);
+                }, 2000);
+
+            } catch (error) {
+                logsContainer.innerHTML += `<div style="color: #ff3b30">❌ Error: ${error.message}</div>`;
+            } finally {
+                createBtn.disabled = false;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const createModal = document.getElementById('createModelModal');
+            const manageModelsModal = document.getElementById('manageModelsModal');
+            const manageModelfilesModal = document.getElementById('manageModelfilesModal');
+            const editorModal = document.getElementById('editorModal');
+            const buildModal = document.getElementById('buildModelModal');
+
+            if (event.target == createModal) {
+                closeCreateModelModal();
+            } else if (event.target == manageModelsModal) {
+                closeManageModelsModal();
+            } else if (event.target == manageModelfilesModal) {
+                closeManageModelfilesModal();
+            } else if (event.target == editorModal) {
+                closeEditorModal();
+            } else if (event.target == buildModal) {
+                closeBuildModelModal();
+            }
+        }
+
+        // --- Model Management Functions ---
+
+        async function openManageModelsModal() {
+            document.getElementById('manageModelsModal').style.display = 'flex';
+            await loadModelsList();
+        }
+
+        function closeManageModelsModal() {
+            document.getElementById('manageModelsModal').style.display = 'none';
+        }
+
+        async function loadModelsList() {
+            const container = document.getElementById('modelsList');
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🤖</div><p>Loading...</p></div>';
+
+            try {
+                const response = await fetch('/api/models');
+                const data = await response.json();
+
+                if (data.models && data.models.length > 0) {
+                    container.innerHTML = '';
+                    data.models.forEach(model => {
+                        const item = document.createElement('div');
+                        item.className = 'modelfile-item';
+
+                        // Format size
+                        const sizeGB = (model.size / (1024 * 1024 * 1024)).toFixed(2);
+                        const modifiedDate = model.modified_at ? new Date(model.modified_at).toLocaleString() : 'Unknown';
+
+                        item.innerHTML = `
+                            <div style="flex: 1;">
+                                <div class="modelfile-name">${model.name}</div>
+                                <div style="font-size: 12px; color: #999; margin-top: 4px;">
+                                    ${sizeGB} GB • Modified: ${modifiedDate}
+                                </div>
+                            </div>
+                            <div class="modelfile-actions">
+                                <button class="btn-sm btn-delete" onclick="deleteOllamaModel('${model.name}')">🗑️ Delete</button>
+                            </div>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🤖</div><p>No models found</p></div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error loading models</p></div>';
+                showToast('Error loading models: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteOllamaModel(name) {
+            const confirmed = await showConfirmDialog(
+                'Delete Model',
+                `Are you sure you want to delete the model "${name}"?\n\nThis will remove it from Ollama and free up disk space.`,
+                'Delete'
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`/api/delete-model?name=${encodeURIComponent(name)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await loadModelsList();
+                    await loadModels();
+                    addSystemMessage(`Deleted model: ${name}`);
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to delete model'), 'error');
+                }
+            } catch (error) {
+                showToast('Error deleting model: ' + error.message, 'error');
+            }
+        }
+
+        // --- Modelfile Management Functions ---
+
+        async function openManageModelfilesModal() {
+            document.getElementById('manageModelfilesModal').style.display = 'flex';
+            await loadModelfilesList();
+        }
+
+        function closeManageModelfilesModal() {
+            document.getElementById('manageModelfilesModal').style.display = 'none';
+        }
+
+        async function loadModelfilesList() {
+            const container = document.getElementById('modelfilesList');
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📂</div><p>Loading...</p></div>';
+
+            try {
+                const response = await fetch('/api/modelfiles');
+                const data = await response.json();
+
+                if (data.modelfiles && data.modelfiles.length > 0) {
+                    container.innerHTML = '';
+                    data.modelfiles.forEach(mf => {
+                        const item = document.createElement('div');
+                        item.className = 'modelfile-item';
+
+                        const isCustom = mf.path.includes('/custom/');
+
+                        item.innerHTML = `
+                            <div class="modelfile-name">${mf.name}</div>
+                            <div class="modelfile-actions">
+                                <button class="btn-sm btn-view" onclick="viewModelfile('${mf.path}')">👁️ View</button>
+                                <button class="btn-sm btn-build" onclick="openBuildModelModal('${mf.path}', '${mf.name}')">🔨 Build</button>
+                                ${isCustom ? `
+                                    <button class="btn-sm btn-edit" onclick="editModelfile('${mf.path}', '${mf.name}')">✏️ Edit</button>
+                                    <button class="btn-sm btn-delete" onclick="deleteModelfile('${mf.path}', '${mf.name}')">🗑️ Delete</button>
+                                ` : ''}
+                            </div>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📂</div><p>No Modelfiles found</p></div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error loading Modelfiles</p></div>';
+                showToast('Error loading Modelfiles: ' + error.message, 'error');
+            }
+        }
+
+        function openEditorModal(name = '', content = '', path = null) {
+            editingModelfilePath = path;
+            document.getElementById('editorTitle').textContent = path ? 'Edit Modelfile' : 'Create New Modelfile';
+            document.getElementById('modelfileName').value = name;
+            document.getElementById('modelfileContent').value = content;
+            document.getElementById('modelfileName').disabled = !!path;
+            document.getElementById('editorModal').style.display = 'flex';
+        }
+
+        function closeEditorModal() {
+            document.getElementById('editorModal').style.display = 'none';
+            editingModelfilePath = null;
+            document.getElementById('modelfileName').value = '';
+            document.getElementById('modelfileContent').value = '';
+            document.getElementById('modelfileName').disabled = false;
+        }
+
+        async function viewModelfile(path) {
+            try {
+                const response = await fetch(`/api/modelfile?path=${encodeURIComponent(path)}`);
+                const data = await response.json();
+
+                if (data.content) {
+                    const name = path.split('/').slice(-2, -1)[0] || 'Modelfile';
+                    openEditorModal(name, data.content, path);
+                    document.getElementById('saveBtn').style.display = 'none';
+                    document.getElementById('modelfileContent').disabled = true;
+                }
+            } catch (error) {
+                showToast('Error loading Modelfile: ' + error.message, 'error');
+            }
+        }
+
+        async function editModelfile(path, name) {
+            try {
+                const response = await fetch(`/api/modelfile?path=${encodeURIComponent(path)}`);
+                const data = await response.json();
+
+                if (data.content) {
+                    const simpleName = name.replace('custom/', '').replace('/Modelfile', '');
+                    openEditorModal(simpleName, data.content, path);
+                    document.getElementById('saveBtn').style.display = 'inline-block';
+                    document.getElementById('modelfileContent').disabled = false;
+                }
+            } catch (error) {
+                showToast('Error loading Modelfile: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteModelfile(path, name) {
+            const confirmed = await showConfirmDialog(
+                'Delete Modelfile',
+                `Are you sure you want to delete "${name}"?\n\nThis action cannot be undone.`,
+                'Delete'
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`/api/modelfile?path=${encodeURIComponent(path)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await loadModelfilesList();
+                    addSystemMessage(`Deleted Modelfile: ${name}`);
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to delete'), 'error');
+                }
+            } catch (error) {
+                showToast('Error deleting Modelfile: ' + error.message, 'error');
+            }
+        }
+
+        async function saveModelfile() {
+            const name = document.getElementById('modelfileName').value.trim();
+            const content = document.getElementById('modelfileContent').value;
+
+            if (!name) {
+                showToast('Please enter a name for the Modelfile', 'warning');
+                return;
+            }
+
+            if (!content.trim()) {
+                showToast('Please enter content for the Modelfile', 'warning');
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+
+            try {
+                let response;
+
+                if (editingModelfilePath) {
+                    // Update existing
+                    response = await fetch('/api/modelfile', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            path: editingModelfilePath,
+                            content: content
+                        })
+                    });
+                } else {
+                    // Create new
+                    response = await fetch('/api/modelfile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: name,
+                            content: content
+                        })
+                    });
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeEditorModal();
+                    await loadModelfilesList();
+                    showToast(editingModelfilePath ? `Updated Modelfile: ${name}` : `Created Modelfile: ${name}`, 'success');
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to save'), 'error');
+                }
+            } catch (error) {
+                showToast('Error saving Modelfile: ' + error.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+            }
+        }
+
+        // --- Build Model Functions ---
+
+        function openBuildModelModal(path, name) {
+            document.getElementById('buildModelModal').style.display = 'flex';
+            document.getElementById('buildModelfilePath').value = name;
+
+            // Pre-fill model name suggestion (remove path separators)
+            const suggestedName = name.replace('custom/', '').replace('examples/', '').replace('/Modelfile', '');
+            document.getElementById('buildModelName').value = suggestedName;
+
+            // Store path for building
+            document.getElementById('buildModelfilePath').dataset.fullPath = path;
+
+            document.getElementById('buildLogs').style.display = 'none';
+            document.getElementById('buildLogs').innerHTML = '';
+        }
+
+        function closeBuildModelModal() {
+            document.getElementById('buildModelModal').style.display = 'none';
+            document.getElementById('buildModelName').value = '';
+            document.getElementById('buildLogs').style.display = 'none';
+            document.getElementById('buildLogs').innerHTML = '';
+        }
+
+        async function executeBuildModel() {
+            const nameInput = document.getElementById('buildModelName');
+            const pathInput = document.getElementById('buildModelfilePath');
+            const buildBtn = document.getElementById('buildBtn');
+            const logsContainer = document.getElementById('buildLogs');
+
+            const name = nameInput.value.trim();
+            const path = pathInput.dataset.fullPath;
+
+            if (!name) {
+                showToast('Please enter a model name', 'warning');
+                return;
+            }
+
+            buildBtn.disabled = true;
+            logsContainer.style.display = 'block';
+            logsContainer.innerHTML = '';
+
+            try {
+                logsContainer.innerHTML += `<div style="color: #667eea">📋 Building model: ${name}</div>`;
+                logsContainer.innerHTML += '<div style="color: #667eea">📋 Checking for existing model...</div>';
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                // Check if model exists and delete it first
+                const modelsResponse = await fetch('/api/models');
+                const modelsData = await modelsResponse.json();
+
+                const existingModel = modelsData.models?.find(m => m.name === name);
+
+                if (existingModel) {
+                    logsContainer.innerHTML += `<div style="color: #ff9500">⚠️ Found existing model "${name}"</div>`;
+                    logsContainer.innerHTML += `<div style="color: #ff3b30">🗑️ Removing old version from Ollama...</div>`;
+
+                    const deleteResponse = await fetch(`/api/delete-model?name=${encodeURIComponent(name)}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (deleteResponse.ok) {
+                        logsContainer.innerHTML += `<div style="color: #4cd964">✅ Old version removed successfully</div>`;
+                    } else {
+                        logsContainer.innerHTML += `<div style="color: #ff9500">⚠️ Could not remove old version, continuing anyway...</div>`;
+                    }
+                } else {
+                    logsContainer.innerHTML += `<div style="color: #667eea">ℹ️ No existing model found</div>`;
+                }
+
+                logsContainer.innerHTML += `<div style="color: #ff9500">🔨 Building model "${name}" from Modelfile...</div>`;
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                const response = await fetch('/api/create-model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, path })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buildSuccessful = false;
+                let hasError = false;
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n').filter(line => line.trim());
+
+                    for (const line of lines) {
+                        try {
+                            const data = JSON.parse(line);
+
+                            if (data.error) {
+                                logsContainer.innerHTML += `<div style="color: #ff3b30">❌ Error: ${data.error}</div>`;
+                                hasError = true;
+                            } else if (data.status) {
+                                logsContainer.innerHTML += `<div>${data.status}</div>`;
+
+                                // Check if build is complete
+                                if (data.status.includes('success')) {
+                                    buildSuccessful = true;
+                                }
+                            }
+                            logsContainer.scrollTop = logsContainer.scrollHeight;
+                        } catch (e) {
+                            // Ignore parse errors for invalid JSON lines
+                        }
+                    }
+                }
+
+                if (hasError) {
+                    logsContainer.innerHTML += '<div style="color: #ff3b30">❌ Build failed with errors</div>';
+                    return;
+                }
+
+                logsContainer.innerHTML += '<div style="color: #4cd964">✅ Model built successfully!</div>';
+                logsContainer.innerHTML += '<div style="color: #667eea">⏳ Waiting for Ollama to register model...</div>';
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                // Wait a bit for Ollama to fully register the model
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                logsContainer.innerHTML += '<div style="color: #4cd964">🔄 Refreshing model list...</div>';
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                // Refresh models multiple times to ensure we get the new model
+                await loadModels();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                await loadModels();
+
+                logsContainer.innerHTML += '<div style="color: #4cd964">✅ Complete! Selecting model...</div>';
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                setTimeout(() => {
+                    // Auto-select the new/updated model
+                    const modelSelect = document.getElementById('modelSelect');
+
+                    // Check if model exists in the list
+                    const modelExists = Array.from(modelSelect.options).some(opt => opt.value === name);
+
+                    if (modelExists) {
+                        modelSelect.value = name;
+                        currentModel = name;
+                        addSystemMessage(`Model "${name}" is ready to use!`);
+                    } else {
+                        addSystemMessage(`Model "${name}" was built, but not showing in list yet. Click Refresh to see it.`);
+                    }
+
+                    closeBuildModelModal();
+                }, 500);
+
+            } catch (error) {
+                logsContainer.innerHTML += `<div style="color: #ff3b30">❌ Error: ${error.message}</div>`;
+            } finally {
+                buildBtn.disabled = false;
+            }
         }
 
         // Load models on page load
