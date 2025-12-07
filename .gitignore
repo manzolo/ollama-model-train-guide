@@ -1,0 +1,31 @@
+# Environment files
+.env
+
+# User-specific custom models
+models/custom/*
+!models/custom/.gitkeep
+
+# Large model files
+data/gguf/*
+!data/gguf/.gitkeep
+
+# User-specific adapters
+data/adapters/*
+!data/adapters/.gitkeep
+
+# Training data (can be large)
+data/training/*
+!data/training/.gitkeep
+
+# Docker volumes
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

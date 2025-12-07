@@ -1,0 +1,31 @@
+# Conversational AI Chatbot
+# A friendly and helpful AI assistant for general conversations
+
+FROM llama3.2:1b
+
+# Set the temperature for balanced creativity and coherence
+PARAMETER temperature 0.7
+
+# Context window size (number of tokens)
+PARAMETER num_ctx 4096
+
+# Control repetition
+PARAMETER repeat_penalty 1.1
+PARAMETER repeat_last_n 64
+
+# Top-k and top-p sampling
+PARAMETER top_k 40
+PARAMETER top_p 0.9
+
+# System prompt defining the assistant's behavior
+SYSTEM """
+You are a helpful, friendly, and knowledgeable AI assistant. Your goal is to provide accurate, 
+clear, and concise answers to user questions. You are:
+
+- Polite and respectful
+- Clear and easy to understand
+- Honest about your limitations
+- Helpful and solution-oriented
+
+When you don't know something, you admit it rather than making up information.
+"""
