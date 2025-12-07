@@ -1,0 +1,72 @@
+name: Test Dataset Training Example
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'models/examples/techcorp-support/**'
+      - 'data/training/techcorp-support.jsonl'
+      - 'scripts/test-techcorp-example.sh'
+      - 'docs/dataset-training-example.md'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-techcorp-example:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Create .env file
+      run: make setup
+
+    - name: Start Ollama service
+      run: make up
+
+    - name: Wait for Ollama to be ready
+      run: |
+        echo "Waiting for Ollama service to be ready..."
+        timeout 60 bash -c 'until curl -f http://localhost:11434/api/tags 2>/dev/null; do sleep 2; done'
+        echo "Ollama is ready!"
+
+    - name: Pull base model
+      run: |
+        echo "Pulling llama3.2:1b base model for TechCorp example..."
+        docker compose exec ollama ollama pull llama3.2:1b
+        echo "Base model ready!"
+
+    - name: Verify dataset exists
+      run: |
+        echo "Checking training dataset..."
+        if [ ! -f "data/training/techcorp-support.jsonl" ]; then
+          echo "ERROR: Dataset not found!"
+          exit 1
+        fi
+        echo "Dataset found ($(wc -l < data/training/techcorp-support.jsonl) examples)"
+        echo ""
+        echo "Sample dataset entry:"
+        head -1 data/training/techcorp-support.jsonl
+
+    - name: Test TechCorp Customer Support Example
+      run: |
+        echo "Testing dataset-based customer support model..."
+        echo "This demonstrates few-shot learning with MESSAGE examples"
+        bash scripts/test-techcorp-example.sh
+
+    - name: List models (for debugging)
+      if: always()
+      run: make list-models
+
+    - name: Show logs on failure
+      if: failure()
+      run: make logs
+
+    - name: Cleanup
+      if: always()
+      run: make down

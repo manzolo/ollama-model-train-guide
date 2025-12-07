@@ -6,6 +6,8 @@ This directory contains automated CI/CD workflows for the Ollama Model Training 
 
 ### 1. Test Ollama Model Workflow (`test.yml`)
 
+**Main CI/CD test workflow**
+
 **Triggers:**
 - Push to `main` or `master` branch
 - Pull requests to `main` or `master` branch
@@ -48,6 +50,31 @@ This directory contains automated CI/CD workflows for the Ollama Model Training 
 
 **Duration:** ~30 seconds
 
+### 3. Test Dataset Training Example (`test-dataset-example.yml`)
+
+**Triggers:**
+- Push to `main` or `master` branch (when dataset example files change)
+- Pull requests to `main` or `master` branch
+- Manual workflow dispatch
+
+**What it does:**
+1. Sets up Docker environment
+2. Starts Ollama service
+3. Pulls base model (`llama3.2:1b`)
+4. Verifies training dataset exists (`data/training/techcorp-support.jsonl`)
+5. Creates TechCorp customer support model (few-shot learning example)
+6. Tests with 3 dataset questions
+7. Tests with 1 out-of-dataset question (to verify SYSTEM prompt usage)
+8. Cleans up test model
+
+**Duration:** ~4-6 minutes
+
+**Purpose:**
+Validates the dataset training example works correctly, demonstrating:
+- Few-shot learning with MESSAGE examples
+- Dataset-based model customization
+- SYSTEM prompt context usage
+
 ## Status Badges
 
 Add these to your README.md:
@@ -55,6 +82,7 @@ Add these to your README.md:
 ```markdown
 ![Test Workflow](https://github.com/manzolo/ollama-model-train-guide/actions/workflows/test.yml/badge.svg)
 ![Validate Workflow](https://github.com/manzolo/ollama-model-train-guide/actions/workflows/validate.yml/badge.svg)
+![Dataset Example](https://github.com/manzolo/ollama-model-train-guide/actions/workflows/test-dataset-example.yml/badge.svg)
 ```
 
 ## Running Workflows Manually

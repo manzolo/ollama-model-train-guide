@@ -244,7 +244,40 @@ The project includes four pre-configured example Modelfiles:
 - **Context**: 8192 tokens
 - **Use case**: Story writing, content creation
 
+### 5. TechCorp Support (`models/examples/techcorp-support/Modelfile`)
+- **Purpose**: Customer support bot with dataset examples
+- **Temperature**: 0.3 (factual)
+- **Context**: 4096 tokens
+- **Dataset**: 10 Q&A pairs in `data/training/techcorp-support.jsonl`
+- **Use case**: Demonstrates few-shot learning with MESSAGE examples
+- **See**: [`docs/dataset-training-example.md`](./docs/dataset-training-example.md) for complete training guide
+
 ## 🎓 Advanced Topics
+
+### Dataset Training Example
+
+Learn how to train models with your own datasets! The project includes a complete example:
+
+- **TechCorp Support Bot**: Customer support model using few-shot learning
+- **Sample Dataset**: 10 Q&A pairs in `data/training/techcorp-support.jsonl`
+- **Complete Guide**: [`docs/dataset-training-example.md`](./docs/dataset-training-example.md)
+
+The guide covers:
+- Preparing JSONL datasets
+- Fine-tuning with Unsloth or Hugging Face
+- Few-shot learning with MESSAGE examples
+- Exporting to GGUF format
+- When to use fine-tuning vs few-shot learning
+
+**Quick test**:
+```bash
+# Create the TechCorp support model
+bash scripts/create-custom-model.sh techcorp-support ./models/examples/techcorp-support/Modelfile
+
+# Test it
+make chat
+# Try: "How do I reset my password?" or "What are your business hours?"
+```
 
 ### Creating Custom Modelfiles
 

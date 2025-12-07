@@ -27,11 +27,11 @@ Modelfiles define custom models by extending base models with:
 - **TEMPLATE**: Custom prompt formatting
 
 Key directories:
-- `models/examples/`: Pre-configured templates (chatbot, code-assistant, translator, creative-writer, personal-assistant)
+- `models/examples/`: Pre-configured templates (chatbot, code-assistant, translator, creative-writer, personal-assistant, **techcorp-support**)
 - `models/custom/`: User-created Modelfiles
 - `data/gguf/`: External GGUF model files
 - `data/adapters/`: Fine-tuned LoRA adapters
-- `data/training/`: Training dataset documentation
+- `data/training/`: Training datasets (includes `techcorp-support.jsonl` example)
 
 ## Common Commands
 
@@ -261,11 +261,30 @@ The project includes GitHub Actions workflows for automated testing:
 
 - **`.github/workflows/test.yml`**: End-to-end testing (creates model, tests chat, cleans up)
 - **`.github/workflows/validate.yml`**: Configuration and structure validation
+- **`.github/workflows/test-dataset-example.yml`**: Tests the TechCorp customer support dataset example
 
-Both workflows run on push and pull requests to main/master branches.
+All workflows run on push and pull requests to main/master branches.
 
 To run the same tests locally:
 ```bash
-make quick-test    # End-to-end test
-make test          # Validation tests
+make quick-test                          # End-to-end test
+make test                                # Validation tests
+bash scripts/test-techcorp-example.sh    # Dataset example test
 ```
+
+## Dataset Training Example
+
+The project includes a complete example of dataset-based model training:
+
+**TechCorp Customer Support Bot** (`models/examples/techcorp-support/`)
+- Demonstrates few-shot learning with MESSAGE examples
+- Uses a 10-example Q&A dataset (`data/training/techcorp-support.jsonl`)
+- Shows how to create specialized models without fine-tuning
+- Temperature: 0.3 (factual, consistent responses)
+
+**Complete guide**: `docs/dataset-training-example.md` covers:
+- Preparing JSONL datasets
+- Fine-tuning with Unsloth or Hugging Face Transformers
+- Converting to GGUF format
+- When to use few-shot learning vs fine-tuning
+- Using Google Colab for free GPU training
