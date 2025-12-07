@@ -3,11 +3,6 @@ name: Test Dataset Training Example
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'models/examples/techcorp-support/**'
-      - 'data/training/techcorp-support.jsonl'
-      - 'scripts/test-techcorp-example.sh'
-      - 'docs/dataset-training-example.md'
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
