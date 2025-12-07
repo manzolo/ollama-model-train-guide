@@ -236,6 +236,33 @@ def get_modelfiles():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/pull-model', methods=['POST'])
+def pull_model():
+    try:
+        data = request.json
+        model_name = data.get('name')
+
+        if not model_name:
+            return jsonify({'error': 'Missing model name'}), 400
+
+        def generate():
+            try:
+                response = requests.post(
+                    f'{OLLAMA_API}/api/pull',
+                    json={'name': model_name},
+                    stream=True
+                )
+
+                for line in response.iter_lines():
+                    if line:
+                        yield line.decode('utf-8') + '\n'
+            except Exception as e:
+                yield json.dumps({'error': str(e)}) + '\n'
+
+        return Response(generate(), mimetype='text/event-stream')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/create-model', methods=['POST'])
 def create_model():
     import subprocess

@@ -979,6 +979,15 @@
                 <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
                     These are the models currently built and available in Ollama
                 </p>
+                <div class="form-group"
+                    style="padding-bottom: 20px; border-bottom: 1px solid #eee; margin-bottom: 20px;">
+                    <label for="pullModelName">Pull External Model</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="pullModelName" placeholder="e.g., llama3.2, mistral:latest">
+                        <button class="btn btn-primary" onclick="pullModel()" id="pullBtn">Pull</button>
+                    </div>
+                    <div class="logs-container" id="pullLogs"></div>
+                </div>
                 <div class="modelfile-list" id="modelsList">
                     <div class="empty-state">
                         <div class="empty-state-icon">🤖</div>
@@ -1416,7 +1425,73 @@ You are a helpful assistant.
 
         async function openManageModelsModal() {
             document.getElementById('manageModelsModal').style.display = 'flex';
+            document.getElementById('pullLogs').style.display = 'none';
+            document.getElementById('pullModelName').value = '';
             await loadModelsList();
+        }
+
+        async function pullModel() {
+            const nameInput = document.getElementById('pullModelName');
+            const pullBtn = document.getElementById('pullBtn');
+            const logsContainer = document.getElementById('pullLogs');
+
+            const name = nameInput.value.trim();
+            if (!name) {
+                showToast('Please enter a model name', 'warning');
+                return;
+            }
+
+            pullBtn.disabled = true;
+            logsContainer.style.display = 'block';
+            logsContainer.innerHTML = `Starting pull for ${name}...\n`;
+
+            try {
+                const response = await fetch('/api/pull-model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n').filter(line => line.trim());
+
+                    for (const line of lines) {
+                        try {
+                            const data = JSON.parse(line);
+                            if (data.status) {
+                                let statusMsg = data.status;
+                                if (data.completed && data.total) {
+                                    const percent = Math.round((data.completed / data.total) * 100);
+                                    statusMsg += ` (${percent}%)`;
+                                }
+                                logsContainer.innerHTML += `<div>${statusMsg}</div>`;
+                                logsContainer.scrollTop = logsContainer.scrollHeight;
+                            } else if (data.error) {
+                                throw new Error(data.error);
+                            }
+                        } catch (e) {
+                            if (e.message) logsContainer.innerHTML += `<div style="color: #ff3b30">Error: ${e.message}</div>`;
+                        }
+                    }
+                }
+
+                logsContainer.innerHTML += '<div style="color: #4cd964">✅ Model pulled successfully!</div>';
+                nameInput.value = '';
+                await loadModelsList();
+                await loadModels(); // Refresh header dropdown too
+
+            } catch (error) {
+                logsContainer.innerHTML += `<div style="color: #ff3b30">❌ Error: ${error.message}</div>`;
+            } finally {
+                pullBtn.disabled = false;
+            }
         }
 
         function closeManageModelsModal() {
