@@ -40,10 +40,10 @@ This directory contains example spreadsheet files you can use to test the spread
 
 ### Option 1: Web Converter (Recommended)
 
-1. **Start the converter:**
+1. **Access the converter:**
    ```bash
-   make converter
-   # Opens http://localhost:5000
+   make chat-web
+   # Opens http://localhost:8080, then click "Converter" in the sidebar
    ```
 
 2. **Upload a file:**
@@ -60,7 +60,7 @@ This directory contains example spreadsheet files you can use to test the spread
 
 ```bash
 # Using the converter API
-curl -X POST http://localhost:5000/convert \
+curl -X POST http://localhost:8080/api/converter/convert \
   -F "file=@data/examples/customer-support-qa.csv" \
   -F "instruction_col=question" \
   -F "output_col=answer"

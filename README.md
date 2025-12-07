@@ -17,7 +17,7 @@ A comprehensive Docker Compose project for training, customizing, and managing O
 ## ✨ Features
 
 - **Docker Compose Setup**: Easy-to-use containerized Ollama environment
-- **📊 Spreadsheet Converter**: Web-based tool to convert Excel/CSV to JSONL (http://localhost:5000)
+- **📊 Spreadsheet Converter**: Web-based tool integrated into Chat (http://localhost:8080/converter)
 - **Example Modelfiles**: Pre-configured templates for common use cases
 - **Helper Scripts**: Convenient automation for common tasks
 - **Model Customization**: Adjust parameters, prompts, and behavior
@@ -146,7 +146,12 @@ docker compose exec ollama ollama list
 
 **Pull a specific model**:
 ```bash
-docker compose exec ollama ollama pull llama3.2:3b
+# Via UI:
+# 1. Open "Manage Models"
+# 2. Enter model name (e.g., llama3.2) and click "Pull"
+
+# Via CLI:
+docker compose exec ollama ollama pull llama3.2:1b
 ```
 
 **Create a custom model** (interactive):
@@ -273,11 +278,11 @@ The guide covers:
 
 **Convert spreadsheets to JSONL**:
 
-Use the web-based converter at **http://localhost:5000**:
+Use the web-based converter at **http://localhost:8080/converter** or access it via the Chat interface sidebar.
 
 ```bash
-# Open converter in browser
-make converter
+# Open Chat and navigate to Converter
+make chat-web
 ```
 
 Features:
