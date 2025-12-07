@@ -34,13 +34,9 @@ A comprehensive Docker Compose project for training, customizing, and managing O
 
 ## 🚀 Quick Start
 
-<a href="https://www.buymeacoffee.com/manzolo">
-  <img src=".github/blue-button.png" alt="Buy Me A Coffee" width="200">
-</a>
-
-
 1. **Clone or navigate to the project directory**:
    ```bash
+   git clone https://github.com/manzolo/ollama-model-train-guide.git
    cd ollama-model-train-guide
    ```
 
@@ -82,6 +78,9 @@ A comprehensive Docker Compose project for training, customizing, and managing O
    # Or use directly
    docker compose exec ollama ollama run my-chatbot "Tell me a joke"
    ```
+<a href="https://www.buymeacoffee.com/manzolo">
+  <img src=".github/blue-button.png" alt="Buy Me A Coffee" width="200">
+</a>
 
 ## 📁 Project Structure
 
