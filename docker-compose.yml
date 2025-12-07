@@ -20,6 +20,32 @@ services:
     #           count: 1
     #           capabilities: [gpu]
 
+  converter:
+    build:
+      context: ./converter
+      dockerfile: Dockerfile
+    container_name: spreadsheet-converter
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=production
+
+  chat:
+    build:
+      context: ./chat
+      dockerfile: Dockerfile
+    container_name: ollama-chat
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    environment:
+      - OLLAMA_API=http://ollama:11434
+
 volumes:
   ollama_data:
     driver: local

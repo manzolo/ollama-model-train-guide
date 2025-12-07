@@ -1,0 +1,16 @@
+question,answer
+What programming languages do you support?,We support Python JavaScript TypeScript Java C++ Go Rust Ruby and PHP with syntax highlighting and autocomplete
+How do I debug my code?,Use our integrated debugger by clicking the bug icon. Set breakpoints by clicking the line numbers and use F5 to start debugging
+Can I collaborate with my team?,Yes! Share your project link with team members. They can view and edit in real-time. Use the Share button in the top menu
+What is the maximum file size?,Individual files can be up to 100MB. Total project size is limited to 5GB on free plans and 50GB on premium plans
+How do I deploy my application?,Click the Deploy button choose your hosting provider (AWS GCP Azure or our managed hosting) and follow the deployment wizard
+Do you offer dark mode?,Yes! Click the theme icon in the top right corner. Choose from Light Dark or Auto (follows system preferences)
+How do I import existing projects?,Go to File > Import and select your project folder. We support importing from GitHub GitLab and Bitbucket
+What keyboard shortcuts are available?,Press Ctrl+K (Cmd+K on Mac) to open the command palette and see all available shortcuts. You can also customize shortcuts in Settings
+Can I use environment variables?,Yes! Create a .env file in your project root. Access variables using process.env.VARIABLE_NAME in your code
+How do I install packages?,Use the terminal (Ctrl+`) and run npm install package-name for Node.js or pip install package-name for Python
+Is version control included?,Yes! Built-in Git integration. Commit push and pull directly from the editor. View history and create branches easily
+How do I get help?,Click the Help icon for documentation. Join our Discord community or email support@example.com for assistance
+Can I work offline?,Yes! Enable offline mode in Settings. Your work syncs automatically when you reconnect to the internet
+What security features do you have?,We use end-to-end encryption for data transfer 2FA for accounts and SOC 2 Type II certified infrastructure
+How do I upgrade my plan?,Go to Account Settings > Billing. Compare plans and click Upgrade. You only pay the difference prorated for the current month

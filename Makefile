@@ -1,25 +1,31 @@
 .PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
+.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean converter build
 
 # Default target
 help:
 	@echo "Ollama Model Training Guide - Available Commands:"
 	@echo ""
 	@echo "  make setup        - Initial setup (copy .env.example to .env)"
-	@echo "  make up           - Start Ollama service"
-	@echo "  make down         - Stop Ollama service"
-	@echo "  make restart      - Restart Ollama service"
+	@echo "  make up           - Start all services (Ollama + Converter + Chat)"
+	@echo "  make down         - Stop all services"
+	@echo "  make restart      - Restart all services"
 	@echo "  make logs         - View Ollama logs"
 	@echo "  make shell        - Access Ollama container shell"
 	@echo "  make pull-base    - Pull common base models"
 	@echo "  make create-model - Create a custom model (interactive)"
 	@echo "  make list-models  - List all available models"
-	@echo "  make chat         - Chat with a model (interactive)"
-	@echo "  make save-model   - Save a model for deployment (interactive)"
-	@echo "  make deploy-model - Deploy a saved model (interactive)"
-	@echo "  make backup-models- Backup all custom models"
+	@echo "  make chat         - Interactive chat with models (CLI)"
+	@echo "  make save-model   - Save model configuration (interactive)"
+	@echo "  make deploy-model - Deploy saved model (interactive)"
+	@echo "  make backup-models - Backup all custom models"
 	@echo "  make test         - Run validation tests"
 	@echo "  make quick-test   - Quick test: create, chat, and delete a model"
 	@echo "  make clean        - Stop services and remove volumes"
+	@echo ""
+	@echo "  Web Services:"
+	@echo "  make converter    - Open converter web interface (port 5000)"
+	@echo "  make chat-web     - Open chat web interface (port 8080)"
+	@echo "  make build        - Build/rebuild all services"
 	@echo ""
 
 setup:
@@ -30,19 +36,39 @@ setup:
 	else \
 		echo "⚠️  .env file already exists, skipping"; \
 	fi
-	@mkdir -p data/gguf data/adapters data/training models/custom models/saved
-	@touch data/gguf/.gitkeep data/adapters/.gitkeep data/training/.gitkeep models/custom/.gitkeep models/saved/.gitkeep
+	@mkdir -p data/gguf data/adapters data/training models/custom
+	@touch data/gguf/.gitkeep data/adapters/.gitkeep data/training/.gitkeep models/custom/.gitkeep
 	@chmod +x scripts/*.sh
 	@echo "✅ Setup complete!"
 	@echo ""
 	@echo "Next steps:"
-	@echo "  1. Run 'make up' to start Ollama"
+	@echo "  1. Run 'make up' to start services"
 	@echo "  2. Run 'make pull-base' to download base models"
+	@echo "  3. Visit http://localhost:5000 for the spreadsheet converter"
+
+build:
+	@echo "🔨 Building services..."
+	@docker compose build
 
 up:
-	@echo "🚀 Starting Ollama service..."
+	@echo "🚀 Starting all services..."
 	@docker compose up -d
-	@echo "✅ Ollama is running on http://localhost:11434"
+	@echo "✅ Services are running:"
+	@echo "  - Ollama: http://localhost:11434"
+	@echo "  - Converter: http://localhost:5000"
+	@echo "  - Chat: http://localhost:8080"
+
+chat-web:
+	@echo "🌐 Opening chat web interface..."
+	@command -v xdg-open > /dev/null && xdg-open http://localhost:8080 || \
+	 command -v open > /dev/null && open http://localhost:8080 || \
+	 echo "Please visit: http://localhost:8080"
+
+converter:
+	@echo "🌐 Opening converter web interface..."
+	@command -v xdg-open > /dev/null && xdg-open http://localhost:5000 || \
+	 command -v open > /dev/null && open http://localhost:5000 || \
+	 echo "Please visit: http://localhost:5000"
 
 down:
 	@echo "🛑 Stopping Ollama service..."

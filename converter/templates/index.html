@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreadsheet to JSONL Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #f0f0ff;
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .preview-table {
+            width: 100%;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .file-info {
+            background: #e8f4f8;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Spreadsheet to JSONL Converter</h1>
+        <p class="subtitle">Convert Excel or CSV files to JSONL format for model training</p>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p><strong>Click to upload</strong> or drag and drop</p>
+            <p style="font-size: 12px; color: #999; margin-top: 5px;">
+                Supported: .xlsx, .xls, .csv (max 16MB)
+            </p>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+        </div>
+
+        <div class="file-info" id="fileInfo"></div>
+
+        <div class="preview" id="preview"></div>
+
+        <form id="convertForm">
+            <div class="form-group">
+                <label for="instructionCol">Question/Instruction Column Name:</label>
+                <input type="text" id="instructionCol" name="instruction_col" value="instruction"
+                    placeholder="e.g., question, instruction, input">
+            </div>
+
+            <div class="form-group">
+                <label for="outputCol">Answer/Output Column Name:</label>
+                <input type="text" id="outputCol" name="output_col" value="output"
+                    placeholder="e.g., answer, output, response">
+            </div>
+
+            <button type="submit" class="btn" id="convertBtn" disabled>Convert to JSONL</button>
+        </form>
+
+        <div class="spinner" id="spinner"></div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const convertForm = document.getElementById('convertForm');
+        const convertBtn = document.getElementById('convertBtn');
+        const message = document.getElementById('message');
+        const spinner = document.getElementById('spinner');
+        const fileInfo = document.getElementById('fileInfo');
+        const preview = document.getElementById('preview');
+
+        let selectedFile = null;
+
+        // Upload area click
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            selectedFile = file;
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `<strong>Selected:</strong> ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+            convertBtn.disabled = false;
+
+            // Preview file
+            previewFile(file);
+        }
+
+        async function previewFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/preview', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.columns) {
+                    preview.style.display = 'block';
+                    preview.innerHTML = `
+                        <h3>Preview (first 5 rows)</h3>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                            Columns found: ${data.columns.join(', ')}
+                        </p>
+                        <div class="preview-table">
+                            <pre style="font-size: 11px; overflow-x: auto;">${JSON.stringify(data.preview, null, 2)}</pre>
+                        </div>
+                    `;
+
+                    // Auto-detect columns
+                    if (data.columns.includes('instruction') || data.columns.includes('question')) {
+                        document.getElementById('instructionCol').value =
+                            data.columns.includes('instruction') ? 'instruction' : 'question';
+                    }
+                    if (data.columns.includes('output') || data.columns.includes('answer')) {
+                        document.getElementById('outputCol').value =
+                            data.columns.includes('output') ? 'output' : 'answer';
+                    }
+                }
+            } catch (error) {
+                console.error('Preview error:', error);
+            }
+        }
+
+        // Form submit
+        convertForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!selectedFile) {
+                showMessage('Please select a file first', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('instruction_col', document.getElementById('instructionCol').value);
+            formData.append('output_col', document.getElementById('outputCol').value);
+
+            convertBtn.disabled = true;
+            spinner.style.display = 'block';
+            message.style.display = 'none';
+
+            try {
+                const response = await fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Check if response is a file download
+                const contentType = response.headers.get('content-type');
+
+                if (contentType && contentType.includes('application/jsonl')) {
+                    // Handle file download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = selectedFile.name.replace(/\.(xlsx|xls|csv)$/, '.jsonl');
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+
+                    showMessage(
+                        `✅ Conversion successful!<br>File downloaded: ${a.download}<br>Check your Downloads folder`,
+                        'success'
+                    );
+
+                    // Reset form
+                    setTimeout(() => {
+                        selectedFile = null;
+                        fileInput.value = '';
+                        fileInfo.style.display = 'none';
+                        preview.style.display = 'none';
+                        convertBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    // Handle JSON response (save to server mode)
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showMessage(
+                            `✅ ${data.message}<br>Converted ${data.rows_converted} rows<br>File saved to: /data/training/${data.output_file}`,
+                            'success'
+                        );
+                        setTimeout(() => {
+                            selectedFile = null;
+                            fileInput.value = '';
+                            fileInfo.style.display = 'none';
+                            preview.style.display = 'none';
+                            convertBtn.disabled = false;
+                        }, 2000);
+                    } else {
+                        showMessage('❌ ' + (data.error || 'Conversion failed'), 'error');
+                        convertBtn.disabled = false;
+                    }
+                }
+            } catch (error) {
+                showMessage('❌ Error: ' + error.message, 'error');
+                convertBtn.disabled = false;
+            } finally {
+                spinner.style.display = 'none';
+            }
+        });
+
+        function showMessage(text, type) {
+            message.className = 'message ' + type;
+            message.innerHTML = text;
+            message.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

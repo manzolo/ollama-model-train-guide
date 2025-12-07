@@ -282,6 +282,20 @@ The project includes a complete example of dataset-based model training:
 - Shows how to create specialized models without fine-tuning
 - Temperature: 0.3 (factual, consistent responses)
 
+**Spreadsheet to JSONL Converter**: `scripts/spreadsheet-to-jsonl.py`
+- Convert CSV or Excel files to JSONL training format
+- Auto-detects question/answer columns
+- Supports custom column names
+- Preview mode before converting
+
+Usage:
+```bash
+python3 scripts/spreadsheet-to-jsonl.py input.csv output.jsonl
+python3 scripts/spreadsheet-to-jsonl.py input.xlsx output.jsonl --preview 5
+```
+
+See `docs/spreadsheet-to-jsonl-guide.md` for complete guide.
+
 **Complete guide**: `docs/dataset-training-example.md` covers:
 - Preparing JSONL datasets
 - Fine-tuning with Unsloth or Hugging Face Transformers

@@ -17,6 +17,7 @@ A comprehensive Docker Compose project for training, customizing, and managing O
 ## ✨ Features
 
 - **Docker Compose Setup**: Easy-to-use containerized Ollama environment
+- **📊 Spreadsheet Converter**: Web-based tool to convert Excel/CSV to JSONL (http://localhost:5000)
 - **Example Modelfiles**: Pre-configured templates for common use cases
 - **Helper Scripts**: Convenient automation for common tasks
 - **Model Customization**: Adjust parameters, prompts, and behavior
@@ -260,6 +261,7 @@ Learn how to train models with your own datasets! The project includes a complet
 
 - **TechCorp Support Bot**: Customer support model using few-shot learning
 - **Sample Dataset**: 10 Q&A pairs in `data/training/techcorp-support.jsonl`
+- **Spreadsheet Converter**: Convert CSV/Excel to JSONL format
 - **Complete Guide**: [`docs/dataset-training-example.md`](./docs/dataset-training-example.md)
 
 The guide covers:
@@ -268,6 +270,24 @@ The guide covers:
 - Few-shot learning with MESSAGE examples
 - Exporting to GGUF format
 - When to use fine-tuning vs few-shot learning
+
+**Convert spreadsheets to JSONL**:
+
+Use the web-based converter at **http://localhost:5000**:
+
+```bash
+# Open converter in browser
+make converter
+```
+
+Features:
+- Upload Excel (.xlsx, .xls) or CSV files
+- Drag & drop support
+- Auto-detect column names
+- Preview before converting
+- Save directly to `data/training/`
+
+See [`converter/README.md`](./converter/README.md) for detailed guide.
 
 **Quick test**:
 ```bash

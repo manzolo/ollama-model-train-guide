@@ -18,6 +18,7 @@ data/training/*
 !data/training/.gitkeep
 !data/training/README.md
 !data/training/techcorp-support.jsonl
+!data/training/example.csv
 
 # Docker volumes
 *.log

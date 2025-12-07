@@ -2,13 +2,18 @@
 
 This directory contains training datasets for model customization.
 
-## Example Dataset
+## Example Datasets
 
 **`techcorp-support.jsonl`** - Customer support Q&A dataset
 - 10 example question-answer pairs
 - Used by `models/examples/techcorp-support/Modelfile`
 - Demonstrates few-shot learning with MESSAGE instructions
 - Format: JSONL (JSON Lines) with `instruction` and `output` fields
+
+**`example.csv`** - Example CSV format
+- 5 Q&A examples in CSV format
+- Demonstrates spreadsheet structure
+- Use as template for your own datasets
 
 ## Dataset Format
 
@@ -19,9 +24,31 @@ Training datasets should be in JSONL format (one JSON object per line):
 {"instruction": "Another question", "output": "Another response"}
 ```
 
+## Converting Spreadsheets to JSONL
+
+The easiest way to create datasets is using spreadsheets!
+
+### Quick Start
+
+1. **Create a spreadsheet** (CSV or Excel) with two columns:
+   - Column 1: Questions/Prompts
+   - Column 2: Answers/Responses
+
+2. **Convert to JSONL**:
+   ```bash
+   python3 scripts/spreadsheet-to-jsonl.py your-data.csv data/training/your-dataset.jsonl
+   ```
+
+3. **Preview before converting**:
+   ```bash
+   python3 scripts/spreadsheet-to-jsonl.py your-data.csv output.jsonl --preview 5
+   ```
+
+See [docs/spreadsheet-to-jsonl-guide.md](../../docs/spreadsheet-to-jsonl-guide.md) for complete guide.
+
 ## Using Your Own Datasets
 
-1. **Create your dataset** in JSONL format:
+1. **Create your dataset** in JSONL format (or convert from spreadsheet):
    ```bash
    # Example: data/training/my-dataset.jsonl
    echo '{"instruction": "What is your product?", "output": "We offer AI solutions"}' > data/training/my-dataset.jsonl
