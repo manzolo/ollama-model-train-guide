@@ -16,6 +16,8 @@ data/adapters/*
 # Training data (can be large)
 data/training/*
 !data/training/.gitkeep
+!data/training/README.md
+!data/training/techcorp-support.jsonl
 
 # Docker volumes
 *.log
