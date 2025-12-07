@@ -84,25 +84,32 @@ else
     exit 1
 fi
 
-echo "Testing /api/pull-model (Validation)..."
-# Expect 400 Bad Request for missing name
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/pull-model -H "Content-Type: application/json" -d '{}')
-if [ "$HTTP_CODE" -eq 400 ]; then
-    echo "  ✓ /api/pull-model correctly returns 400 for missing input"
+echo "Testing /api/converter/convert (Real File)..."
+# Create a dummy CSV file
+TEST_CSV="test_conversion.csv"
+echo "instruction,output" > "$TEST_CSV"
+echo "What is 1+1?,It is 2." >> "$TEST_CSV"
+
+# Test conversion (download mode)
+HTTP_CODE=$(curl -s -o converted.jsonl -w "%{http_code}" -X POST http://localhost:8080/api/converter/convert -F "file=@$TEST_CSV")
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+    if grep -q "It is 2" converted.jsonl; then
+        echo "  ✓ /api/converter/convert successfully converted CSV to JSONL"
+    else
+        echo "  ❌ /api/converter/convert returned 200 but content is unexpected"
+        cat converted.jsonl
+        rm -f "$TEST_CSV" converted.jsonl
+        exit 1
+    fi
 else
-    echo "  ❌ /api/pull-model failed validation check (Code: $HTTP_CODE)"
+    echo "  ❌ /api/converter/convert failed (Code: $HTTP_CODE)"
+    rm -f "$TEST_CSV" converted.jsonl
     exit 1
 fi
 
-echo "Testing /api/converter/convert (Validation)..."
-# Expect 400 Bad Request for missing file
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/api/converter/convert)
-if [ "$HTTP_CODE" -eq 400 ]; then
-    echo "  ✓ /api/converter/convert correctly returns 400 for missing file"
-else
-    echo "  ❌ /api/converter/convert failed validation check (Code: $HTTP_CODE)"
-    exit 1
-fi
+# Cleanup
+rm -f "$TEST_CSV" converted.jsonl
 
 echo "Testing /api/modelfile (Create & Delete)..."
 # Create a temporary Modelfile
@@ -133,6 +140,42 @@ else
         echo "  ❌ /api/modelfile (POST) failed (Code: $HTTP_CODE)"
         exit 1
     fi
+fi
+
+echo "Testing /api/pull-model (Real Pull)..."
+# Pull a tiny model (all-minilm is ~20MB)
+echo "  Pulling all-minilm..."
+curl -s -X POST http://localhost:8080/api/pull-model -H "Content-Type: application/json" -d '{"name": "all-minilm"}' > /dev/null
+
+# Verify it exists
+if curl -s http://localhost:8080/api/models | grep -q "all-minilm"; then
+    echo "  ✓ /api/pull-model successfully pulled the model"
+else
+    echo "  ❌ /api/pull-model failed (Model not found in list)"
+    exit 1
+fi
+
+echo "Testing /api/create-model (Real Creation)..."
+# 1. Create Modelfile
+TEST_CREATE_NAME="api-created-bot"
+TEST_CREATE_MF_CONTENT="FROM all-minilm\nSYSTEM You are an API test bot."
+curl -s -X POST http://localhost:8080/api/modelfile -H "Content-Type: application/json" -d "{\"name\": \"$TEST_CREATE_NAME\", \"content\": \"$TEST_CREATE_MF_CONTENT\"}" > /dev/null
+
+# 2. Create Model from it
+echo "  Creating model from API..."
+curl -s -X POST http://localhost:8080/api/create-model -H "Content-Type: application/json" -d "{\"name\": \"$TEST_CREATE_NAME\", \"path\": \"/models/custom/$TEST_CREATE_NAME/Modelfile\"}" > /dev/null
+
+# 3. Verify
+if curl -s http://localhost:8080/api/models | grep -q "$TEST_CREATE_NAME"; then
+    echo "  ✓ /api/create-model successfully created the model"
+    
+    # 4. Cleanup Model
+    curl -s -X DELETE "http://localhost:8080/api/delete-model?name=$TEST_CREATE_NAME" > /dev/null
+    # 5. Cleanup Modelfile
+    curl -s -X DELETE "http://localhost:8080/api/modelfile?path=/models/custom/$TEST_CREATE_NAME/Modelfile" > /dev/null
+else
+    echo "  ❌ /api/create-model failed (Model not found in list)"
+    exit 1
 fi
 
 echo "Testing /api/create-model (Validation)..."
