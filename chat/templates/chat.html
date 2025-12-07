@@ -367,14 +367,34 @@
 
         .side-panel-content .model-selector select {
             width: 100%;
-            color: #343a40;
-            background-color: white;
-            border: 1px solid #ced4da;
-            padding: 8px 12px;
-            -webkit-appearance: listbox;
-            -moz-appearance: listbox;
-            appearance: listbox;
-            background-image: none;
+            color: #333;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        .side-panel-content .model-selector select:hover {
+            background-color: #fff;
+            border-color: #ced4da;
+        }
+
+        .side-panel-content .model-selector select:focus {
+            background-color: #fff;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         .side-panel-content .panel-actions {
