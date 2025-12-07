@@ -14,11 +14,22 @@ This directory contains automated CI/CD workflows for the Ollama Model Training 
 **What it does:**
 1. Sets up Docker environment
 2. Starts Ollama service
-3. Pulls base model (`llama3.2:1b`)
-4. Runs end-to-end test (`make quick-test`)
-5. Verifies model creation, chat functionality, and cleanup
+3. Pulls base model (`llama3.2:1b` - a lightweight 1.3GB model)
+4. Runs end-to-end test (`make quick-test`) which:
+   - Creates a temporary test model using the chatbot example
+   - Based on `llama3.2:1b` with custom system prompt
+   - Sends test prompt: "Hello! Can you introduce yourself in one sentence?"
+   - Verifies the model responds correctly
+   - Cleans up the test model automatically
+5. Displays clean output (ANSI escape codes stripped for readability)
 
 **Duration:** ~3-5 minutes (depending on model download)
+
+**Why llama3.2:1b?**
+- Small size (1.3GB) - faster CI/CD
+- Fast inference on CPU
+- Sufficient for testing model creation workflow
+- Same model used in examples
 
 ### 2. Validate Configuration (`validate.yml`)
 

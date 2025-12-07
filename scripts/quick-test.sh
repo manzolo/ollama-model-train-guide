@@ -26,11 +26,17 @@ fi
 
 TEST_MODEL_NAME="test-chatbot-$(date +%s)"
 TEST_MODELFILE="./models/examples/chatbot/Modelfile"
+BASE_MODEL="llama3.2:1b"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📝 Step 1/3: Creating test model '$TEST_MODEL_NAME'"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "Test Details:"
+echo "  Base Model: $BASE_MODEL"
+echo "  Modelfile:  $TEST_MODELFILE"
+echo "  Test Model: $TEST_MODEL_NAME"
 echo ""
 
 bash scripts/create-custom-model.sh "$TEST_MODEL_NAME" "$TEST_MODELFILE"
@@ -43,11 +49,23 @@ echo ""
 echo "Sending test prompt: 'Hello! Can you introduce yourself in one sentence?'"
 echo ""
 
+# Capture response and strip ANSI escape codes for clean output
 RESPONSE=$(docker compose exec ollama ollama run "$TEST_MODEL_NAME" "Hello! Can you introduce yourself in one sentence?" 2>&1)
+
+# Strip all ANSI escape codes and control characters
+# This removes spinner animations, cursor movements, colors, etc.
+CLEAN_RESPONSE=$(echo "$RESPONSE" | \
+    sed -r 's/\x1B\[[0-9;?]*[a-zA-Z]//g' | \
+    sed -r 's/\x1B\][0-9;]*;//g' | \
+    tr -d '\000-\037' | \
+    sed 's/⠋//g; s/⠙//g; s/⠹//g; s/⠸//g; s/⠼//g; s/⠴//g; s/⠦//g; s/⠧//g; s/⠇//g; s/⠏//g' | \
+    sed 's/^\s*//; s/\s*$//' | \
+    grep -v '^$' | \
+    head -1)
 
 echo "Response:"
 echo "─────────────────────────────────────────────────────"
-echo "$RESPONSE"
+echo "$CLEAN_RESPONSE"
 echo "─────────────────────────────────────────────────────"
 
 echo ""
@@ -64,7 +82,7 @@ echo "✅ Quick test completed successfully!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Summary:"
-echo "  ✓ Model creation works"
+echo "  ✓ Model creation works (base: $BASE_MODEL)"
 echo "  ✓ Model responds to prompts"
 echo "  ✓ Model cleanup works"
 echo ""

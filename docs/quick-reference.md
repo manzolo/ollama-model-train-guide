@@ -271,6 +271,11 @@ Continue? (y/N): y
 📝 Step 1/3: Creating test model 'test-chatbot-1701234567'
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+Test Details:
+  Base Model: llama3.2:1b
+  Modelfile:  ./models/examples/chatbot/Modelfile
+  Test Model: test-chatbot-1701234567
+
 🔨 Creating custom model: test-chatbot-1701234567
 ✅ Model created successfully!
 
@@ -297,10 +302,12 @@ deleted 'test-chatbot-1701234567'
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Summary:
-  ✓ Model creation works
+  ✓ Model creation works (base: llama3.2:1b)
   ✓ Model responds to prompts
   ✓ Model cleanup works
 
 You can now create your own models with:
   make create-model
 ```
+
+**Note:** Output is automatically cleaned for readability (ANSI escape codes removed).

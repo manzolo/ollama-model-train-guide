@@ -32,13 +32,17 @@ jobs:
 
     - name: Pull base model
       run: |
-        echo "Pulling llama3.2:1b base model..."
+        echo "Pulling llama3.2:1b base model (1.3GB, lightweight for testing)..."
         docker compose exec ollama ollama pull llama3.2:1b
+        echo "Base model ready!"
 
     - name: Run quick test
       run: |
         echo "Running end-to-end test..."
+        echo "This will create a test model, send a prompt, verify response, and cleanup."
         echo "y" | make quick-test
+        echo ""
+        echo "Test completed! Check output above for model response."
 
     - name: List models (for debugging)
       if: always()
