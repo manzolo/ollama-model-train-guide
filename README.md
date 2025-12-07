@@ -57,13 +57,24 @@ A comprehensive Docker Compose project for training, customizing, and managing O
    ```
    This downloads common models like `llama3.2:1b`, `mistral:7b`, etc.
 
-5. **Create your first custom model**:
+5. **Create your first custom model** (with interactive selection):
+   ```bash
+   make create-model
+   # Select from available Modelfiles, then enter a name
+   ```
+
+   Or specify directly:
    ```bash
    bash scripts/create-custom-model.sh my-chatbot ./models/examples/chatbot/Modelfile
    ```
 
 6. **Test the model**:
    ```bash
+   # Interactive chat
+   make chat
+   # Select your model and start chatting!
+
+   # Or use directly
    docker compose exec ollama ollama run my-chatbot "Tell me a joke"
    ```
 
@@ -133,7 +144,13 @@ docker compose exec ollama ollama list
 docker compose exec ollama ollama pull llama3.2:3b
 ```
 
-**Create a custom model**:
+**Create a custom model** (interactive):
+```bash
+make create-model
+# Select from a numbered list of available Modelfiles
+```
+
+Or specify paths directly:
 ```bash
 bash scripts/create-custom-model.sh <model-name> <modelfile-path>
 
@@ -141,7 +158,13 @@ bash scripts/create-custom-model.sh <model-name> <modelfile-path>
 bash scripts/create-custom-model.sh my-assistant ./models/examples/code-assistant/Modelfile
 ```
 
-**Run a model interactively**:
+**Chat with a model** (interactive):
+```bash
+make chat
+# Select from a numbered list of models
+```
+
+Or run directly:
 ```bash
 docker compose exec ollama ollama run my-assistant
 ```
@@ -155,7 +178,20 @@ curl http://localhost:11434/api/generate -d '{
 }'
 ```
 
-### Exporting and Sharing Models
+### Saving and Deploying Models
+
+**Save a model for deployment** (interactive):
+```bash
+make save-model
+# Select from your existing models
+# Saves to: ./models/saved/<model-name>.Modelfile
+```
+
+**Deploy to another instance** (interactive):
+```bash
+make deploy-model
+# Select from saved Modelfiles
+```
 
 **Export a model's Modelfile**:
 ```bash
@@ -163,8 +199,9 @@ bash scripts/export-model.sh my-chatbot ./my-chatbot-modelfile
 ```
 
 This creates a file you can:
+- Deploy to other Ollama instances
 - Edit to create variations
-- Share with others
+- Share with team members
 - Version control in Git
 - Use to recreate the model
 
@@ -375,7 +412,22 @@ To enable NVIDIA GPU support:
 
 ## 🧪 Testing
 
-Run validation tests:
+### Quick Test (End-to-End)
+
+Test the complete workflow automatically:
+```bash
+make quick-test
+```
+
+This will:
+1. Create a test model from an example
+2. Send a test prompt and display the response
+3. Delete the test model
+4. Verify everything works
+
+### Validation Tests
+
+Run configuration and structure validation:
 ```bash
 make test
 ```
@@ -398,6 +450,15 @@ make clean
 
 This project is provided as-is for educational and development purposes.
 
+## 🔄 Continuous Integration
+
+This project includes automated GitHub Actions workflows:
+
+- **Test Workflow**: Runs end-to-end tests on every push/PR
+- **Validate Workflow**: Validates configuration and structure
+
+See [`.github/workflows/README.md`](.github/workflows/README.md) for details.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
@@ -405,3 +466,5 @@ Contributions are welcome! Feel free to:
 - Improve documentation
 - Report issues
 - Suggest enhancements
+
+All pull requests are automatically tested via GitHub Actions.

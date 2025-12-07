@@ -1,4 +1,4 @@
-.PHONY: help setup up down restart logs shell pull-base create-model list-models test clean
+.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
 
 # Default target
 help:
@@ -13,7 +13,12 @@ help:
 	@echo "  make pull-base    - Pull common base models"
 	@echo "  make create-model - Create a custom model (interactive)"
 	@echo "  make list-models  - List all available models"
+	@echo "  make chat         - Chat with a model (interactive)"
+	@echo "  make save-model   - Save a model for deployment (interactive)"
+	@echo "  make deploy-model - Deploy a saved model (interactive)"
+	@echo "  make backup-models- Backup all custom models"
 	@echo "  make test         - Run validation tests"
+	@echo "  make quick-test   - Quick test: create, chat, and delete a model"
 	@echo "  make clean        - Stop services and remove volumes"
 	@echo ""
 
@@ -25,8 +30,8 @@ setup:
 	else \
 		echo "⚠️  .env file already exists, skipping"; \
 	fi
-	@mkdir -p data/gguf data/adapters data/training models/custom
-	@touch data/gguf/.gitkeep data/adapters/.gitkeep data/training/.gitkeep models/custom/.gitkeep
+	@mkdir -p data/gguf data/adapters data/training models/custom models/saved
+	@touch data/gguf/.gitkeep data/adapters/.gitkeep data/training/.gitkeep models/custom/.gitkeep models/saved/.gitkeep
 	@chmod +x scripts/*.sh
 	@echo "✅ Setup complete!"
 	@echo ""
@@ -58,17 +63,28 @@ pull-base:
 	@bash scripts/pull-base-models.sh
 
 create-model:
-	@echo "🔨 Create a custom model"
-	@echo ""
-	@read -p "Enter model name: " model_name; \
-	read -p "Enter Modelfile path: " modelfile_path; \
-	bash scripts/create-custom-model.sh $$model_name $$modelfile_path
+	@bash scripts/interactive-create-model.sh
 
 list-models:
 	@bash scripts/list-models.sh
 
+chat:
+	@bash scripts/interactive-chat.sh
+
+save-model:
+	@bash scripts/interactive-save-model.sh
+
+deploy-model:
+	@bash scripts/interactive-deploy-model.sh
+
+backup-models:
+	@bash scripts/backup-models.sh
+
 test:
 	@bash scripts/test.sh
+
+quick-test:
+	@bash scripts/quick-test.sh
 
 clean:
 	@echo "🧹 Cleaning up..."

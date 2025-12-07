@@ -1,0 +1,53 @@
+name: Test Ollama Model Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Create .env file
+      run: make setup
+
+    - name: Start Ollama service
+      run: make up
+
+    - name: Wait for Ollama to be ready
+      run: |
+        echo "Waiting for Ollama service to be ready..."
+        timeout 60 bash -c 'until curl -f http://localhost:11434/api/tags 2>/dev/null; do sleep 2; done'
+        echo "Ollama is ready!"
+
+    - name: Pull base model
+      run: |
+        echo "Pulling llama3.2:1b base model..."
+        docker compose exec ollama ollama pull llama3.2:1b
+
+    - name: Run quick test
+      run: |
+        echo "Running end-to-end test..."
+        echo "y" | make quick-test
+
+    - name: List models (for debugging)
+      if: always()
+      run: make list-models
+
+    - name: Show logs on failure
+      if: failure()
+      run: make logs
+
+    - name: Cleanup
+      if: always()
+      run: make down
