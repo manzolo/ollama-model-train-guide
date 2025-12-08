@@ -2,468 +2,271 @@
 
 A comprehensive Docker Compose project for training, customizing, and managing Ollama models. This guide provides everything you need to work with Ollama models in a containerized environment, from basic customization to advanced model management.
 
-## 📋 Table of Contents
-
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Usage Guide](#usage-guide)
-- [Example Modelfiles](#example-modelfiles)
-- [Advanced Topics](#advanced-topics)
-- [Troubleshooting](#troubleshooting)
-- [GPU Support](#gpu-support)
+<a href="https://www.buymeacoffee.com/manzolo">
+  <img src=".github/blue-button.png" alt="Buy Me A Coffee" width="200">
+</a>
 
 ## ✨ Features
 
 - **Docker Compose Setup**: Easy-to-use containerized Ollama environment
-- **📊 Spreadsheet Converter**: Web-based tool integrated into Chat (http://localhost:8080/converter)
-- **Example Modelfiles**: Pre-configured templates for common use cases
-- **Helper Scripts**: Convenient automation for common tasks
-- **Model Customization**: Adjust parameters, prompts, and behavior
-- **Import/Export**: Share and version control your custom models
-- **GPU Support**: Optional NVIDIA GPU acceleration
-- **Persistent Storage**: Models survive container restarts
+- **🌐 Chat Web UI**: Modern web interface at `http://localhost:8080`
+- **📊 Spreadsheet Converter**: Convert Excel/CSV to JSONL training format
+- **🔄 Model Pulling UI**: Pull models from Ollama library with real-time progress
+- **📝 Example Modelfiles**: Pre-configured templates for common use cases
+- **🛠️ Helper Scripts**: Convenient automation for common tasks
+- **🎨 Model Customization**: Adjust parameters, prompts, and behavior
+- **💾 Import/Export**: Share and version control your custom models
+- **⚡ GPU Support**: Optional NVIDIA GPU acceleration
+- **💿 Persistent Storage**: Models survive container restarts
 
-## 🔧 Prerequisites
+## 🚀 Quick Start (60 seconds)
 
-- **Docker**: Version 20.10 or higher
-- **Docker Compose**: Version 2.0 or higher
-- **Disk Space**: At least 10GB for base models
-- **RAM**: Minimum 8GB (16GB recommended)
-- **Optional**: NVIDIA GPU with Container Toolkit for GPU acceleration
+```bash
+# Clone and setup
+git clone https://github.com/manzolo/ollama-model-train-guide.git
+cd ollama-model-train-guide
+make setup && make up
 
-## 🚀 Quick Start
+# Pull a base model
+docker compose exec ollama ollama pull llama3.2:1b
 
-1. **Clone or navigate to the project directory**:
-   ```bash
-   git clone https://github.com/manzolo/ollama-model-train-guide.git
-   cd ollama-model-train-guide
-   ```
+# Access the Web UI
+open http://localhost:8080
+```
 
-2. **Run initial setup**:
-   ```bash
-   make setup
-   ```
-   This creates the `.env` file and necessary directories.
+That's it! 🎉 Start chatting with your models or [learn more about installation](./docs/installation.md).
 
-3. **Start Ollama**:
-   ```bash
-   make up
-   ```
-   Ollama will be available at `http://localhost:11434`
+## 📖 Documentation
 
-4. **Pull base models**:
-   ```bash
-   make pull-base
-   ```
-   This downloads common models like `llama3.2:1b`, `mistral:7b`, etc.
+### Getting Started
 
-5. **Create your first custom model** (with interactive selection):
-   ```bash
-   make create-model
-   # Select from available Modelfiles, then enter a name
-   ```
+- **[Installation Guide](./docs/installation.md)** - Prerequisites, setup, and GPU support
+- **[Usage Guide](./docs/usage.md)** - Managing environment and working with models
+- **[Chat Web UI](./docs/chat-ui.md)** - Using the web interface, converter, and model management
+- **[Troubleshooting](./docs/troubleshooting.md)** - Common issues and solutions
 
-   Or specify directly:
-   ```bash
-   bash scripts/create-custom-model.sh my-chatbot ./models/examples/chatbot/Modelfile
-   ```
+### Working with Models
 
-6. **Test the model**:
-   ```bash
-   # Interactive chat
-   make chat
-   # Select your model and start chatting!
+- **[Example Modelfiles](./docs/examples.md)** - Pre-configured templates (chatbot, code assistant, translator, etc.)
+- **[Modelfile Reference](./docs/modelfile-reference.md)** - Complete Modelfile syntax and parameters
+- **[Dataset Training Example](./docs/dataset-training-example.md)** - Train models with custom datasets
+- **[Advanced Usage](./docs/advanced-usage.md)** - Fine-tuning, LoRA adapters, and more
 
-   # Or use directly
-   docker compose exec ollama ollama run my-chatbot "Tell me a joke"
-   ```
-<a href="https://www.buymeacoffee.com/manzolo">
-  <img src=".github/blue-button.png" alt="Buy Me A Coffee" width="200">
-</a>
+### API and Integration
+
+- **[API Usage Guide](./docs/api-usage.md)** - REST API documentation
+- **[Quick Reference](./docs/quick-reference.md)** - Command cheat sheet
+- **[Deployment Guide](./docs/deployment-guide.md)** - Deploy to production
 
 ## 📁 Project Structure
 
 ```
 ollama-model-train-guide/
-├── docker-compose.yml          # Docker Compose configuration
-├── .env.example                # Environment variables template
-├── Makefile                    # Convenient make commands
+├── docker-compose.yml      # Services: Ollama + Chat UI
+├── .env                    # Environment configuration
+├── Makefile                # Convenient commands
+├── chat/                   # Web UI application
+│   ├── app.py             # Flask app (chat + converter)
+│   └── templates/         # HTML templates
 ├── models/
-│   ├── examples/              # Example Modelfiles
+│   ├── examples/          # Pre-configured Modelfiles
 │   │   ├── chatbot/
 │   │   ├── code-assistant/
 │   │   ├── translator/
-│   │   └── creative-writer/
-│   └── custom/                # Your custom Modelfiles
-├── scripts/
-│   ├── pull-base-models.sh    # Download base models
-│   ├── create-custom-model.sh # Create models from Modelfiles
-│   ├── list-models.sh         # List available models
-│   ├── export-model.sh        # Export model configurations
-│   ├── import-model.sh        # Import GGUF models
-│   └── test.sh                # Validation tests
+│   │   ├── creative-writer/
+│   │   ├── personal-assistant/
+│   │   └── techcorp-support/
+│   ├── custom/            # Your custom Modelfiles
+│   └── saved/             # Exported models
 ├── data/
-│   ├── gguf/                  # External GGUF model files
-│   ├── adapters/              # LoRA adapter files
-│   └── training/              # Training dataset documentation
-└── docs/                      # Additional documentation
+│   ├── gguf/             # External GGUF files
+│   ├── adapters/         # LoRA adapters
+│   └── training/         # Training datasets
+├── scripts/              # Helper scripts
+└── docs/                 # Documentation
 ```
 
-## 📖 Usage Guide
+## 🎯 Common Commands
 
-### Managing the Environment
+### Environment Management
 
-**Start Ollama**:
 ```bash
-make up
+make setup              # Initial setup
+make up                 # Start services (Ollama + Chat UI)
+make down               # Stop services
+make restart            # Restart all services
+make logs               # View logs
 ```
 
-**Stop Ollama**:
+### Model Operations
+
 ```bash
-make down
+make pull-base          # Pull common base models
+make create-model       # Create custom model (interactive)
+make chat               # Chat with a model (interactive)
+make list-models        # List all models
+make save-model         # Save model for deployment (interactive)
+make deploy-model       # Deploy saved model (interactive)
 ```
 
-**View logs**:
+### Testing
+
 ```bash
-make logs
+make quick-test         # Quick end-to-end test
+make test               # Run validation tests
 ```
 
-**Access container shell**:
+### Access Points
+
+- **Ollama API**: http://localhost:11434
+- **Chat Web UI**: http://localhost:8080
+- **Converter**: http://localhost:8080/converter (or via Chat sidebar)
+
+## 🌟 Popular Use Cases
+
+### 1. Chat with Models
+
+**Via Web UI** (easiest):
+1. Open http://localhost:8080
+2. Select a model from dropdown
+3. Start chatting!
+
+**Via CLI**:
 ```bash
-make shell
+make chat
+# Select your model and start chatting
 ```
 
-### Working with Models
+See [Chat UI Guide](./docs/chat-ui.md) for features and tips.
 
-**List all models**:
-```bash
-make list-models
-# Or directly:
-docker compose exec ollama ollama list
-```
+### 2. Create Custom Models
 
-**Pull a specific model**:
-```bash
-# Via UI:
-# 1. Open "Manage Models"
-# 2. Enter model name (e.g., llama3.2) and click "Pull"
-
-# Via CLI:
-docker compose exec ollama ollama pull llama3.2:1b
-```
-
-**Create a custom model** (interactive):
+**Interactive**:
 ```bash
 make create-model
-# Select from a numbered list of available Modelfiles
+# Select from example templates
 ```
 
-Or specify paths directly:
-```bash
-bash scripts/create-custom-model.sh <model-name> <modelfile-path>
+**From scratch**:
+1. Create a Modelfile in `./models/custom/my-model/Modelfile`
+2. Run: `bash scripts/create-custom-model.sh my-model ./models/custom/my-model/Modelfile`
 
-# Example:
-bash scripts/create-custom-model.sh my-assistant ./models/examples/code-assistant/Modelfile
-```
+See [Example Modelfiles](./docs/examples.md) for templates and [Modelfile Reference](./docs/modelfile-reference.md) for syntax.
 
-**Chat with a model** (interactive):
-```bash
-make chat
-# Select from a numbered list of models
-```
+### 3. Pull Models with UI
 
-Or run directly:
-```bash
-docker compose exec ollama ollama run my-assistant
-```
+1. Open http://localhost:8080
+2. Click "Manage Models"
+3. Enter model name (e.g., `llama3.2:1b`, `mistral:7b`)
+4. Click "Pull Model"
+5. Watch real-time progress with download speed and ETA
 
-**Use model via API**:
-```bash
-curl http://localhost:11434/api/generate -d '{
-  "model": "my-assistant",
-  "prompt": "Write a Python function to calculate factorial",
-  "stream": false
-}'
-```
+See all available models at [Ollama Library](https://ollama.com/library).
 
-### Saving and Deploying Models
+### 4. Convert Spreadsheets to Training Data
 
-**Save a model for deployment** (interactive):
-```bash
-make save-model
-# Select from your existing models
-# Saves to: ./models/saved/<model-name>.Modelfile
-```
+1. Open http://localhost:8080/converter
+2. Upload Excel (.xlsx, .xls) or CSV file
+3. Map question/answer columns
+4. Preview and convert to JSONL
+5. Use in your Modelfiles
 
-**Deploy to another instance** (interactive):
-```bash
-make deploy-model
-# Select from saved Modelfiles
-```
+See [Chat UI Guide - Converter](./docs/chat-ui.md#spreadsheet-to-jsonl-converter) for details.
 
-**Export a model's Modelfile**:
-```bash
-bash scripts/export-model.sh my-chatbot ./my-chatbot-modelfile
-```
+### 5. Train with Your Own Data
 
-This creates a file you can:
-- Deploy to other Ollama instances
-- Edit to create variations
-- Share with team members
-- Version control in Git
-- Use to recreate the model
+1. Prepare a JSONL dataset (or use the converter)
+2. Create a Modelfile with MESSAGE examples
+3. Create the model
+4. Test and iterate
 
-**Import an external GGUF model**:
-```bash
-# 1. Place your GGUF file in ./data/gguf/
-# 2. Import it:
-bash scripts/import-model.sh my-custom-model ./data/gguf/model.gguf
-```
+See [Dataset Training Example](./docs/dataset-training-example.md) for a complete guide using the TechCorp support bot example.
 
-## 📝 Example Modelfiles
-
-The project includes four pre-configured example Modelfiles:
-
-### 1. Chatbot (`models/examples/chatbot/Modelfile`)
-- **Purpose**: General conversational AI assistant
-- **Temperature**: 0.7 (balanced)
-- **Context**: 4096 tokens
-- **Use case**: Customer service, Q&A, general chat
-
-### 2. Code Assistant (`models/examples/code-assistant/Modelfile`)
-- **Purpose**: Programming help and code generation
-- **Temperature**: 0.3 (deterministic)
-- **Context**: 8192 tokens
-- **Use case**: Code writing, debugging, explanations
-
-### 3. Translator (`models/examples/translator/Modelfile`)
-- **Purpose**: Language translation
-- **Temperature**: 0.5 (moderate)
-- **Context**: 4096 tokens
-- **Use case**: Text translation, localization
-
-### 4. Creative Writer (`models/examples/creative-writer/Modelfile`)
-- **Purpose**: Creative content generation
-- **Temperature**: 1.2 (high creativity)
-- **Context**: 8192 tokens
-- **Use case**: Story writing, content creation
-
-### 5. TechCorp Support (`models/examples/techcorp-support/Modelfile`)
-- **Purpose**: Customer support bot with dataset examples
-- **Temperature**: 0.3 (factual)
-- **Context**: 4096 tokens
-- **Dataset**: 10 Q&A pairs in `data/training/techcorp-support.jsonl`
-- **Use case**: Demonstrates few-shot learning with MESSAGE examples
-- **See**: [`docs/dataset-training-example.md`](./docs/dataset-training-example.md) for complete training guide
-
-## 🎓 Advanced Topics
-
-### Dataset Training Example
-
-Learn how to train models with your own datasets! The project includes a complete example:
-
-- **TechCorp Support Bot**: Customer support model using few-shot learning
-- **Sample Dataset**: 10 Q&A pairs in `data/training/techcorp-support.jsonl`
-- **Spreadsheet Converter**: Convert CSV/Excel to JSONL format
-- **Complete Guide**: [`docs/dataset-training-example.md`](./docs/dataset-training-example.md)
-
-The guide covers:
-- Preparing JSONL datasets
-- Fine-tuning with Unsloth or Hugging Face
-- Few-shot learning with MESSAGE examples
-- Exporting to GGUF format
-- When to use fine-tuning vs few-shot learning
-
-**Convert spreadsheets to JSONL**:
-
-Use the web-based converter at **http://localhost:8080/converter** or access it via the Chat interface sidebar.
+## 🔧 Example: Creating a Custom Chatbot
 
 ```bash
-# Open Chat and navigate to Converter
-make chat-web
-```
-
-Features:
-- Upload Excel (.xlsx, .xls) or CSV files
-- Drag & drop support
-- Auto-detect column names
-- Preview before converting
-- Save directly to `data/training/`
-
-See [`converter/README.md`](./converter/README.md) for detailed guide.
-
-**Quick test**:
-```bash
-# Create the TechCorp support model
-bash scripts/create-custom-model.sh techcorp-support ./models/examples/techcorp-support/Modelfile
-
-# Test it
-make chat
-# Try: "How do I reset my password?" or "What are your business hours?"
-```
-
-### Creating Custom Modelfiles
-
-Create a new file `./models/custom/my-model/Modelfile`:
-
-```dockerfile
-# Base model
+# 1. Create a Modelfile
+mkdir -p ./models/custom/my-bot
+cat > ./models/custom/my-bot/Modelfile << 'EOF'
 FROM llama3.2:1b
 
-# Adjust parameters
-PARAMETER temperature 0.8
+PARAMETER temperature 0.7
 PARAMETER num_ctx 4096
-PARAMETER top_p 0.9
 
-# Define behavior
 SYSTEM """
-You are a specialized assistant for [your use case].
-[Define specific behavior, constraints, and personality]
+You are a friendly customer service assistant for ACME Corp.
+Be helpful, professional, and concise.
 """
+
+MESSAGE user "What are your hours?"
+MESSAGE assistant "We're open Monday-Friday, 9am-6pm EST."
+EOF
+
+# 2. Create the model
+bash scripts/create-custom-model.sh my-bot ./models/custom/my-bot/Modelfile
+
+# 3. Test it
+docker compose exec ollama ollama run my-bot "Hello!"
+
+# 4. Use in Web UI
+# Open http://localhost:8080 and select "my-bot" from dropdown
 ```
 
-Then create the model:
+## 🎓 Learning Resources
+
+### For Beginners
+1. [Installation Guide](./docs/installation.md) - Get started
+2. [Usage Guide](./docs/usage.md) - Learn basic commands
+3. [Example Modelfiles](./docs/examples.md) - See pre-configured templates
+4. [Chat UI Guide](./docs/chat-ui.md) - Use the web interface
+
+### For Advanced Users
+1. [Modelfile Reference](./docs/modelfile-reference.md) - Master Modelfile syntax
+2. [Dataset Training Example](./docs/dataset-training-example.md) - Train with custom data
+3. [Advanced Usage](./docs/advanced-usage.md) - Fine-tuning and LoRA adapters
+4. [API Usage Guide](./docs/api-usage.md) - Integrate into applications
+
+## 🧪 Testing
+
+Run automated tests to verify everything works:
+
 ```bash
-bash scripts/create-custom-model.sh my-model ./models/custom/my-model/Modelfile
+# Quick end-to-end test
+make quick-test
+
+# Validation tests
+make test
+
+# Test TechCorp dataset example
+bash scripts/test-techcorp-example.sh
 ```
 
-### Using LoRA Adapters
+GitHub Actions automatically run tests on every push. See [.github/workflows/README.md](.github/workflows/README.md) for CI/CD details.
 
-If you have a fine-tuned LoRA adapter:
+## 🚨 Troubleshooting
 
-1. Place the adapter in `./data/adapters/`
-2. Create a Modelfile:
-   ```dockerfile
-   FROM llama3.2:1b
-   ADAPTER /data/adapters/my-adapter.bin
-   ```
-3. Create the model as usual
-
-### Model Parameters Reference
-
-Key Modelfile parameters:
-
-- **temperature** (0.0-2.0): Controls randomness
-  - Lower (0.1-0.5): More focused, deterministic
-  - Medium (0.6-0.9): Balanced
-  - Higher (1.0-2.0): More creative, varied
-
-- **num_ctx** (512-32768): Context window size in tokens
-
-- **top_k** (1-100): Limits next token selection to top K
-
-- **top_p** (0.0-1.0): Cumulative probability threshold
-
-- **repeat_penalty** (0.0-2.0): Penalizes repetition
-
-See [`docs/modelfile-reference.md`](./docs/modelfile-reference.md) for complete documentation.
-
-### Integrating Fine-Tuned Models
-
-For models fine-tuned externally (e.g., with Unsloth, Hugging Face):
-
-1. Export your model to GGUF format
-2. Place the GGUF file in `./data/gguf/`
-3. Import using:
-   ```bash
-   bash scripts/import-model.sh my-finetuned-model ./data/gguf/model.gguf
-   ```
-
-See [`docs/fine-tuning-guide.md`](./docs/fine-tuning-guide.md) for detailed instructions.
-
-## 🔍 Troubleshooting
-
-### Ollama service won't start
-
-**Check Docker is running**:
-```bash
-docker ps
-```
-
-**Check logs**:
-```bash
-make logs
-```
-
-**Restart services**:
-```bash
-make restart
-```
-
-### Model downloads fail
-
-**Check disk space**:
-```bash
-df -h
-```
-
-**Check internet connection** and Docker network:
-```bash
-docker compose exec ollama ping -c 3 ollama.com
-```
-
-### Custom model creation fails
-
-**Verify Modelfile syntax**:
-```bash
-docker compose exec ollama ollama create test -f /models/your-modelfile --dry-run
-```
-
-**Check base model exists**:
-```bash
-docker compose exec ollama ollama list
-```
-
-### API not accessible
-
-**Verify port mapping**:
-```bash
-docker compose ps
-netstat -an | grep 11434
-```
-
-**Test API directly**:
-```bash
-curl http://localhost:11434/api/tags
-```
+Having issues? Check the [Troubleshooting Guide](./docs/troubleshooting.md) for solutions to:
+- Service startup problems
+- Model creation errors
+- API connection issues
+- Performance problems
+- Disk space issues
+- GPU configuration
 
 ## 🎮 GPU Support
 
-To enable NVIDIA GPU support:
+Enable NVIDIA GPU acceleration for 5-10x faster inference:
 
-1. **Install NVIDIA Container Toolkit**:
-   ```bash
-   # Ubuntu/Debian
-   distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
-       sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-   sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-   sudo systemctl restart docker
-   ```
+```bash
+# 1. Install NVIDIA Container Toolkit
+# (see installation guide for commands)
 
-2. **Uncomment GPU configuration** in `docker-compose.yml`:
-   ```yaml
-   deploy:
-     resources:
-       reservations:
-         devices:
-           - driver: nvidia
-             count: 1
-             capabilities: [gpu]
-   ```
+# 2. Uncomment GPU config in docker-compose.yml
+# 3. Restart services
+make restart
+```
 
-3. **Restart services**:
-   ```bash
-   make restart
-   ```
-
-4. **Verify GPU is detected**:
-   ```bash
-   docker compose exec ollama nvidia-smi
-   ```
+See [Installation Guide - GPU Support](./docs/installation.md#gpu-support-optional) for detailed instructions.
 
 ## 📚 Additional Resources
 
@@ -471,55 +274,6 @@ To enable NVIDIA GPU support:
 - [Modelfile Specification](https://github.com/ollama/ollama/blob/main/docs/modelfile.md)
 - [Available Models](https://ollama.com/library)
 - [Ollama API Reference](https://github.com/ollama/ollama/blob/main/docs/api.md)
-
-## 🧪 Testing
-
-### Quick Test (End-to-End)
-
-Test the complete workflow automatically:
-```bash
-make quick-test
-```
-
-This will:
-1. Create a test model from an example
-2. Send a test prompt and display the response
-3. Delete the test model
-4. Verify everything works
-
-### Validation Tests
-
-Run configuration and structure validation:
-```bash
-make test
-```
-
-This will verify:
-- Docker Compose configuration
-- Service health
-- Directory structure
-- Example Modelfiles
-- Model operations (optional)
-
-## 🧹 Cleanup
-
-**Remove all containers and volumes** (this deletes all models):
-```bash
-make clean
-```
-
-## 📄 License
-
-This project is provided as-is for educational and development purposes.
-
-## 🔄 Continuous Integration
-
-This project includes automated GitHub Actions workflows:
-
-- **Test Workflow**: Runs end-to-end tests on every push/PR
-- **Validate Workflow**: Validates configuration and structure
-
-See [`.github/workflows/README.md`](.github/workflows/README.md) for details.
 
 ## 🤝 Contributing
 
@@ -530,3 +284,35 @@ Contributions are welcome! Feel free to:
 - Suggest enhancements
 
 All pull requests are automatically tested via GitHub Actions.
+
+## 🧹 Cleanup
+
+**Remove all containers and volumes** (deletes all models):
+```bash
+make clean
+```
+
+## 📄 License
+
+This project is provided as-is for educational and development purposes.
+
+---
+
+## Quick Links
+
+| Documentation | Description |
+|--------------|-------------|
+| [Installation](./docs/installation.md) | Prerequisites, setup, GPU support |
+| [Usage Guide](./docs/usage.md) | Commands and model operations |
+| [Chat UI](./docs/chat-ui.md) | Web interface and converter |
+| [Examples](./docs/examples.md) | Pre-configured templates |
+| [Troubleshooting](./docs/troubleshooting.md) | Common issues and solutions |
+| [Modelfile Reference](./docs/modelfile-reference.md) | Complete syntax guide |
+| [Dataset Training](./docs/dataset-training-example.md) | Train with custom data |
+| [Advanced Usage](./docs/advanced-usage.md) | Fine-tuning and adapters |
+| [API Guide](./docs/api-usage.md) | REST API documentation |
+| [Quick Reference](./docs/quick-reference.md) | Command cheat sheet |
+
+---
+
+**Get started now**: `make setup && make up` then open http://localhost:8080
