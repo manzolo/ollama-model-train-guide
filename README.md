@@ -35,6 +35,18 @@ open http://localhost:8080
 ```
 
 That's it! 🎉 Start chatting with your models or [learn more about installation](./docs/installation.md).
+  
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/b4703c8f-8d34-4846-894d-699cb503efe9" />
+
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/ae737805-8df6-4d56-90e6-652dd4620844" />
+
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/51214062-044f-4f67-86e8-87a4cffe98a8" />
+
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/8f4d08f9-1740-4266-a04e-b28cf6b3b365" />
+
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/cd00f10a-cf6c-4504-a07f-7784c3e2bdd6" />
+
+<img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/195a95de-8235-4145-b3df-8dd547e43d72" />
 
 ## 📖 Documentation
 
