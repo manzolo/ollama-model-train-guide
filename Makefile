@@ -1,5 +1,5 @@
 .PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
-.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean build
+.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean build
 
 # Default target
 help:
@@ -17,6 +17,7 @@ help:
 	@echo "  make chat         - Interactive chat with models (CLI)"
 	@echo "  make save-model   - Save model configuration (interactive)"
 	@echo "  make deploy-model - Deploy saved model (interactive)"
+	@echo "  make publish-model - Publish model to external registry (interactive)"
 	@echo "  make backup-models - Backup all custom models"
 	@echo "  make test         - Run validation tests"
 	@echo "  make quick-test   - Quick test: create, chat, and delete a model"
@@ -97,6 +98,9 @@ save-model:
 
 deploy-model:
 	@bash scripts/interactive-deploy-model.sh
+
+publish-model:
+	@bash scripts/interactive-publish-model.sh
 
 backup-models:
 	@bash scripts/backup-models.sh
