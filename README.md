@@ -19,22 +19,34 @@ A comprehensive Docker Compose project for training, customizing, and managing O
 - **⚡ GPU Support**: Optional NVIDIA GPU acceleration
 - **💿 Persistent Storage**: Models survive container restarts
 
-## 🚀 Quick Start (60 seconds)
+## 🚀 Quick Start
+
+**New to Ollama?** Read [Essential Concepts](./docs/concepts.md) first (5 min read) to understand the basics.
 
 ```bash
-# Clone and setup
+# 1. Clone the repository
 git clone https://github.com/manzolo/ollama-model-train-guide.git
 cd ollama-model-train-guide
+
+# 2. Check system requirements (optional but recommended)
+make preflight
+
+# 3. Setup and start services
 make setup && make up
 
-# Pull a base model
+# 4. Pull a base model
 docker compose exec ollama ollama pull llama3.2:1b
 
-# Access the Web UI
+# 5. Open the Web UI and start chatting!
 open http://localhost:8080
 ```
 
-That's it! 🎉 Start chatting with your models or [learn more about installation](./docs/installation.md).
+That's it! 🎉
+
+**Next steps:**
+- 📖 **[Essential Concepts](./docs/concepts.md)** - Understand what you're working with
+- 🎨 **[Customization Guide](./docs/customization-guide.md)** - Create your first custom model
+- 📊 **[Parameter Guide](./docs/parameter-guide.md)** - Optimize model settings
   
 <img width="1000" height="879" alt="immagine" src="https://github.com/user-attachments/assets/b4703c8f-8d34-4846-894d-699cb503efe9" />
 
@@ -224,19 +236,30 @@ docker compose exec ollama ollama run my-bot "Hello!"
 # Open http://localhost:8080 and select "my-bot" from dropdown
 ```
 
-## 🎓 Learning Resources
+## 🎓 Learning Path
 
-### For Beginners
-1. [Installation Guide](./docs/installation.md) - Get started
-2. [Usage Guide](./docs/usage.md) - Learn basic commands
-3. [Example Modelfiles](./docs/examples.md) - See pre-configured templates
-4. [Chat UI Guide](./docs/chat-ui.md) - Use the web interface
+**Follow this order for the smoothest experience:**
 
-### For Advanced Users
-1. [Modelfile Reference](./docs/modelfile-reference.md) - Master Modelfile syntax
-2. [Dataset Training Example](./docs/dataset-training-example.md) - Train with custom data
-3. [Advanced Usage](./docs/advanced-usage.md) - Fine-tuning and LoRA adapters
-4. [API Usage Guide](./docs/api-usage.md) - Integrate into applications
+### 1️⃣ Getting Started (15 minutes)
+- **[Essential Concepts](./docs/concepts.md)** ⭐ **START HERE** - Learn the basics
+- **[Installation Guide](./docs/installation.md)** - Setup your environment
+- **[Chat UI Guide](./docs/chat-ui.md)** - Use the web interface
+
+### 2️⃣ Customization (30 minutes)
+- **[Customization Guide](./docs/customization-guide.md)** ⭐ **Which method to use?**
+- **[Parameter Guide](./docs/parameter-guide.md)** ⭐ **Copy-paste templates**
+- **[Example Modelfiles](./docs/examples.md)** - Ready-to-use templates
+
+### 3️⃣ Advanced (Optional)
+- **[Dataset Training Example](./docs/dataset-training-example.md)** - Fine-tuning guide
+- **[Advanced Usage](./docs/advanced-usage.md)** - LoRA adapters and more
+- **[API Usage Guide](./docs/api-usage.md)** - Programmatic access
+- **[Modelfile Reference](./docs/modelfile-reference.md)** - Complete syntax reference
+
+### 📚 Reference
+- **[Quick Reference](./docs/quick-reference.md)** - Command cheat sheet
+- **[Troubleshooting](./docs/troubleshooting.md)** - Common issues and solutions
+- **[Deployment Guide](./docs/deployment-guide.md)** - Production deployment
 
 ## 🧪 Testing
 
@@ -312,18 +335,21 @@ This project is provided as-is for educational and development purposes.
 
 ## Quick Links
 
-| Documentation | Description |
-|--------------|-------------|
-| [Installation](./docs/installation.md) | Prerequisites, setup, GPU support |
-| [Usage Guide](./docs/usage.md) | Commands and model operations |
-| [Chat UI](./docs/chat-ui.md) | Web interface and converter |
-| [Examples](./docs/examples.md) | Pre-configured templates |
-| [Troubleshooting](./docs/troubleshooting.md) | Common issues and solutions |
-| [Modelfile Reference](./docs/modelfile-reference.md) | Complete syntax guide |
-| [Dataset Training](./docs/dataset-training-example.md) | Train with custom data |
-| [Advanced Usage](./docs/advanced-usage.md) | Fine-tuning and adapters |
-| [API Guide](./docs/api-usage.md) | REST API documentation |
-| [Quick Reference](./docs/quick-reference.md) | Command cheat sheet |
+| Documentation | Description | Level |
+|--------------|-------------|-------|
+| **[Essential Concepts](./docs/concepts.md)** ⭐ | **Understand the basics first** | Beginner |
+| **[Customization Guide](./docs/customization-guide.md)** ⭐ | **Which method to use?** | Beginner |
+| **[Parameter Guide](./docs/parameter-guide.md)** ⭐ | **Copy-paste templates** | Beginner |
+| [Installation](./docs/installation.md) | Prerequisites, setup, GPU support | Beginner |
+| [Chat UI](./docs/chat-ui.md) | Web interface and converter | Beginner |
+| [Examples](./docs/examples.md) | Pre-configured templates | Beginner |
+| [Quick Reference](./docs/quick-reference.md) | Command cheat sheet | All Levels |
+| [Usage Guide](./docs/usage.md) | Commands and model operations | Intermediate |
+| [Dataset Training](./docs/dataset-training-example.md) | Train with custom data | Advanced |
+| [Advanced Usage](./docs/advanced-usage.md) | Fine-tuning and adapters | Advanced |
+| [Modelfile Reference](./docs/modelfile-reference.md) | Complete syntax guide | Reference |
+| [API Guide](./docs/api-usage.md) | REST API documentation | Reference |
+| [Troubleshooting](./docs/troubleshooting.md) | Common issues and solutions | All Levels |
 
 ---
 

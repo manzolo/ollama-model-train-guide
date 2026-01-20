@@ -33,6 +33,10 @@ def allowed_file(filename):
 def converter_page():
     return render_template('converter.html')
 
+@app.route('/wizard')
+def wizard_page():
+    return render_template('wizard.html')
+
 @app.route('/api/converter/convert', methods=['POST'])
 def convert():
     temp_jsonl = None
@@ -201,6 +205,62 @@ def preview():
                 os.remove(filepath)
             except:
                 pass
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wizard/generate', methods=['POST'])
+def generate_modelfile_from_wizard():
+    try:
+        data = request.json
+        use_case = data.get('use_case', 'chatbot')
+        base_model = data.get('base_model', 'llama3.2:1b')
+        personality = data.get('personality', '')
+        rules = data.get('rules', [])
+        examples = data.get('examples', [])
+
+        # Parameter presets based on use case
+        params = {
+            'chatbot': {'temperature': 0.7, 'num_ctx': 4096, 'top_p': 0.9},
+            'code': {'temperature': 0.3, 'num_ctx': 8192, 'top_p': 0.9, 'repeat_penalty': 1.1},
+            'support': {'temperature': 0.3, 'num_ctx': 4096, 'top_p': 0.9},
+            'creative': {'temperature': 1.2, 'num_ctx': 8192, 'top_p': 0.95},
+            'translator': {'temperature': 0.2, 'num_ctx': 4096, 'top_p': 0.9},
+            'data': {'temperature': 0.1, 'num_ctx': 2048, 'top_p': 0.9}
+        }.get(use_case, {'temperature': 0.7, 'num_ctx': 4096, 'top_p': 0.9})
+
+        # Build Modelfile content
+        content = f"FROM {base_model}\n\n"
+
+        # Add parameters
+        for key, value in params.items():
+            content += f"PARAMETER {key} {value}\n"
+        content += "\n"
+
+        # Build system prompt
+        system_prompt = ""
+        if personality:
+            system_prompt = personality
+        if rules:
+            if system_prompt:
+                system_prompt += "\n\nRules:\n"
+            else:
+                system_prompt = "Rules:\n"
+            for rule in rules:
+                system_prompt += f"- {rule}\n"
+
+        if system_prompt:
+            content += f'SYSTEM """\n{system_prompt.strip()}\n"""\n\n'
+
+        # Add examples
+        if examples:
+            for example in examples:
+                q = example.get('question', '').strip()
+                a = example.get('answer', '').strip()
+                if q and a:
+                    content += f'MESSAGE user "{q}"\n'
+                    content += f'MESSAGE assistant "{a}"\n\n'
+
+        return jsonify({'content': content.strip()})
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/')

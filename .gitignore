@@ -32,3 +32,4 @@ data/training/*
 # OS
 .DS_Store
 Thumbs.db
+.continue/agents/new-config.yaml

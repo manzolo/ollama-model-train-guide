@@ -1,10 +1,11 @@
-.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
-.PHONY: help setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean build
+.PHONY: help preflight setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
+.PHONY: help preflight setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean build
 
 # Default target
 help:
 	@echo "Ollama Model Training Guide - Available Commands:"
 	@echo ""
+	@echo "  make preflight    - Check system requirements before setup"
 	@echo "  make setup        - Initial setup (copy .env.example to .env)"
 	@echo "  make up           - Start all services (Ollama + Chat)"
 	@echo "  make down         - Stop all services"
@@ -27,6 +28,9 @@ help:
 	@echo "  make chat-web     - Open chat web interface (port 8080)"
 	@echo "  make build        - Build/rebuild all services"
 	@echo ""
+
+preflight:
+	@bash scripts/preflight-check.sh
 
 setup:
 	@echo "🔧 Setting up environment..."

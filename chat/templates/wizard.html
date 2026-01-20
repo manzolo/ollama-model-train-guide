@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelfile Wizard - Ollama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-title {
+            font-size: 24px;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .option-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        }
+
+        .option-card .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .option-card .title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .option-card .description {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f7fafc;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-prev {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-prev:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-prev:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .list-item input {
+            flex: 1;
+        }
+
+        .btn-remove {
+            padding: 8px 12px;
+            background: #fc8181;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .btn-remove:hover {
+            background: #f56565;
+        }
+
+        .btn-add {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: #38a169;
+        }
+
+        .example-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .example-item label {
+            margin-top: 10px;
+        }
+
+        .result-content {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        .hint {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #2c5282;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 300px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.slide-out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #68d391 0%, #48bb78 100%);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, #63b3ed 0%, #4299e1 100%);
+        }
+
+        .toast-warning {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🧙 Modelfile Wizard</h1>
+            <p>Create your custom model in 5 easy steps</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Step 1: Use Case -->
+            <div class="step active" id="step1">
+                <h2 class="step-title">Step 1: What will your model do?</h2>
+                <p class="step-description">Select the use case that best matches your needs. This will set optimal parameters automatically.</p>
+
+                <div class="options">
+                    <div class="option-card" data-value="chatbot">
+                        <div class="icon">💬</div>
+                        <div class="title">Chatbot</div>
+                        <div class="description">General conversation assistant</div>
+                    </div>
+                    <div class="option-card" data-value="code">
+                        <div class="icon">💻</div>
+                        <div class="title">Code Assistant</div>
+                        <div class="description">Programming help and code generation</div>
+                    </div>
+                    <div class="option-card" data-value="support">
+                        <div class="icon">🎧</div>
+                        <div class="title">Customer Support</div>
+                        <div class="description">Answer customer questions</div>
+                    </div>
+                    <div class="option-card" data-value="creative">
+                        <div class="icon">✍️</div>
+                        <div class="title">Creative Writer</div>
+                        <div class="description">Stories, poems, creative content</div>
+                    </div>
+                    <div class="option-card" data-value="translator">
+                        <div class="icon">🌐</div>
+                        <div class="title">Translator</div>
+                        <div class="description">Language translation</div>
+                    </div>
+                    <div class="option-card" data-value="data">
+                        <div class="icon">📊</div>
+                        <div class="title">Data Extraction</div>
+                        <div class="description">Extract structured information</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" disabled>Previous</button>
+                    <button class="btn-next" id="nextStep1">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Base Model -->
+            <div class="step" id="step2">
+                <h2 class="step-title">Step 2: Choose a base model</h2>
+                <p class="step-description">Smaller models are faster, larger models are smarter.</p>
+
+                <div class="form-group">
+                    <label for="baseModel">Base Model</label>
+                    <select id="baseModel">
+                        <option value="llama3.2:1b">llama3.2:1b (1.3GB - Fast, good for most tasks)</option>
+                        <option value="llama3.2:3b">llama3.2:3b (2.0GB - Balanced quality and speed)</option>
+                        <option value="mistral:7b">mistral:7b (4.1GB - High quality, slower)</option>
+                        <option value="phi3:mini">phi3:mini (2.3GB - Compact and efficient)</option>
+                    </select>
+                    <div class="hint">
+                        💡 <strong>Tip:</strong> llama3.2:1b is perfect for getting started. You can always change it later.
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="prevStep(2)">← Previous</button>
+                    <button class="btn-next" onclick="nextStep(2)">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Personality -->
+            <div class="step" id="step3">
+                <h2 class="step-title">Step 3: Define personality and behavior</h2>
+                <p class="step-description">Describe how your model should act and respond.</p>
+
+                <div class="form-group">
+                    <label for="personality">Model Personality (System Prompt)</label>
+                    <textarea id="personality" placeholder="Example:&#10;You are a friendly programming tutor.&#10;&#10;Your role:&#10;- Explain concepts clearly&#10;- Provide code examples&#10;- Be patient and encouraging"></textarea>
+                    <div class="hint">
+                        💡 <strong>Tip:</strong> Be specific! Instead of "be helpful", say "explain step-by-step" or "use simple language".
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="prevStep(3)">← Previous</button>
+                    <button class="btn-next" onclick="nextStep(3)">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Rules (Optional) -->
+            <div class="step" id="step4">
+                <h2 class="step-title">Step 4: Add rules (Optional)</h2>
+                <p class="step-description">Set specific constraints or guidelines.</p>
+
+                <div class="form-group">
+                    <label>Rules</label>
+                    <div id="rulesList"></div>
+                    <button class="btn-add" onclick="addRule()">+ Add Rule</button>
+                    <div class="hint">
+                        💡 <strong>Examples:</strong> "Keep responses under 3 sentences", "Always ask clarifying questions", "Use markdown formatting"
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="prevStep(4)">← Previous</button>
+                    <button class="btn-next" onclick="nextStep(4)">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Examples (Optional) -->
+            <div class="step" id="step5">
+                <h2 class="step-title">Step 5: Add examples (Optional)</h2>
+                <p class="step-description">Show your model how to respond with example Q&A pairs.</p>
+
+                <div class="form-group">
+                    <div id="examplesList"></div>
+                    <button class="btn-add" onclick="addExample()">+ Add Example</button>
+                    <div class="hint">
+                        💡 <strong>Tip:</strong> 3-5 examples are usually enough. Focus on quality over quantity.
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="prevStep(5)">← Previous</button>
+                    <button class="btn-next" onclick="generateModelfile()">Generate Modelfile ✨</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Result -->
+            <div class="step" id="step6">
+                <h2 class="step-title">🎉 Your Modelfile is ready!</h2>
+
+                <div class="success-message">
+                    ✅ Modelfile generated successfully! You can now save it and create your model.
+                </div>
+
+                <div class="form-group">
+                    <label for="modelName">Model Name</label>
+                    <input type="text" id="modelName" placeholder="my-custom-model">
+                    <div class="hint">
+                        💡 Use lowercase letters, numbers, and hyphens only.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Generated Modelfile</label>
+                    <div class="result-content" id="modelfileContent"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="prevStep(6)">← Edit</button>
+                    <button class="btn-next" onclick="saveModelfile()">Save & Create Model</button>
+                </div>
+
+                <a href="/" class="home-link">← Back to Chat</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 6;
+        let wizardData = {
+            useCase: '',
+            baseModel: 'llama3.2:1b',
+            personality: '',
+            rules: [],
+            examples: []
+        };
+
+        // Toast notification system
+        function showToast(message, type = 'info', title = '', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const icons = {
+                error: '❌',
+                success: '✅',
+                info: 'ℹ️',
+                warning: '⚠️'
+            };
+
+            const titles = {
+                error: title || 'Error',
+                success: title || 'Success',
+                info: title || 'Info',
+                warning: title || 'Warning'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type]}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${titles[type]}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto remove after duration
+            setTimeout(() => {
+                toast.classList.add('slide-out');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        function showLoadingToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-info';
+            toast.id = 'loading-toast';
+
+            toast.innerHTML = `
+                <div class="spinner"></div>
+                <div class="toast-content">
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+
+            container.appendChild(toast);
+            return toast;
+        }
+
+        function removeLoadingToast() {
+            const toast = document.getElementById('loading-toast');
+            if (toast) {
+                toast.classList.add('slide-out');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
+
+        // Step 1: Use case selection
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                wizardData.useCase = this.dataset.value;
+            });
+        });
+
+        document.getElementById('nextStep1').addEventListener('click', () => {
+            if (!wizardData.useCase) {
+                showToast('Please select a use case to continue', 'warning');
+                return;
+            }
+            nextStep(1);
+        });
+
+        function nextStep(step) {
+            // Save current step data
+            if (step === 2) wizardData.baseModel = document.getElementById('baseModel').value;
+            if (step === 3) wizardData.personality = document.getElementById('personality').value;
+            if (step === 4) {
+                wizardData.rules = Array.from(document.querySelectorAll('#rulesList input'))
+                    .map(input => input.value)
+                    .filter(value => value.trim() !== '');
+            }
+            if (step === 5) {
+                wizardData.examples = Array.from(document.querySelectorAll('.example-item'))
+                    .map(item => ({
+                        question: item.querySelector('.example-question').value,
+                        answer: item.querySelector('.example-answer').value
+                    }))
+                    .filter(ex => ex.question.trim() && ex.answer.trim());
+            }
+
+            // Move to next step
+            currentStep++;
+            showStep(currentStep);
+            updateProgress();
+        }
+
+        function prevStep(step) {
+            currentStep--;
+            showStep(currentStep);
+            updateProgress();
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function addRule() {
+            const rulesList = document.getElementById('rulesList');
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.innerHTML = `
+                <input type="text" placeholder="Enter a rule...">
+                <button class="btn-remove" onclick="this.parentElement.remove()">✕</button>
+            `;
+            rulesList.appendChild(div);
+        }
+
+        function addExample() {
+            const examplesList = document.getElementById('examplesList');
+            const div = document.createElement('div');
+            div.className = 'example-item';
+            div.innerHTML = `
+                <label>Question</label>
+                <input type="text" class="example-question" placeholder="What is your return policy?">
+                <label>Answer</label>
+                <textarea class="example-answer" placeholder="We offer 30-day returns..."></textarea>
+                <button class="btn-remove" onclick="this.parentElement.remove()" style="margin-top: 10px;">Remove Example</button>
+            `;
+            examplesList.appendChild(div);
+        }
+
+        async function generateModelfile() {
+            // Collect final data
+            wizardData.examples = Array.from(document.querySelectorAll('.example-item'))
+                .map(item => ({
+                    question: item.querySelector('.example-question').value,
+                    answer: item.querySelector('.example-answer').value
+                }))
+                .filter(ex => ex.question.trim() && ex.answer.trim());
+
+            const loadingToast = showLoadingToast('Generating your Modelfile...');
+
+            try {
+                const response = await fetch('/api/wizard/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(wizardData)
+                });
+
+                const data = await response.json();
+                removeLoadingToast();
+
+                if (data.error) {
+                    showToast(data.error, 'error', 'Generation Failed');
+                    return;
+                }
+
+                document.getElementById('modelfileContent').textContent = data.content;
+                showToast('Modelfile generated successfully!', 'success');
+                nextStep(5);
+            } catch (error) {
+                removeLoadingToast();
+                showToast(error.message, 'error', 'Generation Error');
+            }
+        }
+
+        async function saveModelfile() {
+            const modelName = document.getElementById('modelName').value.trim();
+            if (!modelName) {
+                showToast('Please enter a model name', 'warning');
+                return;
+            }
+
+            if (!/^[a-z0-9-]+$/.test(modelName)) {
+                showToast('Model name can only contain lowercase letters, numbers, and hyphens', 'warning', 'Invalid Name');
+                return;
+            }
+
+            const content = document.getElementById('modelfileContent').textContent;
+            const loadingToast = showLoadingToast('Saving Modelfile...');
+
+            try {
+                // Save Modelfile
+                const response = await fetch('/api/modelfile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: modelName, content: content })
+                });
+
+                const result = await response.json();
+                if (result.error) {
+                    removeLoadingToast();
+                    showToast(result.error, 'error', 'Save Failed');
+                    return;
+                }
+
+                removeLoadingToast();
+                showToast('Modelfile saved! Now creating the model...', 'success');
+
+                const creatingToast = showLoadingToast('Creating model... This may take a minute');
+
+                const createResponse = await fetch('/api/create-model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: modelName, path: result.path })
+                });
+
+                removeLoadingToast();
+
+                if (createResponse.ok) {
+                    showToast('Model created successfully! Redirecting to chat...', 'success', 'All Done!', 2000);
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showToast('Modelfile saved, but model creation failed. You can create it manually from the Manage Models page.', 'warning', 'Partial Success', 6000);
+                }
+            } catch (error) {
+                removeLoadingToast();
+                showToast(error.message, 'error', 'Error');
+            }
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
