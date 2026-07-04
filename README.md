@@ -5,6 +5,8 @@
 [![Validate](https://github.com/manzolo/ollama-model-train-guide/actions/workflows/validate.yml/badge.svg)](https://github.com/manzolo/ollama-model-train-guide/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+🌐 **English** | [Italiano](./README.it.md)
+
 A comprehensive Docker Compose project for creating, customizing, and managing Ollama models. Everything you need to work with lightweight local language models in a containerized environment, from basic customization to advanced model management.
 
 <a href="https://www.buymeacoffee.com/manzolo">

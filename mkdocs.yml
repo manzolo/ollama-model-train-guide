@@ -25,6 +25,14 @@ theme:
     - content.code.copy
     - search.suggest
 
+# Cross-language anchor fragments (#heading) can differ between EN and IT
+# headings, so validate files strictly but only warn on anchors.
+validation:
+  links:
+    absolute_links: warn
+    unrecognized_links: warn
+    anchors: warn
+
 markdown_extensions:
   - admonition
   - pymdownx.superfences
@@ -32,6 +40,41 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: it
+          name: Italiano
+          build: true
+          nav_translations:
+            Home: Home
+            Getting Started: Per iniziare
+            Concepts (start here): Concetti (inizia qui)
+            Installation: Installazione
+            Quick Reference: Riferimento rapido
+            Using the Environment: Usare l'ambiente
+            Day-to-day Usage: Uso quotidiano
+            Web UI (Chat, Converter, Wizard): Interfaccia Web (Chat, Converter, Wizard)
+            Example Modelfiles: Modelfile di esempio
+            Customizing Models: Personalizzare i modelli
+            Choosing a Method: Scegliere un metodo
+            Parameter Guide: Guida ai parametri
+            Modelfile Reference: Riferimento Modelfile
+            Personal Assistant Guide: Guida all'assistente personale
+            Dataset Training Example: Esempio di training con dataset
+            Fine-Tuning Guide: Guida al fine-tuning
+            Operations: Operazioni
+            API Usage: Uso delle API
+            Deployment Guide: Guida al deployment
+            Advanced Usage: Uso avanzato
+            Troubleshooting: Risoluzione dei problemi
 
 nav:
   - Home: index.md

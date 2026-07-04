@@ -281,6 +281,7 @@ The project includes GitHub Actions workflows for automated testing:
 - **`.github/workflows/test.yml`**: End-to-end testing (creates model, tests chat, cleans up)
 - **`.github/workflows/validate.yml`**: Configuration and structure validation
 - **`.github/workflows/test-dataset-example.yml`**: Tests the TechCorp customer support dataset example
+- **`.github/workflows/docs.yml`**: Builds the MkDocs site with `--strict` and deploys it to GitHub Pages (`gh-pages` branch) on changes to `docs/` or `mkdocs.yml`
 
 All workflows run on push and pull requests to main/master branches.
 
@@ -290,6 +291,31 @@ make quick-test                          # End-to-end test
 make test                                # Validation tests
 bash scripts/test-techcorp-example.sh    # Dataset example test
 ```
+
+## Bilingual Documentation (EN + IT)
+
+The docs and README are maintained in **both English and Italian**. The MkDocs
+site (`mkdocs-static-i18n`, suffix structure) serves English at the site root and
+Italian under `/it/`, with an automatic language switcher.
+
+- Every `docs/<name>.md` (English, canonical) has a sibling `docs/<name>.it.md`
+  (Italian). `README.md` (EN) is mirrored by `README.it.md` (IT); each links to
+  the other at the top.
+- **Keep both languages in sync.** When you change or add any documentation —
+  a `docs/*.md` file, the README, or a section within them — apply the equivalent
+  change to the `.it.md` / `README.it.md` counterpart in the same commit. When
+  adding a brand-new doc, create both `<name>.md` and `<name>.it.md` and add the
+  file to the `nav` in `mkdocs.yml` (the plugin adds the Italian page
+  automatically; add its label to the `it` locale's `nav_translations`).
+- Translation rules: translate prose/headings/tables; never translate code
+  blocks, commands, paths, URLs, model names, env vars, Modelfile keywords, or
+  `make` targets. Relative `.md` links keep the English filename (the i18n plugin
+  resolves them per-language); the README's Italian doc table links directly to
+  the `.it.md` files so GitHub renders Italian.
+- Validate locally with `mkdocs build --strict` (requires
+  `pip install mkdocs-material mkdocs-static-i18n`). Cross-language anchor
+  fragments only warn (see `validation` in `mkdocs.yml`), so strict builds still
+  pass, but broken *file* links fail the build.
 
 ## Dataset Training Example
 
