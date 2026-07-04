@@ -1,7 +1,11 @@
 #!/bin/bash
 # Backup all custom models (non-base models)
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 # Display usage
 usage() {
@@ -20,12 +24,7 @@ usage() {
 
 OUTPUT_DIR=${1:-./backups/models}
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+check_ollama_running
 
 # Create output directory with timestamp
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -37,7 +36,7 @@ echo "Backup location: $BACKUP_DIR"
 echo ""
 
 # Get list of all models
-MODELS=$(docker compose exec ollama ollama list | tail -n +2 | awk '{print $1}' | grep -v "^$")
+MODELS=$(get_model_names)
 
 if [ -z "$MODELS" ]; then
     echo "⚠️  No models found to backup"

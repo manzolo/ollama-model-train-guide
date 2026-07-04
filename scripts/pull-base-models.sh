@@ -1,7 +1,11 @@
 #!/bin/bash
 # Pull common base models for Ollama
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 echo "🚀 Pulling common base models for Ollama..."
 echo ""
@@ -23,12 +27,7 @@ pull_model() {
     echo ""
 }
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+check_ollama_running
 
 # Pull each model
 for model in "${MODELS[@]}"; do

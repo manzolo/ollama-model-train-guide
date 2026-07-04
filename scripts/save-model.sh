@@ -1,7 +1,11 @@
 #!/bin/bash
 # Save a model for deployment to another Ollama instance
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 # Display usage
 usage() {
@@ -27,15 +31,10 @@ fi
 MODEL_NAME=$1
 OUTPUT_DIR=${2:-./models/saved}
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+check_ollama_running
 
-# Check if model exists
-if ! docker compose exec ollama ollama list | grep -q "^$MODEL_NAME"; then
+# Check if model exists (exact name match, "name" also matches "name:latest")
+if ! model_exists "$MODEL_NAME"; then
     echo "❌ Error: Model '$MODEL_NAME' not found"
     echo ""
     echo "Available models:"

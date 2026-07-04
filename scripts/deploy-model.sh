@@ -1,7 +1,11 @@
 #!/bin/bash
 # Deploy a saved model to the current Ollama instance
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 # Display usage
 usage() {
@@ -27,7 +31,7 @@ fi
 MODELFILE_PATH=$1
 
 # Extract model name from filename if not provided
-if [ -z "$2" ]; then
+if [ -z "${2:-}" ]; then
     FILENAME=$(basename "$MODELFILE_PATH")
     MODEL_NAME="${FILENAME%.Modelfile}"
     MODEL_NAME="${MODEL_NAME//_/\/}"
@@ -35,12 +39,7 @@ else
     MODEL_NAME=$2
 fi
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+check_ollama_running
 
 # Check if Modelfile exists
 if [ ! -f "$MODELFILE_PATH" ]; then
@@ -51,6 +50,7 @@ fi
 # Copy Modelfile to a location accessible by container
 TEMP_DIR="./models/custom/temp-deploy"
 mkdir -p "$TEMP_DIR"
+trap 'rm -rf "$TEMP_DIR"' EXIT
 cp "$MODELFILE_PATH" "$TEMP_DIR/Modelfile"
 
 CONTAINER_PATH="/models/custom/temp-deploy/Modelfile"
@@ -61,9 +61,6 @@ echo ""
 
 # Create the model
 docker compose exec ollama ollama create "$MODEL_NAME" -f "$CONTAINER_PATH"
-
-# Cleanup
-rm -rf "$TEMP_DIR"
 
 echo ""
 echo "✅ Model deployed successfully!"

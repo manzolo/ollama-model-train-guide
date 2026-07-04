@@ -2,7 +2,7 @@
 # Pre-flight check script
 # Validates system requirements before setup
 
-set -e
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -15,6 +15,20 @@ NC='\033[0m' # No Color
 ERRORS=0
 WARNINGS=0
 
+# Ports to check: defaults match docker-compose.yml, overridable via .env
+OLLAMA_PORT=11434
+CHAT_PORT=8080
+if [ -f ./.env ]; then
+    ENV_OLLAMA_PORT="$(grep -E '^OLLAMA_PORT=' ./.env | tail -n1 | cut -d= -f2- | tr -d '[:space:]\042\047' || true)"
+    if [[ "$ENV_OLLAMA_PORT" =~ ^[0-9]+$ ]]; then
+        OLLAMA_PORT="$ENV_OLLAMA_PORT"
+    fi
+    ENV_CHAT_PORT="$(grep -E '^CHAT_PORT=' ./.env | tail -n1 | cut -d= -f2- | tr -d '[:space:]\042\047' || true)"
+    if [[ "$ENV_CHAT_PORT" =~ ^[0-9]+$ ]]; then
+        CHAT_PORT="$ENV_CHAT_PORT"
+    fi
+fi
+
 echo ""
 echo -e "${BLUE}🚀 Ollama Model Training Guide - Pre-flight Check${NC}"
 echo -e "${BLUE}================================================${NC}"
@@ -23,7 +37,7 @@ echo ""
 # Check 1: Docker installed
 echo -n "Checking Docker installation... "
 if command -v docker &> /dev/null; then
-    DOCKER_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    DOCKER_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1 || true)
     echo -e "${GREEN}✓ Found Docker $DOCKER_VERSION${NC}"
 else
     echo -e "${RED}✗ Docker not found${NC}"
@@ -44,12 +58,12 @@ fi
 # Check 3: Docker Compose installed
 echo -n "Checking Docker Compose... "
 if docker compose version &> /dev/null; then
-    COMPOSE_VERSION=$(docker compose version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    COMPOSE_VERSION=$(docker compose version | grep -oP '\d+\.\d+\.\d+' | head -1 || true)
     echo -e "${GREEN}✓ Found Docker Compose $COMPOSE_VERSION${NC}"
 
     # Version check (need 2.0+)
-    MAJOR_VERSION=$(echo $COMPOSE_VERSION | cut -d. -f1)
-    if [ "$MAJOR_VERSION" -lt 2 ]; then
+    MAJOR_VERSION=$(echo "$COMPOSE_VERSION" | cut -d. -f1)
+    if [ -n "$MAJOR_VERSION" ] && [ "$MAJOR_VERSION" -lt 2 ]; then
         echo -e "${YELLOW}  ⚠ Warning: Docker Compose 2.0+ recommended${NC}"
         WARNINGS=$((WARNINGS + 1))
     fi
@@ -89,20 +103,20 @@ else
 fi
 
 # Check 6: Ports availability
-echo -n "Checking port 11434 (Ollama API)... "
-if ! lsof -i:11434 &> /dev/null && ! netstat -tuln 2>/dev/null | grep -q ":11434 "; then
+echo -n "Checking port $OLLAMA_PORT (Ollama API)... "
+if ! lsof -i:"$OLLAMA_PORT" &> /dev/null && ! netstat -tuln 2>/dev/null | grep -q ":$OLLAMA_PORT "; then
     echo -e "${GREEN}✓ Available${NC}"
 else
-    echo -e "${YELLOW}⚠ Port 11434 already in use${NC}"
+    echo -e "${YELLOW}⚠ Port $OLLAMA_PORT already in use${NC}"
     echo -e "${YELLOW}  You can change OLLAMA_PORT in .env file${NC}"
     WARNINGS=$((WARNINGS + 1))
 fi
 
-echo -n "Checking port 8080 (Chat UI)... "
-if ! lsof -i:8080 &> /dev/null && ! netstat -tuln 2>/dev/null | grep -q ":8080 "; then
+echo -n "Checking port $CHAT_PORT (Chat UI)... "
+if ! lsof -i:"$CHAT_PORT" &> /dev/null && ! netstat -tuln 2>/dev/null | grep -q ":$CHAT_PORT "; then
     echo -e "${GREEN}✓ Available${NC}"
 else
-    echo -e "${YELLOW}⚠ Port 8080 already in use${NC}"
+    echo -e "${YELLOW}⚠ Port $CHAT_PORT already in use${NC}"
     echo -e "${YELLOW}  You can change CHAT_PORT in .env file${NC}"
     WARNINGS=$((WARNINGS + 1))
 fi
@@ -123,7 +137,7 @@ fi
 echo -n "Checking for NVIDIA GPU... "
 if command -v nvidia-smi &> /dev/null; then
     if nvidia-smi &> /dev/null; then
-        GPU_NAME=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)
+        GPU_NAME=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1 || true)
         echo -e "${GREEN}✓ Found: $GPU_NAME${NC}"
         echo -e "${BLUE}  💡 You can enable GPU in docker-compose.yml for 5-10x speedup${NC}"
         echo -e "${BLUE}  📖 See docs/installation.md for GPU setup instructions${NC}"
@@ -147,7 +161,7 @@ if [ $ERRORS -eq 0 ] && [ $WARNINGS -eq 0 ]; then
     echo ""
     echo "Next steps:"
     echo "  1. Run: make setup && make up"
-    echo "  2. Open: http://localhost:8080"
+    echo "  2. Open: http://localhost:$CHAT_PORT"
     echo ""
     exit 0
 elif [ $ERRORS -eq 0 ]; then

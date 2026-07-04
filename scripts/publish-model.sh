@@ -1,7 +1,11 @@
 #!/bin/bash
 # Push a model to an external registry (Ollama.com or private)
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 # Display usage
 usage() {
@@ -27,15 +31,10 @@ fi
 LOCAL_MODEL=$1
 TARGET_MODEL=$2
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+check_ollama_running
 
-# Check if local model exists
-if ! docker compose exec ollama ollama list | grep -q "^$LOCAL_MODEL"; then
+# Check if local model exists (exact name match, "name" also matches "name:latest")
+if ! model_exists "$LOCAL_MODEL"; then
     echo "❌ Error: Local model '$LOCAL_MODEL' not found"
     echo ""
     echo "Available models:"

@@ -1,17 +1,16 @@
 #!/bin/bash
 # Test the TechCorp customer support example model
 
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
 echo "🏢 Testing TechCorp Customer Support Example"
 echo ""
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: make up"
-    exit 1
-fi
+check_ollama_running "make up"
 
 TEST_MODEL_NAME="techcorp-support-test-$(date +%s)"
 TEST_MODELFILE="./models/examples/techcorp-support/Modelfile"
@@ -27,7 +26,7 @@ echo "  Dataset:    data/training/techcorp-support.jsonl (10 examples)"
 echo "  Approach:   Few-shot learning with MESSAGE examples"
 echo ""
 
-bash scripts/create-custom-model.sh "$TEST_MODEL_NAME" "$TEST_MODELFILE"
+bash "$SCRIPT_DIR/create-custom-model.sh" "$TEST_MODEL_NAME" "$TEST_MODELFILE"
 
 # Test questions from the dataset
 TEST_QUESTIONS=(
@@ -50,14 +49,7 @@ for i in "${!TEST_QUESTIONS[@]}"; do
     RESPONSE=$(docker compose exec ollama ollama run "$TEST_MODEL_NAME" "$QUESTION" 2>&1)
 
     # Strip ANSI codes
-    CLEAN_RESPONSE=$(echo "$RESPONSE" | \
-        sed -r 's/\x1B\[[0-9;?]*[a-zA-Z]//g' | \
-        sed -r 's/\x1B\][0-9;]*;//g' | \
-        tr -d '\000-\037' | \
-        sed 's/⠋//g; s/⠙//g; s/⠹//g; s/⠸//g; s/⠼//g; s/⠴//g; s/⠦//g; s/⠧//g; s/⠇//g; s/⠏//g' | \
-        sed 's/^\s*//; s/\s*$//' | \
-        grep -v '^$' | \
-        head -1)
+    CLEAN_RESPONSE=$(strip_ansi <<< "$RESPONSE" | first_nonempty_line)
 
     echo "Response:"
     echo "─────────────────────────────────────────────────────"
@@ -77,14 +69,7 @@ echo ""
 
 RESPONSE=$(docker compose exec ollama ollama run "$TEST_MODEL_NAME" "$OUT_OF_DATASET_QUESTION" 2>&1)
 
-CLEAN_RESPONSE=$(echo "$RESPONSE" | \
-    sed -r 's/\x1B\[[0-9;?]*[a-zA-Z]//g' | \
-    sed -r 's/\x1B\][0-9;]*;//g' | \
-    tr -d '\000-\037' | \
-    sed 's/⠋//g; s/⠙//g; s/⠹//g; s/⠸//g; s/⠼//g; s/⠴//g; s/⠦//g; s/⠧//g; s/⠇//g; s/⠏//g' | \
-    sed 's/^\s*//; s/\s*$//' | \
-    grep -v '^$' | \
-    head -1)
+CLEAN_RESPONSE=$(strip_ansi <<< "$RESPONSE" | first_nonempty_line)
 
 echo "Response:"
 echo "─────────────────────────────────────────────────────"

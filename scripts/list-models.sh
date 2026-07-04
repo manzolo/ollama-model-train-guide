@@ -1,14 +1,13 @@
 #!/bin/bash
 # List all available Ollama models
 
-set -e
+set -euo pipefail
 
-# Check if Ollama service is running
-if ! docker compose ps | grep -qE "ollama.*(Up|running)"; then
-    echo "❌ Error: Ollama service is not running"
-    echo "Please start it with: docker compose up -d"
-    exit 1
-fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
+check_ollama_running
 
 echo "📋 Available Ollama models:"
 echo ""
