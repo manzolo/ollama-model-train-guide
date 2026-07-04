@@ -1,0 +1,2773 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/troubleshooting/">
+      
+      
+        <link rel="prev" href="../advanced-usage/">
+      
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/troubleshooting/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Troubleshooting - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#troubleshooting-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Troubleshooting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/troubleshooting/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollama-service-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ollama service won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-ui-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-immediately-exits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container immediately exits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission denied errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-creation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model creation fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-downloads-fail-or-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model downloads fail or timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-responses-are-poor-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model responses are poor quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-runs-out-of-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model runs out of memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-and-api-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network and API Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network and API Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-not-accessible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API not accessible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-returns-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API returns errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-connect-from-external-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot connect from external host
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-model-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow model responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High memory usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-ui-is-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI is slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-space-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Space Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disk Space Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-enough-space-for-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not enough space for models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-is-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume is full
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat-ui-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chat UI Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#models-not-showing-in-dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models not showing in dropdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-pulling-shows-no-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model pulling shows no progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-responses-cut-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat responses cut off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#converter-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Converter Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Converter Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-upload-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File upload fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversion-produces-empty-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversion produces empty file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-detection-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-detection fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpu-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPU Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gpu-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU not detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpu-not-being-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU not being used
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-gpu-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of GPU memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-additional-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Additional Help
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Additional Help">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collect-debug-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect Debug Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#still-stuck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Still Stuck?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventive-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventive Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preventive Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-disk-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Disk Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-services-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Services Updated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollama-service-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ollama service won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-ui-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-immediately-exits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container immediately exits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission denied errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-creation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model creation fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-downloads-fail-or-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model downloads fail or timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-responses-are-poor-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model responses are poor quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-runs-out-of-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model runs out of memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-and-api-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network and API Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network and API Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-not-accessible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API not accessible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-returns-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API returns errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-connect-from-external-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot connect from external host
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-model-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow model responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High memory usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-ui-is-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI is slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-space-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Space Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disk Space Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-enough-space-for-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not enough space for models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-is-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume is full
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat-ui-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat UI Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chat UI Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#models-not-showing-in-dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models not showing in dropdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-pulling-shows-no-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model pulling shows no progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-responses-cut-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat responses cut off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#converter-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Converter Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Converter Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-upload-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File upload fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversion-produces-empty-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversion produces empty file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-detection-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-detection fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpu-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPU Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gpu-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU not detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpu-not-being-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU not being used
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-gpu-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of GPU memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-additional-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Additional Help
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Additional Help">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collect-debug-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect Debug Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#still-stuck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Still Stuck?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventive-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventive Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preventive Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-disk-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Disk Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-services-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Services Updated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="troubleshooting-guide">Troubleshooting Guide<a class="headerlink" href="#troubleshooting-guide" title="Permanent link">&para;</a></h1>
+<p>Common issues and solutions for the Ollama Model Training Guide.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#service-issues">Service Issues</a></li>
+<li><a href="#model-issues">Model Issues</a></li>
+<li><a href="#network-and-api-issues">Network and API Issues</a></li>
+<li><a href="#performance-issues">Performance Issues</a></li>
+<li><a href="#disk-space-issues">Disk Space Issues</a></li>
+<li><a href="#chat-ui-issues">Chat UI Issues</a></li>
+<li><a href="#converter-issues">Converter Issues</a></li>
+<li><a href="#gpu-issues">GPU Issues</a></li>
+</ul>
+<hr />
+<h2 id="service-issues">Service Issues<a class="headerlink" href="#service-issues" title="Permanent link">&para;</a></h2>
+<h3 id="ollama-service-wont-start">Ollama service won't start<a class="headerlink" href="#ollama-service-wont-start" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: <code>docker compose up</code> fails or service immediately exits</p>
+<p><strong>Check Docker is running</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>ps
+<span class="c1"># If this fails, Docker daemon is not running</span>
+</code></pre></div></p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu/Debian</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker
+
+<span class="c1"># Check status</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>docker
+</code></pre></div></p>
+<p><strong>Check logs</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>logs
+<span class="c1"># Or:</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>ollama
+</code></pre></div></p>
+<p>Look for error messages indicating:
+- Port conflicts
+- Volume mount issues
+- Permission problems</p>
+<p><strong>Restart services</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>restart
+</code></pre></div></p>
+<h3 id="chat-ui-wont-start">Chat UI won't start<a class="headerlink" href="#chat-ui-wont-start" title="Permanent link">&para;</a></h3>
+<p><strong>Check both services</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div></p>
+<p>Both <code>ollama</code> and <code>ollama-chat</code> should be "Up".</p>
+<p><strong>Check Chat logs</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat
+</code></pre></div></p>
+<p><strong>Rebuild Chat container</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>build<span class="w"> </span>chat
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div></p>
+<h3 id="container-immediately-exits">Container immediately exits<a class="headerlink" href="#container-immediately-exits" title="Permanent link">&para;</a></h3>
+<p><strong>Check for port conflicts</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if port 11434 is already in use</span>
+netstat<span class="w"> </span>-an<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
+
+<span class="c1"># Check if port 8080 is already in use</span>
+netstat<span class="w"> </span>-an<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">8080</span>
+</code></pre></div></p>
+<p><strong>Solution</strong>: Change the host ports in <code>.env</code> (these are interpolated into the compose file as <code>${OLLAMA_PORT:-11434}:11434</code> and <code>${CHAT_PORT:-8080}:8080</code>):
+<div class="highlight"><pre><span></span><code><span class="nv">OLLAMA_PORT</span><span class="o">=</span><span class="m">11435</span>
+<span class="nv">CHAT_PORT</span><span class="o">=</span><span class="m">8081</span>
+</code></pre></div></p>
+<p>Then recreate the containers (a plain restart is not enough for port changes):
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>down<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>up
+</code></pre></div></p>
+<h3 id="permission-denied-errors">Permission denied errors<a class="headerlink" href="#permission-denied-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Add user to docker group</strong>:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+<span class="c1"># Log out and back in for changes to take effect</span>
+</code></pre></div></p>
+<p><strong>Fix volume permissions</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check volume ownership</span>
+docker<span class="w"> </span>volume<span class="w"> </span>inspect<span class="w"> </span>ollama_data
+
+<span class="c1"># If needed, fix permissions</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>ollama_data
+make<span class="w"> </span>up
+</code></pre></div></p>
+<hr />
+<h2 id="model-issues">Model Issues<a class="headerlink" href="#model-issues" title="Permanent link">&para;</a></h2>
+<h3 id="model-creation-fails">Model creation fails<a class="headerlink" href="#model-creation-fails" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: <code>bash scripts/create-custom-model.sh</code> fails with error</p>
+<p><strong>Verify base model exists</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+</code></pre></div></p>
+<p>If base model missing, pull it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2:1b
+</code></pre></div></p>
+<p><strong>Validate Modelfile syntax</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Modelfile exists</span>
+cat<span class="w"> </span>./models/custom/my-model/Modelfile
+
+<span class="c1"># Verify FROM line uses correct model name</span>
+grep<span class="w"> </span><span class="s2">&quot;FROM&quot;</span><span class="w"> </span>./models/custom/my-model/Modelfile
+</code></pre></div></p>
+<p><strong>Common syntax errors</strong>:
+- Missing <code>FROM</code> line
+- Incorrect base model name
+- Malformed PARAMETER lines
+- Missing quotes in SYSTEM prompt</p>
+<p><strong>Test Modelfile manually</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>create<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>/models/examples/chatbot/Modelfile
+</code></pre></div></p>
+<h3 id="model-downloads-fail-or-timeout">Model downloads fail or timeout<a class="headerlink" href="#model-downloads-fail-or-timeout" title="Permanent link">&para;</a></h3>
+<p><strong>Check internet connection</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>ollama.com
+</code></pre></div></p>
+<p><strong>Check Docker network</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>network<span class="w"> </span>ls
+docker<span class="w"> </span>network<span class="w"> </span>inspect<span class="w"> </span>ollama-model-train-guide_default
+</code></pre></div></p>
+<p><strong>Retry with larger timeout</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Some models are large (&gt;10GB) and may take time</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>mistral:7b
+<span class="c1"># Wait patiently...</span>
+</code></pre></div></p>
+<p><strong>Check disk space</strong> (see <a href="#disk-space-issues">Disk Space Issues</a>)</p>
+<h3 id="model-responses-are-poor-quality">Model responses are poor quality<a class="headerlink" href="#model-responses-are-poor-quality" title="Permanent link">&para;</a></h3>
+<p><strong>Adjust temperature</strong>:
+- Too high (&gt;1.5): Random, incoherent
+- Too low (&lt;0.1): Repetitive, rigid</p>
+<p><strong>Increase context window</strong>:
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">8192</span>
+<span class="c"># Instead of 2048</span>
+</code></pre></div></p>
+<p><strong>Use better base model</strong>:
+- Upgrade from 1B to 3B or 7B model
+- Try different model families (Mistral, CodeLlama, etc.)</p>
+<p><strong>Add few-shot examples</strong>:
+<div class="highlight"><pre><span></span><code>MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;Example question?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;Example high-quality answer.&quot;</span>
+</code></pre></div></p>
+<h3 id="model-runs-out-of-memory">Model runs out of memory<a class="headerlink" href="#model-runs-out-of-memory" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: Service crashes, "out of memory" errors</p>
+<p><strong>Use smaller model</strong>:
+- <code>llama3.2:1b</code> instead of <code>mistral:7b</code>
+- Quantized versions (if available)</p>
+<p><strong>Reduce context window</strong>:
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">2048</span>
+<span class="c"># Instead of 8192</span>
+</code></pre></div></p>
+<p><strong>Increase system RAM</strong> or enable GPU acceleration</p>
+<p><strong>Check Docker resource limits</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>stats
+</code></pre></div></p>
+<hr />
+<h2 id="network-and-api-issues">Network and API Issues<a class="headerlink" href="#network-and-api-issues" title="Permanent link">&para;</a></h2>
+<h3 id="api-not-accessible">API not accessible<a class="headerlink" href="#api-not-accessible" title="Permanent link">&para;</a></h3>
+<p><strong>Check service is running</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div></p>
+<p><strong>Verify port mapping</strong>:
+<div class="highlight"><pre><span></span><code>netstat<span class="w"> </span>-an<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
+</code></pre></div></p>
+<p><strong>Test API directly</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/tags
+</code></pre></div></p>
+<p>If this fails:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check firewall</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>status
+
+<span class="c1"># Try from within container</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>curl<span class="w"> </span>http://localhost:11434/api/tags
+</code></pre></div></p>
+<h3 id="api-returns-errors">API returns errors<a class="headerlink" href="#api-returns-errors" title="Permanent link">&para;</a></h3>
+<p><strong>"model not found"</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># List available models</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+
+<span class="c1"># Pull missing model</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>&lt;model-name&gt;
+</code></pre></div></p>
+<p><strong>Connection timeout</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if Ollama is responsive</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>ollama
+
+<span class="c1"># Restart if needed</span>
+make<span class="w"> </span>restart
+</code></pre></div></p>
+<p><strong>Rate limiting or slow responses</strong>:
+- Reduce concurrent requests
+- Enable GPU acceleration
+- Use smaller models</p>
+<h3 id="cannot-connect-from-external-host">Cannot connect from external host<a class="headerlink" href="#cannot-connect-from-external-host" title="Permanent link">&para;</a></h3>
+<p><strong>Ollama is bound to 0.0.0.0</strong> by default in <code>docker-compose.yml</code>.</p>
+<p><strong>Check firewall rules</strong>:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">11434</span>/tcp
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">8080</span>/tcp
+</code></pre></div></p>
+<p><strong>Verify Docker network</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>OLLAMA_HOST
+<span class="c1"># Should show: OLLAMA_HOST=0.0.0.0</span>
+</code></pre></div></p>
+<hr />
+<h2 id="performance-issues">Performance Issues<a class="headerlink" href="#performance-issues" title="Permanent link">&para;</a></h2>
+<h3 id="slow-model-responses">Slow model responses<a class="headerlink" href="#slow-model-responses" title="Permanent link">&para;</a></h3>
+<p><strong>Enable GPU acceleration</strong>:
+See <a href="../installation/#gpu-support-optional">Installation Guide - GPU Support</a></p>
+<p><strong>Use smaller models</strong>:
+- <code>llama3.2:1b</code> (fastest)
+- <code>phi3:mini</code> (fast and good quality)
+- <code>llama3.2:3b</code> (balanced)</p>
+<p><strong>Reduce context window</strong>:
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">2048</span>
+</code></pre></div></p>
+<p><strong>Check system resources</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>stats
+htop<span class="w">  </span><span class="c1"># or top</span>
+</code></pre></div></p>
+<p>Look for:
+- High CPU usage
+- Memory pressure
+- Disk I/O bottlenecks</p>
+<p><strong>Upgrade hardware</strong>:
+- Add more RAM (16GB+ recommended)
+- Use SSD instead of HDD
+- Add GPU acceleration</p>
+<h3 id="high-memory-usage">High memory usage<a class="headerlink" href="#high-memory-usage" title="Permanent link">&para;</a></h3>
+<p><strong>Check memory consumption</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>stats<span class="w"> </span>ollama
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+- Use smaller models (1B-3B instead of 7B+)
+- Reduce context window
+- Limit concurrent requests
+- Enable GPU to offload from CPU memory</p>
+<h3 id="chat-ui-is-slow">Chat UI is slow<a class="headerlink" href="#chat-ui-is-slow" title="Permanent link">&para;</a></h3>
+<p><strong>Check API response time</strong>:
+<div class="highlight"><pre><span></span><code><span class="nb">time</span><span class="w"> </span>curl<span class="w"> </span>http://localhost:11434/api/generate<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;model&quot;:&quot;llama3.2:1b&quot;,&quot;prompt&quot;:&quot;Hi&quot;,&quot;stream&quot;:false}&#39;</span>
+</code></pre></div></p>
+<p>If API is slow, see model performance issues above.</p>
+<p><strong>Check browser console</strong> for JavaScript errors:
+- Open DevTools (F12)
+- Check Console tab for errors
+- Check Network tab for slow requests</p>
+<hr />
+<h2 id="disk-space-issues">Disk Space Issues<a class="headerlink" href="#disk-space-issues" title="Permanent link">&para;</a></h2>
+<h3 id="not-enough-space-for-models">Not enough space for models<a class="headerlink" href="#not-enough-space-for-models" title="Permanent link">&para;</a></h3>
+<p><strong>Check available space</strong>:
+<div class="highlight"><pre><span></span><code>df<span class="w"> </span>-h
+docker<span class="w"> </span>system<span class="w"> </span>df
+</code></pre></div></p>
+<p><strong>Check model sizes</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+</code></pre></div></p>
+<p><strong>Clean up Docker resources</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Remove unused images</span>
+docker<span class="w"> </span>image<span class="w"> </span>prune<span class="w"> </span>-a
+
+<span class="c1"># Remove unused volumes (CAUTION: may delete models)</span>
+docker<span class="w"> </span>volume<span class="w"> </span>prune
+
+<span class="c1"># Full cleanup</span>
+docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-a<span class="w"> </span>--volumes
+</code></pre></div></p>
+<p><strong>Delete unused models</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>rm<span class="w"> </span>&lt;unused-model&gt;
+</code></pre></div></p>
+<p><strong>Move Docker data directory</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Stop Docker</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>docker
+
+<span class="c1"># Edit daemon.json</span>
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/docker/daemon.json
+<span class="c1"># Add: {&quot;data-root&quot;: &quot;/new/path&quot;}</span>
+
+<span class="c1"># Move data</span>
+sudo<span class="w"> </span>mv<span class="w"> </span>/var/lib/docker<span class="w"> </span>/new/path/
+
+<span class="c1"># Start Docker</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
+</code></pre></div></p>
+<h3 id="volume-is-full">Volume is full<a class="headerlink" href="#volume-is-full" title="Permanent link">&para;</a></h3>
+<p><strong>Check volume size</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>volume<span class="w"> </span>inspect<span class="w"> </span>ollama_data
+</code></pre></div></p>
+<p><strong>Recreate volume with more space</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup models first!</span>
+make<span class="w"> </span>backup-models
+
+<span class="c1"># Remove old volume</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>ollama_data
+
+<span class="c1"># Start fresh</span>
+make<span class="w"> </span>up
+make<span class="w"> </span>pull-base
+</code></pre></div></p>
+<hr />
+<h2 id="chat-ui-issues">Chat UI Issues<a class="headerlink" href="#chat-ui-issues" title="Permanent link">&para;</a></h2>
+<h3 id="models-not-showing-in-dropdown">Models not showing in dropdown<a class="headerlink" href="#models-not-showing-in-dropdown" title="Permanent link">&para;</a></h3>
+<p><strong>Verify Ollama API is accessible</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/tags
+</code></pre></div></p>
+<p><strong>Check Chat UI logs</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat
+</code></pre></div></p>
+<p><strong>Restart Chat UI</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>chat
+</code></pre></div></p>
+<p><strong>Clear browser cache</strong>:
+- Press <code>Ctrl+Shift+R</code> (Windows/Linux)
+- Press <code>Cmd+Shift+R</code> (Mac)</p>
+<h3 id="model-pulling-shows-no-progress">Model pulling shows no progress<a class="headerlink" href="#model-pulling-shows-no-progress" title="Permanent link">&para;</a></h3>
+<p><strong>Check if model is actually downloading</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>ollama
+</code></pre></div></p>
+<p><strong>Try pulling via CLI</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2:1b
+</code></pre></div></p>
+<p><strong>Check network speed</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Test download speed</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>http://speedtest.example.com/file
+</code></pre></div></p>
+<h3 id="chat-responses-cut-off">Chat responses cut off<a class="headerlink" href="#chat-responses-cut-off" title="Permanent link">&para;</a></h3>
+<p><strong>Increase context window</strong> in model's Modelfile:
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">8192</span>
+</code></pre></div></p>
+<p><strong>Check for API timeout</strong> in Chat UI logs:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>timeout
+</code></pre></div></p>
+<hr />
+<h2 id="converter-issues">Converter Issues<a class="headerlink" href="#converter-issues" title="Permanent link">&para;</a></h2>
+<h3 id="file-upload-fails">File upload fails<a class="headerlink" href="#file-upload-fails" title="Permanent link">&para;</a></h3>
+<p><strong>Check file size</strong>:
+Very large files (&gt;50MB) may timeout. Try splitting into smaller files.</p>
+<p><strong>Check file format</strong>:
+- Ensure <code>.xlsx</code>, <code>.xls</code>, or <code>.csv</code>
+- Ensure file is not corrupted</p>
+<p><strong>Check permissions</strong>:
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>./data/training/
+</code></pre></div></p>
+<p>Directory should be writable.</p>
+<p><strong>Check logs</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>converter
+</code></pre></div></p>
+<h3 id="conversion-produces-empty-file">Conversion produces empty file<a class="headerlink" href="#conversion-produces-empty-file" title="Permanent link">&para;</a></h3>
+<p><strong>Check column mapping</strong>:
+- Ensure correct columns are selected
+- Preview data before converting
+- Verify source data has content</p>
+<p><strong>Check output file</strong>:
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>./data/training/output.jsonl
+</code></pre></div></p>
+<p><strong>Manual conversion</strong>:
+Try the converter API directly:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/api/converter/convert<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@input.csv&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;instruction_col=question&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;output_col=answer&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>output.jsonl
+</code></pre></div></p>
+<h3 id="auto-detection-fails">Auto-detection fails<a class="headerlink" href="#auto-detection-fails" title="Permanent link">&para;</a></h3>
+<p><strong>Manually specify columns</strong> in the UI:
+- Select "Question" column from dropdown
+- Select "Answer" column from dropdown
+- Preview to verify</p>
+<p><strong>Check column names</strong> in source file:
+- Use clear names like "question", "answer"
+- Avoid special characters
+- Use first row as headers</p>
+<hr />
+<h2 id="gpu-issues">GPU Issues<a class="headerlink" href="#gpu-issues" title="Permanent link">&para;</a></h2>
+<h3 id="gpu-not-detected">GPU not detected<a class="headerlink" href="#gpu-not-detected" title="Permanent link">&para;</a></h3>
+<p><strong>Check NVIDIA driver</strong>:
+<div class="highlight"><pre><span></span><code>nvidia-smi
+</code></pre></div></p>
+<p>If this fails, install/update NVIDIA drivers.</p>
+<p><strong>Check NVIDIA Container Toolkit</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>nvidia/cuda:12.0-base<span class="w"> </span>nvidia-smi
+</code></pre></div></p>
+<p><strong>Make sure you started with the GPU override</strong>:
+GPU support comes from the <code>docker-compose.gpu.yml</code> override, not from <code>docker-compose.yml</code>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up-gpu
+<span class="c1"># Equivalent to:</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.gpu.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div></p>
+<p><strong>Restart Docker</strong>:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+make<span class="w"> </span>up-gpu
+</code></pre></div></p>
+<h3 id="gpu-not-being-used">GPU not being used<a class="headerlink" href="#gpu-not-being-used" title="Permanent link">&para;</a></h3>
+<p><strong>Check Ollama is detecting GPU</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>nvidia-smi
+</code></pre></div></p>
+<p><strong>Check during inference</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># In one terminal</span>
+watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>nvidia-smi
+
+<span class="c1"># In another terminal</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.2:1b<span class="w"> </span><span class="s2">&quot;Long prompt here...&quot;</span>
+</code></pre></div></p>
+<p>GPU usage should increase during generation.</p>
+<p><strong>Ensure model fits in VRAM</strong>:
+- Check GPU memory with <code>nvidia-smi</code>
+- Use smaller models if needed
+- Monitor VRAM usage</p>
+<h3 id="out-of-gpu-memory">Out of GPU memory<a class="headerlink" href="#out-of-gpu-memory" title="Permanent link">&para;</a></h3>
+<p><strong>Use smaller models</strong>:
+- Try quantized versions
+- Use 1B-3B models instead of 7B+</p>
+<p><strong>Reduce batch size</strong> (for API usage):
+Lower concurrent requests to reduce VRAM usage.</p>
+<p><strong>Check other GPU processes</strong>:
+<div class="highlight"><pre><span></span><code>nvidia-smi
+<span class="c1"># Look for other processes using GPU</span>
+</code></pre></div></p>
+<hr />
+<h2 id="getting-additional-help">Getting Additional Help<a class="headerlink" href="#getting-additional-help" title="Permanent link">&para;</a></h2>
+<h3 id="check-logs">Check Logs<a class="headerlink" href="#check-logs" title="Permanent link">&para;</a></h3>
+<p><strong>All services</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>logs
+</code></pre></div></p>
+<p><strong>Specific service</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>ollama
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat
+</code></pre></div></p>
+<p><strong>Follow logs in real-time</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f
+</code></pre></div></p>
+<h3 id="run-tests">Run Tests<a class="headerlink" href="#run-tests" title="Permanent link">&para;</a></h3>
+<p><strong>Quick test</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>quick-test
+</code></pre></div></p>
+<p><strong>Validation tests</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span><span class="nb">test</span>
+</code></pre></div></p>
+<p><strong>TechCorp dataset example</strong>:
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/test-techcorp-example.sh
+</code></pre></div></p>
+<h3 id="collect-debug-information">Collect Debug Information<a class="headerlink" href="#collect-debug-information" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># System info</span>
+uname<span class="w"> </span>-a
+docker<span class="w"> </span>--version
+docker<span class="w"> </span>compose<span class="w"> </span>version
+
+<span class="c1"># Service status</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Resource usage</span>
+docker<span class="w"> </span>stats<span class="w"> </span>--no-stream
+df<span class="w"> </span>-h
+
+<span class="c1"># Network</span>
+netstat<span class="w"> </span>-an<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;11434|8080&quot;</span>
+
+<span class="c1"># Models</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+</code></pre></div>
+<h3 id="community-resources">Community Resources<a class="headerlink" href="#community-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://ollama.com/docs">Ollama Documentation</a></li>
+<li><a href="https://github.com/ollama/ollama/issues">Ollama GitHub Issues</a></li>
+<li><a href="https://docs.docker.com">Docker Documentation</a></li>
+<li><a href="https://github.com/manzolo/ollama-model-train-guide/issues">Project GitHub Issues</a></li>
+</ul>
+<h3 id="still-stuck">Still Stuck?<a class="headerlink" href="#still-stuck" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Search existing issues</strong> on GitHub</li>
+<li><strong>Create a new issue</strong> with:</li>
+<li>Description of the problem</li>
+<li>Error messages</li>
+<li>Log output</li>
+<li>System information</li>
+<li>Steps to reproduce</li>
+</ol>
+<hr />
+<h2 id="preventive-maintenance">Preventive Maintenance<a class="headerlink" href="#preventive-maintenance" title="Permanent link">&para;</a></h2>
+<h3 id="regular-cleanup">Regular Cleanup<a class="headerlink" href="#regular-cleanup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Weekly: Clean up Docker resources</span>
+docker<span class="w"> </span>system<span class="w"> </span>prune
+
+<span class="c1"># Monthly: Review and delete unused models</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>rm<span class="w"> </span>&lt;unused-model&gt;
+
+<span class="c1"># Quarterly: Backup custom models</span>
+make<span class="w"> </span>backup-models
+</code></pre></div>
+<h3 id="monitor-disk-space">Monitor Disk Space<a class="headerlink" href="#monitor-disk-space" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check before pulling large models</span>
+df<span class="w"> </span>-h
+docker<span class="w"> </span>system<span class="w"> </span>df
+</code></pre></div>
+<h3 id="keep-services-updated">Keep Services Updated<a class="headerlink" href="#keep-services-updated" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pull latest Ollama image</span>
+docker<span class="w"> </span>compose<span class="w"> </span>pull
+
+<span class="c1"># Rebuild Chat UI with updates</span>
+docker<span class="w"> </span>compose<span class="w"> </span>build<span class="w"> </span>chat
+
+<span class="c1"># Restart services</span>
+make<span class="w"> </span>restart
+</code></pre></div>
+<h3 id="backup-strategy">Backup Strategy<a class="headerlink" href="#backup-strategy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup custom Modelfiles</span>
+make<span class="w"> </span>backup-models
+
+<span class="c1"># Export important models</span>
+bash<span class="w"> </span>scripts/export-model.sh<span class="w"> </span>my-important-model<span class="w"> </span>./backups/my-model.Modelfile
+
+<span class="c1"># Backup training data</span>
+cp<span class="w"> </span>-r<span class="w"> </span>./data/training<span class="w"> </span>./backups/training-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1978 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/personal-model-guide/">
+      
+      
+        <link rel="prev" href="../modelfile-reference/">
+      
+      
+        <link rel="next" href="../dataset-training-example/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/personal-model-guide/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Personal Assistant Guide - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#creating-a-personalized-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Personal Assistant Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/personal-model-guide/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-edit-your-personal-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Edit Your Personal Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create the Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Test It
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Customization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Customization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-more-personal-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add More Personal Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-qa-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Custom Q&amp;A Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-response-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjust Response Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#daily-planner-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Planner Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contact-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contact Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips-for-best-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips for Best Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips for Best Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-be-specific-and-consistent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Be Specific and Consistent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cover-variations-of-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cover Variations of Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-lower-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Lower Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-thoroughly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test Thoroughly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Privacy Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-your-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Your Information
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-edit-your-personal-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Edit Your Personal Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create the Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Test It
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Customization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Customization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-more-personal-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add More Personal Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-qa-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Custom Q&amp;A Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-response-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjust Response Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#daily-planner-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Planner Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contact-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contact Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips-for-best-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips for Best Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips for Best Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-be-specific-and-consistent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Be Specific and Consistent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cover-variations-of-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cover Variations of Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-lower-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Lower Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-thoroughly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test Thoroughly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Privacy Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-your-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Your Information
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="creating-a-personalized-model">Creating a Personalized Model<a class="headerlink" href="#creating-a-personalized-model" title="Permanent link">&para;</a></h1>
+<p>Guide for creating a model that knows your personal information.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>You can create a customized model that remembers and responds with your personal information (where you live, weight, hobbies, etc.) using two approaches:</p>
+<ol>
+<li><strong>SYSTEM prompt</strong> - Embed information in the system message</li>
+<li><strong>MESSAGE examples</strong> - Provide few-shot learning examples</li>
+</ol>
+<p>The provided example uses both for best results.</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="1-edit-your-personal-information">1. Edit Your Personal Information<a class="headerlink" href="#1-edit-your-personal-information" title="Permanent link">&para;</a></h3>
+<p>Open and edit the Modelfile:</p>
+<div class="highlight"><pre><span></span><code>nano<span class="w"> </span>models/examples/personal-assistant/Modelfile
+</code></pre></div>
+<p>Replace the placeholders with your actual information:</p>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">PERSONAL INFORMATION:</span>
+-<span class="w"> </span>Name:<span class="w"> </span>Mario<span class="w"> </span>Rossi<span class="w">                    </span>#<span class="w"> </span>←<span class="w"> </span>Your<span class="w"> </span>name
+-<span class="w"> </span>Location:<span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Italy<span class="w">   </span>#<span class="w"> </span>←<span class="w"> </span>Already<span class="w"> </span>set
+-<span class="w"> </span>Weight:<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg<span class="w">                        </span>#<span class="w"> </span>←<span class="w"> </span>Your<span class="w"> </span>weight
+-<span class="w"> </span>Occupation:<span class="w"> </span>Software<span class="w"> </span>Developer<span class="w">       </span>#<span class="w"> </span>←<span class="w"> </span>Your<span class="w"> </span>job
+-<span class="w"> </span>Hobbies:<span class="w"> </span>Cycling,<span class="w"> </span>Cooking<span class="w">            </span>#<span class="w"> </span>←<span class="w"> </span>Your<span class="w"> </span>hobbies
+-<span class="w"> </span>Favorite<span class="w"> </span>Food:<span class="w"> </span>Pizza<span class="w">                 </span>#<span class="w"> </span>←<span class="w"> </span>Your<span class="w"> </span>favorite<span class="w"> </span>food
+-<span class="w"> </span>Family:<span class="w"> </span>Married,<span class="w"> </span><span class="m">2</span><span class="w"> </span>children<span class="w">          </span>#<span class="w"> </span>←<span class="w"> </span>Family<span class="w"> </span>info
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<p>Also update the MESSAGE examples:</p>
+<div class="highlight"><pre><span></span><code>MESSAGE<span class="w"> </span>user<span class="w"> </span>How<span class="w"> </span>much<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>weigh?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Your<span class="w"> </span>weight<span class="w"> </span>is<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg.<span class="w">  </span>#<span class="w"> </span>←<span class="w"> </span>Use<span class="w"> </span>your<span class="w"> </span>actual<span class="w"> </span>weight
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="err">&#39;</span>s<span class="w"> </span>my<span class="w"> </span>name?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Your<span class="w"> </span>name<span class="w"> </span>is<span class="w"> </span>Mario<span class="w"> </span>Rossi.<span class="w">  </span>#<span class="w"> </span>←<span class="w"> </span>Use<span class="w"> </span>your<span class="w"> </span>actual<span class="w"> </span>name
+</code></pre></div>
+<h3 id="2-create-the-model">2. Create the Model<a class="headerlink" href="#2-create-the-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-personal-assistant<span class="w"> </span>./models/examples/personal-assistant/Modelfile
+</code></pre></div>
+<h3 id="3-test-it">3. Test It<a class="headerlink" href="#3-test-it" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>my-personal-assistant
+</code></pre></div>
+<p>Try asking:
+- "Where do I live?"
+- "How much do I weigh?"
+- "What's my name?"
+- "Tell me about my hobbies"</p>
+<h2 id="advanced-customization">Advanced Customization<a class="headerlink" href="#advanced-customization" title="Permanent link">&para;</a></h2>
+<h3 id="add-more-personal-details">Add More Personal Details<a class="headerlink" href="#add-more-personal-details" title="Permanent link">&para;</a></h3>
+<p>You can add any information you want:</p>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">PERSONAL INFORMATION:</span>
+-<span class="w"> </span>Name:<span class="w"> </span>Mario<span class="w"> </span>Rossi
+-<span class="w"> </span>Location:<span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Italy
+-<span class="w"> </span>Weight:<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg
+-<span class="w"> </span>Height:<span class="w"> </span><span class="m">175</span><span class="w"> </span>cm
+-<span class="w"> </span>Age:<span class="w"> </span><span class="m">35</span>
+-<span class="w"> </span>Birthday:<span class="w"> </span>January<span class="w"> </span><span class="m">15</span>
+-<span class="w"> </span>Occupation:<span class="w"> </span>Software<span class="w"> </span>Developer
+-<span class="w"> </span>Company:<span class="w"> </span>TechCorp<span class="w"> </span>Italia
+-<span class="w"> </span>Hobbies:<span class="w"> </span>Cycling,<span class="w"> </span>Cooking,<span class="w"> </span>Photography
+-<span class="w"> </span>Favorite<span class="w"> </span>Food:<span class="w"> </span>Pizza<span class="w"> </span>Margherita
+-<span class="w"> </span>Favorite<span class="w"> </span>Drink:<span class="w"> </span>Espresso
+-<span class="w"> </span>Favorite<span class="w"> </span>Sport:<span class="w"> </span>Calcio<span class="w"> </span><span class="o">(</span>Juventus<span class="w"> </span>fan<span class="o">)</span>
+-<span class="w"> </span>Family:<span class="w"> </span>Wife<span class="w"> </span>Anna,<span class="w"> </span>children<span class="w"> </span>Luca<span class="w"> </span><span class="o">(</span><span class="m">8</span><span class="o">)</span><span class="w"> </span>and<span class="w"> </span>Sofia<span class="w"> </span><span class="o">(</span><span class="m">5</span><span class="o">)</span>
+-<span class="w"> </span>Pet:<span class="w"> </span>Dog<span class="w"> </span>named<span class="w"> </span>Rex
+-<span class="w"> </span>Car:<span class="w"> </span>Fiat<span class="w"> </span><span class="m">500</span>
+-<span class="w"> </span>Education:<span class="w"> </span>University<span class="w"> </span>of<span class="w"> </span>Florence,<span class="w"> </span>Computer<span class="w"> </span>Science
+-<span class="w"> </span>Languages:<span class="w"> </span>Italian<span class="w"> </span><span class="o">(</span>native<span class="o">)</span>,<span class="w"> </span>English<span class="w"> </span><span class="o">(</span>fluent<span class="o">)</span>,<span class="w"> </span>German<span class="w"> </span><span class="o">(</span>basic<span class="o">)</span>
+-<span class="w"> </span>Favorite<span class="w"> </span>Music:<span class="w"> </span>Italian<span class="w"> </span>rock,<span class="w"> </span>Jazz
+-<span class="w"> </span>Favorite<span class="w"> </span>Movie:<span class="w"> </span>Cinema<span class="w"> </span>Paradiso
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="add-custom-qa-examples">Add Custom Q&amp;A Examples<a class="headerlink" href="#add-custom-qa-examples" title="Permanent link">&para;</a></h3>
+<p>Provide specific question-answer pairs:</p>
+<div class="highlight"><pre><span></span><code>MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="err">&#39;</span>s<span class="w"> </span>my<span class="w"> </span>favorite<span class="w"> </span>restaurant?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Your<span class="w"> </span>favorite<span class="w"> </span>restaurant<span class="w"> </span>is<span class="w"> </span>Trattoria<span class="w"> </span>da<span class="w"> </span>Beppe<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>where<span class="w"> </span>you<span class="w"> </span>love<span class="w"> </span>their<span class="w"> </span>ribollita<span class="w"> </span>and<span class="w"> </span>bistecca<span class="w"> </span>alla<span class="w"> </span>fiorentina.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>work?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>work<span class="w"> </span>as<span class="w"> </span>a<span class="w"> </span>software<span class="w"> </span>developer<span class="w"> </span>at<span class="w"> </span>TechCorp<span class="w"> </span>Italia,<span class="w"> </span>specializing<span class="w"> </span><span class="k">in</span><span class="w"> </span>cloud<span class="w"> </span>infrastructure<span class="w"> </span>and<span class="w"> </span>DevOps.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>Tell<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>my<span class="w"> </span>family
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="err">&#39;</span>re<span class="w"> </span>married<span class="w"> </span>to<span class="w"> </span>Anna<span class="w"> </span>and<span class="w"> </span>have<span class="w"> </span>two<span class="w"> </span>children:<span class="w"> </span>Luca<span class="w"> </span>who<span class="w"> </span>is<span class="w"> </span><span class="m">8</span><span class="w"> </span>years<span class="w"> </span>old<span class="w"> </span>and<span class="w"> </span>Sofia<span class="w"> </span>who<span class="w"> </span>is<span class="w"> </span><span class="m">5</span>.<span class="w"> </span>You<span class="w"> </span>also<span class="w"> </span>have<span class="w"> </span>a<span class="w"> </span>dog<span class="w"> </span>named<span class="w"> </span>Rex.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="w"> </span>are<span class="w"> </span>my<span class="w"> </span>hobbies?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>enjoy<span class="w"> </span>cycling<span class="w"> </span>through<span class="w"> </span>the<span class="w"> </span>Tuscan<span class="w"> </span>countryside<span class="w"> </span>on<span class="w"> </span>weekends,<span class="w"> </span>cooking<span class="w"> </span>traditional<span class="w"> </span>Italian<span class="w"> </span>dishes,<span class="w"> </span>and<span class="w"> </span>photography.<span class="w"> </span>You<span class="w"> </span>particularly<span class="w"> </span>love<span class="w"> </span>capturing<span class="w"> </span>landscapes<span class="w"> </span>around<span class="w"> </span>Mugello.
+</code></pre></div>
+<h3 id="adjust-response-style">Adjust Response Style<a class="headerlink" href="#adjust-response-style" title="Permanent link">&para;</a></h3>
+<p>Make it more conversational or formal:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Casual/Friendly</span>
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="err">&#39;</span>re<span class="w"> </span>a<span class="w"> </span>friendly<span class="w"> </span>personal<span class="w"> </span>assistant<span class="w"> </span>who<span class="w"> </span>knows<span class="w"> </span>me<span class="w"> </span>well.
+Use<span class="w"> </span>casual<span class="w"> </span>language<span class="w"> </span>and<span class="w"> </span>be<span class="w"> </span>warm<span class="w"> </span><span class="k">in</span><span class="w"> </span>your<span class="w"> </span>responses.
+...
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># Professional/Formal  </span>
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>professional<span class="w"> </span>personal<span class="w"> </span>assistant.
+Respond<span class="w"> </span>concisely<span class="w"> </span>and<span class="w"> </span>professionally.
+...
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="example-use-cases">Example Use Cases<a class="headerlink" href="#example-use-cases" title="Permanent link">&para;</a></h2>
+<h3 id="daily-planner-integration">Daily Planner Integration<a class="headerlink" href="#daily-planner-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+...
+SCHEDULE:
+-<span class="w"> </span>Work<span class="w"> </span>hours:<span class="w"> </span><span class="m">9</span>:00-18:00<span class="w"> </span>Monday-Friday
+-<span class="w"> </span>Gym:<span class="w"> </span>Tuesday<span class="w"> </span>and<span class="w"> </span>Thursday<span class="w"> </span><span class="m">19</span>:00
+-<span class="w"> </span>Family<span class="w"> </span>dinner:<span class="w"> </span>Sunday<span class="w"> </span><span class="m">13</span>:00
+-<span class="w"> </span>Weekly<span class="w"> </span>team<span class="w"> </span>meeting:<span class="w"> </span>Monday<span class="w"> </span><span class="m">10</span>:00
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<p>Ask: "When is my gym time?" → "You go to the gym on Tuesdays and Thursdays at 19:00."</p>
+<h3 id="health-tracking">Health Tracking<a class="headerlink" href="#health-tracking" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+...
+HEALTH<span class="w"> </span>INFO:
+-<span class="w"> </span>Target<span class="w"> </span>weight:<span class="w"> </span><span class="m">72</span><span class="w"> </span>kg
+-<span class="w"> </span>Current<span class="w"> </span>weight:<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg
+-<span class="w"> </span>Allergies:<span class="w"> </span>Nuts,<span class="w"> </span>Shellfish
+-<span class="w"> </span>Medications:<span class="w"> </span>None
+-<span class="w"> </span>Blood<span class="w"> </span>type:<span class="w"> </span>A+
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="contact-information">Contact Information<a class="headerlink" href="#contact-information" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+...
+CONTACTS:
+-<span class="w"> </span>Doctor:<span class="w"> </span>Dr.<span class="w"> </span>Bianchi<span class="w"> </span>-<span class="w"> </span>+39<span class="w"> </span><span class="m">055</span><span class="w"> </span><span class="m">1234567</span>
+-<span class="w"> </span>Dentist:<span class="w"> </span>Dr.<span class="w"> </span>Verde<span class="w"> </span>-<span class="w"> </span>+39<span class="w"> </span><span class="m">055</span><span class="w"> </span><span class="m">7654321</span>
+-<span class="w"> </span>Mechanic:<span class="w"> </span>Auto<span class="w"> </span>Rossi<span class="w"> </span>-<span class="w"> </span>+39<span class="w"> </span><span class="m">055</span><span class="w"> </span><span class="m">9876543</span>
+-<span class="w"> </span>Best<span class="w"> </span>friend:<span class="w"> </span>Marco<span class="w"> </span>-<span class="w"> </span>+39<span class="w"> </span><span class="m">333</span><span class="w"> </span><span class="m">1234567</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="s1">&#39;s my doctor&#39;</span>s<span class="w"> </span>number?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Your<span class="w"> </span>doctor<span class="w"> </span>is<span class="w"> </span>Dr.<span class="w"> </span>Bianchi<span class="w"> </span>and<span class="w"> </span>their<span class="w"> </span>number<span class="w"> </span>is<span class="w"> </span>+39<span class="w"> </span><span class="m">055</span><span class="w"> </span><span class="m">1234567</span>.
+</code></pre></div>
+<h2 id="tips-for-best-results">Tips for Best Results<a class="headerlink" href="#tips-for-best-results" title="Permanent link">&para;</a></h2>
+<h3 id="1-be-specific-and-consistent">1. Be Specific and Consistent<a class="headerlink" href="#1-be-specific-and-consistent" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Good</span>
+MESSAGE<span class="w"> </span>user<span class="w"> </span>Where<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>live?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>live<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Tuscany,<span class="w"> </span>Italy.
+
+<span class="c"># Better - More detail</span>
+MESSAGE<span class="w"> </span>user<span class="w"> </span>Where<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>live?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>live<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>a<span class="w"> </span>town<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>Mugello<span class="w"> </span>region<span class="w"> </span>of<span class="w"> </span>Tuscany,<span class="w"> </span>Italy.<span class="w"> </span>It<span class="err">&#39;</span>s<span class="w"> </span>about<span class="w"> </span><span class="m">30</span><span class="w"> </span>km<span class="w"> </span>north<span class="w"> </span>of<span class="w"> </span>Florence.
+</code></pre></div>
+<h3 id="2-cover-variations-of-questions">2. Cover Variations of Questions<a class="headerlink" href="#2-cover-variations-of-questions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>MESSAGE<span class="w"> </span>user<span class="w"> </span>Where<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>live?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>live<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Italy.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="err">&#39;</span>s<span class="w"> </span>my<span class="w"> </span>address?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>live<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Tuscany.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="w"> </span>city<span class="w"> </span>am<span class="w"> </span>I<span class="w"> </span>from?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="err">&#39;</span>re<span class="w"> </span>from<span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>province<span class="w"> </span>of<span class="w"> </span>Florence.
+</code></pre></div>
+<h3 id="3-use-lower-temperature">3. Use Lower Temperature<a class="headerlink" href="#3-use-lower-temperature" title="Permanent link">&para;</a></h3>
+<p>For factual personal information, use lower temperature (0.3-0.5) for consistency:</p>
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.4
+</code></pre></div>
+<h3 id="4-test-thoroughly">4. Test Thoroughly<a class="headerlink" href="#4-test-thoroughly" title="Permanent link">&para;</a></h3>
+<p>Create a test script:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># test-personal-model.sh</span>
+
+<span class="nv">QUESTIONS</span><span class="o">=(</span>
+<span class="w">    </span><span class="s2">&quot;Where do I live?&quot;</span>
+<span class="w">    </span><span class="s2">&quot;What&#39;s my weight?&quot;</span>
+<span class="w">    </span><span class="s2">&quot;What&#39;s my name?&quot;</span>
+<span class="w">    </span><span class="s2">&quot;What are my hobbies?&quot;</span>
+<span class="o">)</span>
+
+<span class="k">for</span><span class="w"> </span>q<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUESTIONS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Q: </span><span class="nv">$q</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$q</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>my-personal-assistant
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<h2 id="privacy-considerations">Privacy Considerations<a class="headerlink" href="#privacy-considerations" title="Permanent link">&para;</a></h2>
+<p>⚠️ <strong>Important</strong>: This model stores personal information in plain text.</p>
+<h3 id="security-tips">Security Tips<a class="headerlink" href="#security-tips" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Don't share the Modelfile</strong> publicly</li>
+<li><strong>Add to .gitignore</strong>:
+   <div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;models/examples/personal-assistant/&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+</code></pre></div></li>
+<li><strong>Keep it local</strong> - don't push to registries</li>
+<li><strong>Use environment variables</strong> for sensitive data (advanced):
+   <div class="highlight"><pre><span></span><code><span class="c1"># In your script, replace before creating model</span>
+sed<span class="w"> </span><span class="s2">&quot;s/\[Your Weight\]/</span><span class="nv">$WEIGHT</span><span class="s2">/g&quot;</span><span class="w"> </span>template.Modelfile<span class="w"> </span>&gt;<span class="w"> </span>Modelfile
+</code></pre></div></li>
+</ol>
+<h2 id="updating-your-information">Updating Your Information<a class="headerlink" href="#updating-your-information" title="Permanent link">&para;</a></h2>
+<p>When your information changes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Edit the Modelfile</span>
+nano<span class="w"> </span>models/examples/personal-assistant/Modelfile
+
+<span class="c1"># 2. Recreate the model (overwrites existing)</span>
+bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-personal-assistant<span class="w"> </span>./models/examples/personal-assistant/Modelfile
+
+<span class="c1"># 3. Test the updated model</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>my-personal-assistant<span class="w"> </span><span class="s2">&quot;What&#39;s my weight?&quot;</span>
+</code></pre></div>
+<h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h2>
+<p>Here's a fully customized example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.4
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>Mario<span class="err">&#39;</span>s<span class="w"> </span>personal<span class="w"> </span>AI<span class="w"> </span>assistant<span class="w"> </span>with<span class="w"> </span>knowledge<span class="w"> </span>about<span class="w"> </span>him.
+
+PERSONAL<span class="w"> </span>INFO:
+-<span class="w"> </span>Name:<span class="w"> </span>Mario<span class="w"> </span>Rossi
+-<span class="w"> </span>Location:<span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>Tuscany,<span class="w"> </span>Italy
+-<span class="w"> </span>Weight:<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg,<span class="w"> </span>Height:<span class="w"> </span><span class="m">175</span><span class="w"> </span>cm
+-<span class="w"> </span>Age:<span class="w"> </span><span class="m">35</span>,<span class="w"> </span>Birthday:<span class="w"> </span>January<span class="w"> </span><span class="m">15</span>
+-<span class="w"> </span>Occupation:<span class="w"> </span>Software<span class="w"> </span>Developer<span class="w"> </span>at<span class="w"> </span>TechCorp<span class="w"> </span>Italia
+-<span class="w"> </span>Family:<span class="w"> </span>Wife<span class="w"> </span>Anna,<span class="w"> </span>children<span class="w"> </span>Luca<span class="w"> </span><span class="o">(</span><span class="m">8</span><span class="o">)</span><span class="w"> </span>and<span class="w"> </span>Sofia<span class="w"> </span><span class="o">(</span><span class="m">5</span><span class="o">)</span>,<span class="w"> </span>dog<span class="w"> </span>Rex
+
+PREFERENCES:
+-<span class="w"> </span>Food:<span class="w"> </span>Pizza<span class="w"> </span>Margherita,<span class="w"> </span>Ribollita
+-<span class="w"> </span>Drink:<span class="w"> </span>Espresso
+-<span class="w"> </span>Sport:<span class="w"> </span>Calcio<span class="w"> </span><span class="o">(</span>Juventus<span class="w"> </span>fan<span class="o">)</span>
+-<span class="w"> </span>Hobbies:<span class="w"> </span>Cycling,<span class="w"> </span>Cooking,<span class="w"> </span>Photography
+
+ROUTINE:
+-<span class="w"> </span>Work:<span class="w"> </span>Monday-Friday<span class="w"> </span><span class="m">9</span>:00-18:00
+-<span class="w"> </span>Gym:<span class="w"> </span>Tuesday,<span class="w"> </span>Thursday<span class="w"> </span><span class="m">19</span>:00
+-<span class="w"> </span>Cycling:<span class="w"> </span>Saturday<span class="w"> </span>morning
+
+Respond<span class="w"> </span>naturally<span class="w"> </span>and<span class="w"> </span>helpfully<span class="w"> </span>to<span class="w"> </span>questions<span class="w"> </span>about<span class="w"> </span>Mario.
+<span class="s2">&quot;&quot;&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>Where<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>live?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>live<span class="w"> </span><span class="k">in</span><span class="w"> </span>San<span class="w"> </span>Piero<span class="w"> </span>a<span class="w"> </span>Sieve,<span class="w"> </span>a<span class="w"> </span>lovely<span class="w"> </span>town<span class="w"> </span><span class="k">in</span><span class="w"> </span>Tuscany,<span class="w"> </span>about<span class="w"> </span>30km<span class="w"> </span>north<span class="w"> </span>of<span class="w"> </span>Florence.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>How<span class="w"> </span>much<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>weigh?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Your<span class="w"> </span>current<span class="w"> </span>weight<span class="w"> </span>is<span class="w"> </span><span class="m">75</span><span class="w"> </span>kg<span class="w"> </span>at<span class="w"> </span>a<span class="w"> </span>height<span class="w"> </span>of<span class="w"> </span><span class="m">175</span><span class="w"> </span>cm.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="err">&#39;</span>s<span class="w"> </span>my<span class="w"> </span>family<span class="w"> </span>like?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="err">&#39;</span>re<span class="w"> </span>married<span class="w"> </span>to<span class="w"> </span>Anna<span class="w"> </span>and<span class="w"> </span>have<span class="w"> </span>two<span class="w"> </span>children:<span class="w"> </span>Luca<span class="w"> </span>who<span class="w"> </span>is<span class="w"> </span><span class="m">8</span><span class="w"> </span>years<span class="w"> </span>old<span class="w"> </span>and<span class="w"> </span>Sofia<span class="w"> </span>who<span class="w"> </span>is<span class="w"> </span><span class="m">5</span>.<span class="w"> </span>You<span class="w"> </span>also<span class="w"> </span>have<span class="w"> </span>a<span class="w"> </span>dog<span class="w"> </span>named<span class="w"> </span>Rex.
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span>When<span class="w"> </span><span class="k">do</span><span class="w"> </span>I<span class="w"> </span>go<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>gym?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>You<span class="w"> </span>go<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>gym<span class="w"> </span>on<span class="w"> </span>Tuesdays<span class="w"> </span>and<span class="w"> </span>Thursdays<span class="w"> </span>at<span class="w"> </span><span class="m">19</span>:00.
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Edit <code>models/examples/personal-assistant/Modelfile</code> with your info</li>
+<li>Create the model</li>
+<li>Test it with various questions</li>
+<li>Refine the responses by adding more MESSAGE examples</li>
+<li>Keep your Modelfile updated as your information changes</li>
+</ol>
+<p>Enjoy your personalized AI assistant! 🎯</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

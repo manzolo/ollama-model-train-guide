@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/advanced-usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/advanced-usage/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/advanced-usage/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/api-usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/api-usage/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/api-usage/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/chat-ui/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/chat-ui/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/chat-ui/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/concepts/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/concepts/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/concepts/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/customization-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/customization-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/customization-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/dataset-training-example/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/dataset-training-example/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/dataset-training-example/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/deployment-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/deployment-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/deployment-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/examples/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/examples/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/examples/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/fine-tuning-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/fine-tuning-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/fine-tuning-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/installation/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/installation/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/installation/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/modelfile-reference/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/modelfile-reference/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/modelfile-reference/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/parameter-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/parameter-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/parameter-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/personal-model-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/personal-model-guide/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/personal-model-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/quick-reference/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/quick-reference/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/quick-reference/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/troubleshooting/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/troubleshooting/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/troubleshooting/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/usage/"/>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/usage/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/advanced-usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/advanced-usage/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/advanced-usage/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/api-usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/api-usage/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/api-usage/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/chat-ui/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/chat-ui/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/chat-ui/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/concepts/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/concepts/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/concepts/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/customization-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/customization-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/customization-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/dataset-training-example/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/dataset-training-example/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/dataset-training-example/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/deployment-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/deployment-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/deployment-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/examples/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/examples/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/examples/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/fine-tuning-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/fine-tuning-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/fine-tuning-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/installation/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/installation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/installation/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/modelfile-reference/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/modelfile-reference/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/modelfile-reference/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/parameter-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/parameter-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/parameter-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/personal-model-guide/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/personal-model-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/personal-model-guide/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/quick-reference/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/quick-reference/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/quick-reference/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/troubleshooting/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/troubleshooting/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/troubleshooting/"/>
+    </url>
+    <url>
+        <loc>https://manzolo.github.io/ollama-model-train-guide/it/usage/</loc>
+        <lastmod>2026-07-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="https://manzolo.github.io/ollama-model-train-guide/it/usage/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://manzolo.github.io/ollama-model-train-guide/usage/"/>
+    </url>
+</urlset>

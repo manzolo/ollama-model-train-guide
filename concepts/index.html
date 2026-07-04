@@ -1,0 +1,2313 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/concepts/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../installation/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/concepts/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Concepts (start here) - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#essential-concepts-quick-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Concepts (start here)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/concepts/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-basics-start-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 The Basics (Start Here)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 The Basics (Start Here)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Ollama?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Model?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Modelfile?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-base-model-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a Base Model (2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-new-in-ollama-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's New in Ollama (2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customization-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎓 Customization Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Customization Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-system-prompt-only-easiest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: System Prompt Only (Easiest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-few-shot-learning-with-message-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Few-Shot Learning with MESSAGE Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-fine-tuning-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: Fine-Tuning (Advanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree-which-method-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree: Which Method Should I Use?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-formats-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ File Formats Explained
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗂️ File Formats Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gguf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GGUF Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonl-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONL Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-and-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔌 Ports and Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-concepts-quick-primer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐳 Docker Concepts (Quick Primer)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐳 Docker Concepts (Quick Primer)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bind-mount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind Mount
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-concepts-you-can-skip-these-initially" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Advanced Concepts (You Can Skip These Initially)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Advanced Concepts (You Can Skip These Initially)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lora-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoRA Adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quantization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Window
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Quick Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-actually-need-to-know-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 What You Actually Need to Know (TL;DR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔗 Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-basics-start-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 The Basics (Start Here)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 The Basics (Start Here)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Ollama?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Model?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Modelfile?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-base-model-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a Base Model (2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-new-in-ollama-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's New in Ollama (2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customization-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎓 Customization Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Customization Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-system-prompt-only-easiest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: System Prompt Only (Easiest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-few-shot-learning-with-message-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Few-Shot Learning with MESSAGE Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-fine-tuning-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: Fine-Tuning (Advanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree-which-method-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree: Which Method Should I Use?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-formats-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ File Formats Explained
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗂️ File Formats Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gguf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GGUF Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonl-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONL Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-and-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔌 Ports and Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-concepts-quick-primer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐳 Docker Concepts (Quick Primer)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐳 Docker Concepts (Quick Primer)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bind-mount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind Mount
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-concepts-you-can-skip-these-initially" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Advanced Concepts (You Can Skip These Initially)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Advanced Concepts (You Can Skip These Initially)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lora-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoRA Adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quantization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Window
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Quick Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-actually-need-to-know-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 What You Actually Need to Know (TL;DR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔗 Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="essential-concepts-quick-reference">Essential Concepts - Quick Reference<a class="headerlink" href="#essential-concepts-quick-reference" title="Permanent link">&para;</a></h1>
+<p><strong>New to Ollama and language models?</strong> This page explains everything you need to know in simple terms.</p>
+<hr />
+<h2 id="the-basics-start-here">🎯 The Basics (Start Here)<a class="headerlink" href="#the-basics-start-here" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-ollama">What is Ollama?<a class="headerlink" href="#what-is-ollama" title="Permanent link">&para;</a></h3>
+<p>A tool that lets you run AI language models (like ChatGPT) <strong>locally on your computer</strong>. No internet required, no API costs, complete privacy.</p>
+<h3 id="what-is-a-model">What is a Model?<a class="headerlink" href="#what-is-a-model" title="Permanent link">&para;</a></h3>
+<p>Think of it as a "brain" that can understand and generate text. Different models have different capabilities:
+- <strong>Small models</strong> (1B-3B): Fast, use less memory, good for simple tasks
+- <strong>Medium models</strong> (7B-13B): Balanced quality and speed
+- <strong>Large models</strong> (30B+): Best quality, but slow and memory-hungry</p>
+<p><strong>The "B" stands for "billions of parameters"</strong> - more parameters = smarter but slower.</p>
+<h3 id="what-is-a-modelfile">What is a Modelfile?<a class="headerlink" href="#what-is-a-modelfile" title="Permanent link">&para;</a></h3>
+<p>Like a recipe card for creating a custom model. It defines:
+- Which base model to use
+- How the model should behave (personality, rules)
+- Settings that control output quality</p>
+<p><strong>Think of it like Dockerfile</strong> - text file with instructions.</p>
+<hr />
+<h2 id="core-concepts">🔧 Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
+<h3 id="base-model">Base Model<a class="headerlink" href="#base-model" title="Permanent link">&para;</a></h3>
+<p>A pre-trained model from the Ollama library (e.g., <code>llama3.2:1b</code>, <code>mistral:7b</code>).</p>
+<p><strong>You build custom models ON TOP of base models</strong> - you don't train from scratch.</p>
+<p><strong>Where do they come from?</strong>
+- Download from <a href="https://ollama.com/library">Ollama Library</a>
+- Use <code>make pull-base</code> to get common ones
+- Or pull via Web UI</p>
+<h3 id="choosing-a-base-model-2026">Choosing a Base Model (2026)<a class="headerlink" href="#choosing-a-base-model-2026" title="Permanent link">&para;</a></h3>
+<p>This project deliberately targets <strong>lightweight models</strong> — everything in the guides and examples uses <code>llama3.2:1b</code>, which remains a great, fast default for learning and prototyping. The model landscape keeps evolving, though, and these modern lightweight alternatives are worth trying with a simple <code>ollama pull</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Approx. size</th>
+<th>Approx. RAM needed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>llama3.2:1b</code></td>
+<td>~1.3 GB</td>
+<td>~4 GB</td>
+<td>Project default; fast, well documented</td>
+</tr>
+<tr>
+<td><code>qwen3:0.6b</code></td>
+<td>~0.5 GB</td>
+<td>~2 GB</td>
+<td>Tiny but surprisingly strong; optional thinking mode</td>
+</tr>
+<tr>
+<td><code>qwen3:1.7b</code></td>
+<td>~1.4 GB</td>
+<td>~4 GB</td>
+<td>Small and strong; optional thinking mode</td>
+</tr>
+<tr>
+<td><code>gemma3:1b</code></td>
+<td>~815 MB</td>
+<td>~4 GB</td>
+<td>Compact Google model</td>
+</tr>
+<tr>
+<td><code>gemma3:4b</code></td>
+<td>~3.3 GB</td>
+<td>~8 GB</td>
+<td>Multimodal (images), 128K context</td>
+</tr>
+<tr>
+<td><code>phi4-mini</code></td>
+<td>~2.5 GB</td>
+<td>~8 GB</td>
+<td>Compact and efficient Microsoft model</td>
+</tr>
+<tr>
+<td><code>llama3.2:3b</code></td>
+<td>~2 GB</td>
+<td>~8 GB</td>
+<td>Balanced quality and speed</td>
+</tr>
+<tr>
+<td><code>mistral:7b</code></td>
+<td>~4.1 GB</td>
+<td>~8-16 GB</td>
+<td>Higher quality, slower</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Heavier options for capable machines:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Approx. size</th>
+<th>Approx. RAM needed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qwen3:8b</code></td>
+<td>~5 GB</td>
+<td>~16 GB</td>
+<td>Strong general-purpose model</td>
+</tr>
+<tr>
+<td><code>gpt-oss:20b</code></td>
+<td>~13 GB</td>
+<td>~16 GB</td>
+<td>OpenAI's open-weight model</td>
+</tr>
+</tbody>
+</table>
+<p>RAM figures are rough guidelines for CPU inference; a GPU with enough VRAM makes everything much faster. Any of these can replace <code>llama3.2:1b</code> in the <code>FROM</code> line of a Modelfile.</p>
+<h3 id="whats-new-in-ollama-2026">What's New in Ollama (2026)<a class="headerlink" href="#whats-new-in-ollama-2026" title="Permanent link">&para;</a></h3>
+<p>This guide focuses on <strong>running models locally</strong> — that is all you need for everything covered here. But Ollama itself has grown, and these features exist if you outgrow local:</p>
+<ul>
+<li><strong>Cloud models</strong>: Offload big models to Ollama's cloud while keeping the exact same API and CLI — useful when a model doesn't fit your hardware.</li>
+<li><strong><code>ollama launch</code></strong>: Bootstraps coding tools/agents preconfigured to use your local models.</li>
+<li><strong>Web search API</strong>: Lets models augment answers with web results.</li>
+<li><strong>Improved scheduling</strong>: Better multi-GPU support and memory management for larger setups.</li>
+</ul>
+<h3 id="system-prompt">System Prompt<a class="headerlink" href="#system-prompt" title="Permanent link">&para;</a></h3>
+<p>Instructions that define your model's behavior and personality.</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>SYSTEM &quot;&quot;&quot;
+You are a helpful customer support agent for ACME Corp.
+Be friendly, professional, and concise.
+Always ask clarifying questions if unsure.
+&quot;&quot;&quot;
+</code></pre></div></p>
+<p><strong>This is the easiest way to customize a model!</strong></p>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<p>Settings that control how the model generates text.</p>
+<p><strong>The 3 most important:</strong>
+- <strong>temperature</strong> (0.0-2.0): Creativity dial
+  - <code>0.3</code> = Predictable, factual (for code, support)
+  - <code>0.7</code> = Balanced (for chat)
+  - <code>1.2</code> = Creative, varied (for stories)</p>
+<ul>
+<li><strong>num_ctx</strong> (tokens): How much conversation history the model remembers</li>
+<li><code>2048</code> = Short conversations</li>
+<li><code>4096</code> = Standard (recommended)</li>
+<li>
+<p><code>8192</code> = Long, complex discussions</p>
+</li>
+<li>
+<p><strong>top_p</strong> (0.0-1.0): Output variety control</p>
+</li>
+<li><code>0.9</code> = Good default for most uses</li>
+</ul>
+<p><strong>Don't worry about the other parameters yet</strong> - these defaults work great:
+<div class="highlight"><pre><span></span><code>PARAMETER temperature 0.7
+PARAMETER num_ctx 4096
+PARAMETER top_p 0.9
+</code></pre></div></p>
+<hr />
+<h2 id="customization-methods">🎓 Customization Methods<a class="headerlink" href="#customization-methods" title="Permanent link">&para;</a></h2>
+<h3 id="method-1-system-prompt-only-easiest">Method 1: System Prompt Only (Easiest)<a class="headerlink" href="#method-1-system-prompt-only-easiest" title="Permanent link">&para;</a></h3>
+<p><strong>When to use:</strong> You want to change personality or add rules</p>
+<p><strong>Example:</strong> Make a customer support bot, translator, or code assistant</p>
+<p><strong>How:</strong> Edit the <code>SYSTEM</code> section in a Modelfile</p>
+<p><strong>Time required:</strong> 5 minutes</p>
+<hr />
+<h3 id="method-2-few-shot-learning-with-message-examples">Method 2: Few-Shot Learning with MESSAGE Examples<a class="headerlink" href="#method-2-few-shot-learning-with-message-examples" title="Permanent link">&para;</a></h3>
+<p><strong>When to use:</strong> You have 5-50 example Q&amp;A pairs</p>
+<p><strong>Example:</strong> Train a support bot with common customer questions</p>
+<p><strong>How:</strong> Add <code>MESSAGE</code> blocks to your Modelfile
+<div class="highlight"><pre><span></span><code>MESSAGE user &quot;What are your hours?&quot;
+MESSAGE assistant &quot;We&#39;re open Mon-Fri, 9am-6pm EST.&quot;
+</code></pre></div></p>
+<p><strong>Time required:</strong> 15-30 minutes</p>
+<hr />
+<h3 id="method-3-fine-tuning-advanced">Method 3: Fine-Tuning (Advanced)<a class="headerlink" href="#method-3-fine-tuning-advanced" title="Permanent link">&para;</a></h3>
+<p><strong>When to use:</strong> You have 100+ examples and need deep specialization</p>
+<p><strong>Example:</strong> Medical diagnosis bot, legal document analyzer</p>
+<p><strong>How:</strong> Train with external tools (Unsloth, Hugging Face), export to GGUF, import to Ollama — see the <a href="../fine-tuning-guide/">Fine-Tuning Guide</a></p>
+<p><strong>Time required:</strong> Hours to days (requires GPU)</p>
+<p><strong>⚠️ Most users don't need this!</strong> Try Method 1 or 2 first.</p>
+<hr />
+<h2 id="decision-tree-which-method-should-i-use">Decision Tree: Which Method Should I Use?<a class="headerlink" href="#decision-tree-which-method-should-i-use" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Do you just want to change the model&#39;s personality/behavior?
+├─ YES → Use Method 1 (System Prompt)
+└─ NO → Continue...
+
+Do you have specific examples of how it should respond?
+├─ NO → Use Method 1 (System Prompt with detailed instructions)
+└─ YES → Continue...
+
+Do you have less than 50 examples?
+├─ YES → Use Method 2 (Few-Shot Learning)
+└─ NO → Continue...
+
+Do you have 100+ examples and need specialized knowledge?
+├─ YES → Consider Method 3 (Fine-Tuning)
+└─ NO → Use Method 2 (Few-Shot Learning)
+</code></pre></div>
+<hr />
+<h2 id="file-formats-explained">🗂️ File Formats Explained<a class="headerlink" href="#file-formats-explained" title="Permanent link">&para;</a></h2>
+<h3 id="gguf-files">GGUF Files<a class="headerlink" href="#gguf-files" title="Permanent link">&para;</a></h3>
+<p>Compressed model files that work with Ollama.</p>
+<p><strong>When you'll see them:</strong>
+- Downloading models from Hugging Face
+- Importing externally trained models
+- Using custom fine-tuned models</p>
+<p><strong>What to do:</strong> Place in <code>./data/gguf/</code> and use <code>bash scripts/import-model.sh</code></p>
+<h3 id="jsonl-files">JSONL Files<a class="headerlink" href="#jsonl-files" title="Permanent link">&para;</a></h3>
+<p>Training data format - one JSON object per line.</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What is your return policy?&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;We offer 30-day returns with receipt.&quot;</span><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>When you'll use:</strong> Preparing training datasets</p>
+<p><strong>Tool available:</strong> Spreadsheet to JSONL converter in Web UI</p>
+<h3 id="modelfile">Modelfile<a class="headerlink" href="#modelfile" title="Permanent link">&para;</a></h3>
+<p>Text file with instructions for creating a model (like Dockerfile).</p>
+<p><strong>Structure:</strong>
+<div class="highlight"><pre><span></span><code>FROM llama3.2:1b
+PARAMETER temperature 0.7
+SYSTEM &quot;&quot;&quot;Your instructions here&quot;&quot;&quot;
+MESSAGE user &quot;example question&quot;
+MESSAGE assistant &quot;example answer&quot;
+</code></pre></div></p>
+<hr />
+<h2 id="ports-and-services">🔌 Ports and Services<a class="headerlink" href="#ports-and-services" title="Permanent link">&para;</a></h2>
+<p>After running <code>make up</code>, you get:</p>
+<ul>
+<li><strong>Port 11434</strong>: Ollama API (for programmatic access)</li>
+<li><strong>Port 8080</strong>: Web UI — chat (<code>/</code>), spreadsheet converter (<code>/converter</code>), and Modelfile wizard (<code>/wizard</code>)</li>
+</ul>
+<p>Both host ports are configurable via <code>OLLAMA_PORT</code> and <code>CHAT_PORT</code> in <code>.env</code> (then <code>make down &amp;&amp; make up</code>).</p>
+<p><strong>Just open http://localhost:8080</strong> - that's all you need!</p>
+<hr />
+<h2 id="docker-concepts-quick-primer">🐳 Docker Concepts (Quick Primer)<a class="headerlink" href="#docker-concepts-quick-primer" title="Permanent link">&para;</a></h2>
+<h3 id="container">Container<a class="headerlink" href="#container" title="Permanent link">&para;</a></h3>
+<p>A lightweight virtual machine running Ollama. <strong>Your models live inside this container.</strong></p>
+<h3 id="volume">Volume<a class="headerlink" href="#volume" title="Permanent link">&para;</a></h3>
+<p>Persistent storage. <strong><code>ollama_data</code> volume</strong> stores your models even when container stops.</p>
+<p><strong>Important:</strong>
+- <code>make down</code> = Stop container (models are safe ✅)
+- <code>make clean</code> = Delete container AND volume (models are deleted ❌)</p>
+<h3 id="bind-mount">Bind Mount<a class="headerlink" href="#bind-mount" title="Permanent link">&para;</a></h3>
+<p>Link between your computer and the container.</p>
+<p><strong>Why it matters:</strong>
+- <code>./models/</code> on your computer → <code>/models/</code> in container
+- <code>./data/</code> on your computer → <code>/data/</code> in container</p>
+<p><strong>This is how you add files to Ollama!</strong></p>
+<hr />
+<h2 id="advanced-concepts-you-can-skip-these-initially">🚀 Advanced Concepts (You Can Skip These Initially)<a class="headerlink" href="#advanced-concepts-you-can-skip-these-initially" title="Permanent link">&para;</a></h2>
+<h3 id="lora-adapters">LoRA Adapters<a class="headerlink" href="#lora-adapters" title="Permanent link">&para;</a></h3>
+<p>Small files that modify base model behavior without full retraining.</p>
+<p><strong>When you'll need:</strong> Fine-tuning with limited resources</p>
+<p><strong>How to use:</strong> Reference in Modelfile with <code>ADAPTER /data/adapters/my-adapter.bin</code></p>
+<h3 id="quantization">Quantization<a class="headerlink" href="#quantization" title="Permanent link">&para;</a></h3>
+<p>Reducing model precision to save memory (8-bit, 4-bit).</p>
+<p><strong>When you'll need:</strong> Running large models on limited RAM</p>
+<p><strong>Ollama does this automatically</strong> - you don't need to worry about it.</p>
+<h3 id="context-window">Context Window<a class="headerlink" href="#context-window" title="Permanent link">&para;</a></h3>
+<p>How many tokens (words/parts of words) the model can process at once.</p>
+<p><strong>Controlled by:</strong> <code>num_ctx</code> parameter</p>
+<p><strong>Default:</strong> 2048 tokens (~1500 words)</p>
+<h3 id="token">Token<a class="headerlink" href="#token" title="Permanent link">&para;</a></h3>
+<p>Atomic unit of text (not always a full word).</p>
+<p><strong>Example:</strong> "Hello world" = 2 tokens, "Anthropic" = 1 token, "ChatGPT" = 2 tokens</p>
+<p><strong>Why it matters:</strong> Model pricing, context limits, response length</p>
+<h3 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
+<p>Advanced prompt formatting using Go template syntax.</p>
+<p><strong>When you'll need:</strong> Custom chat formats for specific models</p>
+<p><strong>⚠️ Skip unless you have specific requirements</strong></p>
+<hr />
+<h2 id="quick-glossary">📖 Quick Glossary<a class="headerlink" href="#quick-glossary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Simple Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inference</strong></td>
+<td>Running a model to generate text</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>The input text you give to the model</td>
+</tr>
+<tr>
+<td><strong>System Prompt</strong></td>
+<td>Instructions that define model behavior</td>
+</tr>
+<tr>
+<td><strong>Temperature</strong></td>
+<td>Creativity setting (0=boring, 2=chaotic)</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>How much history the model remembers</td>
+</tr>
+<tr>
+<td><strong>Base Model</strong></td>
+<td>Pre-trained model from Ollama library</td>
+</tr>
+<tr>
+<td><strong>Custom Model</strong></td>
+<td>Your modified version of a base model</td>
+</tr>
+<tr>
+<td><strong>Modelfile</strong></td>
+<td>Recipe for creating a custom model</td>
+</tr>
+<tr>
+<td><strong>GGUF</strong></td>
+<td>Model file format for Ollama</td>
+</tr>
+<tr>
+<td><strong>LoRA</strong></td>
+<td>Efficient fine-tuning method</td>
+</tr>
+<tr>
+<td><strong>Few-Shot</strong></td>
+<td>Learning from a few examples</td>
+</tr>
+<tr>
+<td><strong>Fine-Tuning</strong></td>
+<td>Training model on custom dataset</td>
+</tr>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>Compressing model to use less memory</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-you-actually-need-to-know-tldr">🎯 What You Actually Need to Know (TL;DR)<a class="headerlink" href="#what-you-actually-need-to-know-tldr" title="Permanent link">&para;</a></h2>
+<p><strong>To get started (5 minutes):</strong>
+1. What is Ollama (runs AI models locally)
+2. How to pull a base model
+3. How to chat via Web UI</p>
+<p><strong>To create custom models (15 minutes):</strong>
+1. What is a Modelfile
+2. How to write a system prompt
+3. Temperature parameter (0.3 = factual, 0.7 = balanced, 1.2 = creative)</p>
+<p><strong>To train with your data (30 minutes):</strong>
+1. What is few-shot learning
+2. How to add MESSAGE examples
+3. JSONL format basics</p>
+<p><strong>Everything else can wait!</strong> Start simple and learn as you go.</p>
+<hr />
+<h2 id="next-steps">🔗 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Beginner?</strong> Start with <a href="../chat-ui/">Chat UI Guide</a> - use pre-made models</li>
+<li><strong>Ready to customize?</strong> See <a href="../examples/">Example Modelfiles</a> - copy and modify</li>
+<li><strong>Have training data?</strong> Read <a href="../dataset-training-example/">Dataset Training Example</a></li>
+<li><strong>Need reference?</strong> Check <a href="../modelfile-reference/">Modelfile Reference</a> - complete syntax</li>
+</ul>
+<hr />
+<p><strong>Still confused?</strong> That's normal! Start with the Web UI, play with pre-made models, and concepts will click into place. 🎉</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

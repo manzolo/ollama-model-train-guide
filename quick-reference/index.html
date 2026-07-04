@@ -1,0 +1,1922 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/quick-reference/">
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../usage/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/quick-reference/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Quick Reference - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-reference-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quick Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/quick-reference/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Model Selection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Model Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chat-with-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat with a Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-custom-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-a-model-for-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Save a Model for Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-a-saved-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy a Saved Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-script-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Script Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cheat Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-base-model-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a Base Model (2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-test-of-example-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test of Example Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy to Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regular-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Model Selection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Model Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chat-with-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat with a Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-custom-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-a-model-for-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Save a Model for Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-a-saved-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy a Saved Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-script-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Script Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cheat Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-base-model-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a Base Model (2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-test-of-example-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test of Example Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy to Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regular-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="quick-reference-guide">Quick Reference Guide<a class="headerlink" href="#quick-reference-guide" title="Permanent link">&para;</a></h1>
+<h2 id="interactive-model-selection">Interactive Model Selection<a class="headerlink" href="#interactive-model-selection" title="Permanent link">&para;</a></h2>
+<p>All model-related make commands now feature interactive selection menus. No need to remember or type long paths!</p>
+<h3 id="chat-with-a-model">Chat with a Model<a class="headerlink" href="#chat-with-a-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>chat
+</code></pre></div>
+<p><strong>What happens:</strong>
+1. Shows numbered list of all available models
+2. You select which model to chat with
+3. Starts an interactive chat session
+4. Type messages and get responses
+5. Use <code>/bye</code> or <code>Ctrl+D</code> to exit</p>
+<p><strong>Example output:</strong>
+<div class="highlight"><pre><span></span><code>💬 Chat with a model
+
+📦 Available models:
+
+  [1] llama3.2:1b (1.3 GB)
+  [2] mistral:7b (4.1 GB)
+  [3] my-chatbot (1.3 GB) ⭐
+  [4] my-code-helper (1.3 GB) ⭐
+
+  [0] Cancel
+
+Select a model to chat with [0-4]: 3
+
+🚀 Starting chat with: my-chatbot
+
+💡 Tips:
+   - Type your messages and press Enter
+   - Use /bye to exit the chat
+   - Use Ctrl+D to exit
+
+───────────────────────────────────────────────────────
+
+&gt;&gt;&gt; Hello! How are you?
+I&#39;m doing great, thanks for asking! How can I help you today?
+
+&gt;&gt;&gt; Tell me a joke
+Why don&#39;t scientists trust atoms? Because they make up everything!
+
+&gt;&gt;&gt; /bye
+👋 Chat ended
+</code></pre></div></p>
+<h3 id="create-a-custom-model">Create a Custom Model<a class="headerlink" href="#create-a-custom-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>create-model
+</code></pre></div>
+<p><strong>What happens:</strong>
+1. Shows numbered list of all Modelfiles in <code>models/examples/</code> and <code>models/custom/</code>
+2. You select by number
+3. You enter a name for your new model
+4. Model is created</p>
+<p><strong>Example output:</strong>
+<div class="highlight"><pre><span></span><code>🔨 Create a custom model
+
+📁 Available Modelfiles:
+
+  [1] examples/chatbot/Modelfile
+  [2] examples/code-assistant/Modelfile
+  [3] examples/creative-writer/Modelfile
+  [4] examples/personal-assistant/Modelfile
+  [5] examples/translator/Modelfile
+  [6] custom/my-custom-bot/Modelfile
+
+  [0] Enter custom path
+
+Select a Modelfile [0-6]: 2
+Enter name for the new model: my-code-helper
+</code></pre></div></p>
+<h3 id="save-a-model-for-deployment">Save a Model for Deployment<a class="headerlink" href="#save-a-model-for-deployment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>save-model
+</code></pre></div>
+<p><strong>What happens:</strong>
+1. Shows numbered list of all models in your Ollama instance
+2. You select which model to save
+3. Saves Modelfile to <code>models/saved/</code></p>
+<p><strong>Example output:</strong>
+<div class="highlight"><pre><span></span><code>💾 Save a model for deployment
+
+📦 Available models:
+
+  [1] llama3.2:1b
+  [2] mistral:7b
+  [3] my-chatbot
+  [4] my-code-helper
+  [5] production-assistant
+
+  [0] Enter custom name
+
+Select a model [0-5]: 3
+
+💾 Saving model: my-chatbot
+Output: ./models/saved/my-chatbot.Modelfile
+
+✅ Model saved successfully!
+</code></pre></div></p>
+<h3 id="deploy-a-saved-model">Deploy a Saved Model<a class="headerlink" href="#deploy-a-saved-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>deploy-model
+</code></pre></div>
+<p><strong>What happens:</strong>
+1. Shows numbered list of saved Modelfiles in <code>models/saved/</code>
+2. You select which one to deploy
+3. Optionally rename it during deployment
+4. Model is created in your Ollama instance</p>
+<p><strong>Example output:</strong>
+<div class="highlight"><pre><span></span><code>🚀 Deploy a saved model
+
+💾 Available saved models:
+
+  [1] my-chatbot.Modelfile
+  [2] production-bot.Modelfile
+  [3] team-assistant.Modelfile
+
+  [0] Enter custom path
+
+Select a saved model [0-3]: 1
+Enter model name (press Enter to use filename):
+
+🚀 Deploying model: my-chatbot
+✅ Model deployed successfully!
+</code></pre></div></p>
+<h2 id="direct-script-usage">Direct Script Usage<a class="headerlink" href="#direct-script-usage" title="Permanent link">&para;</a></h2>
+<p>If you prefer command-line arguments, you can still use the scripts directly:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create model (specify path)</span>
+bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-bot<span class="w"> </span>./models/examples/chatbot/Modelfile
+
+<span class="c1"># Save model (specify name)</span>
+bash<span class="w"> </span>scripts/save-model.sh<span class="w"> </span>my-chatbot
+
+<span class="c1"># Deploy model (specify path)</span>
+bash<span class="w"> </span>scripts/deploy-model.sh<span class="w"> </span>./models/saved/my-chatbot.Modelfile
+
+<span class="c1"># Or deploy with custom name</span>
+bash<span class="w"> </span>scripts/deploy-model.sh<span class="w"> </span>./models/saved/my-chatbot.Modelfile<span class="w"> </span>renamed-bot
+</code></pre></div>
+<h2 id="cheat-sheet">Cheat Sheet<a class="headerlink" href="#cheat-sheet" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+<th>Interactive?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check requirements</td>
+<td><code>make preflight</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Start all services (Ollama + Chat UI)</td>
+<td><code>make up</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Start Ollama only (no web UI)</td>
+<td><code>make up-core</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Start with NVIDIA GPU</td>
+<td><code>make up-gpu</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Stop services</td>
+<td><code>make down</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>View logs</td>
+<td><code>make logs</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Shell access</td>
+<td><code>make shell</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Pull base models</td>
+<td><code>make pull-base</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>List models</td>
+<td><code>make list-models</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Create custom model</strong></td>
+<td><code>make create-model</code></td>
+<td><strong>Yes - select Modelfile</strong></td>
+</tr>
+<tr>
+<td><strong>Chat with model</strong></td>
+<td><code>make chat</code></td>
+<td><strong>Yes - select model</strong></td>
+</tr>
+<tr>
+<td><strong>Save model</strong></td>
+<td><code>make save-model</code></td>
+<td><strong>Yes - select model</strong></td>
+</tr>
+<tr>
+<td><strong>Deploy model</strong></td>
+<td><code>make deploy-model</code></td>
+<td><strong>Yes - select saved file</strong></td>
+</tr>
+<tr>
+<td><strong>Publish model to registry</strong></td>
+<td><code>make publish-model</code></td>
+<td><strong>Yes - select model</strong></td>
+</tr>
+<tr>
+<td><strong>Export model + weights (tar)</strong></td>
+<td><code>make export-full</code></td>
+<td><strong>Yes - select model</strong></td>
+</tr>
+<tr>
+<td><strong>Import full model archive</strong></td>
+<td><code>make import-full</code></td>
+<td><strong>Yes - select archive</strong></td>
+</tr>
+<tr>
+<td>Backup all models</td>
+<td><code>make backup-models</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Quick test</td>
+<td><code>make quick-test</code></td>
+<td>Yes - confirmation</td>
+</tr>
+<tr>
+<td>Validation tests</td>
+<td><code>make test</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Clean up</td>
+<td><code>make clean</code></td>
+<td>Yes - confirmation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="choosing-a-base-model-2026">Choosing a Base Model (2026)<a class="headerlink" href="#choosing-a-base-model-2026" title="Permanent link">&para;</a></h2>
+<p>The project's examples default to the lightweight <code>llama3.2:1b</code> — keep using it for learning and quick iteration. Modern lightweight alternatives worth trying with <code>ollama pull</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Approx. size</th>
+<th>Approx. RAM needed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>llama3.2:1b</code></td>
+<td>~1.3 GB</td>
+<td>~4 GB</td>
+<td>Project default</td>
+</tr>
+<tr>
+<td><code>qwen3:0.6b</code> / <code>qwen3:1.7b</code></td>
+<td>~0.5 / ~1.4 GB</td>
+<td>~2 / ~4 GB</td>
+<td>Small, strong; optional thinking mode</td>
+</tr>
+<tr>
+<td><code>gemma3:1b</code></td>
+<td>~815 MB</td>
+<td>~4 GB</td>
+<td>Very compact</td>
+</tr>
+<tr>
+<td><code>gemma3:4b</code></td>
+<td>~3.3 GB</td>
+<td>~8 GB</td>
+<td>Multimodal, 128K context</td>
+</tr>
+<tr>
+<td><code>phi4-mini</code></td>
+<td>~2.5 GB</td>
+<td>~8 GB</td>
+<td>Compact and efficient</td>
+</tr>
+<tr>
+<td><code>qwen3:8b</code></td>
+<td>~5 GB</td>
+<td>~16 GB</td>
+<td>Heavier, for capable machines</td>
+</tr>
+<tr>
+<td><code>gpt-oss:20b</code></td>
+<td>~13 GB</td>
+<td>~16 GB</td>
+<td>Heavier, for capable machines</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../concepts/#choosing-a-base-model-2026">Essential Concepts - Choosing a Base Model</a> for details.</p>
+<h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>models/
+├── examples/          # Pre-configured example Modelfiles
+│   ├── chatbot/
+│   │   └── Modelfile
+│   ├── code-assistant/
+│   │   └── Modelfile
+│   └── ...
+├── custom/            # Your custom Modelfiles
+│   └── my-bot/
+│       └── Modelfile
+└── saved/             # Saved models ready for deployment
+    ├── my-chatbot.Modelfile
+    └── production-bot.Modelfile
+</code></pre></div>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Option [0]</strong> in any selection menu lets you enter a custom path/name</li>
+<li>Saved models are stored in <code>models/saved/</code> by default</li>
+<li>Backups include timestamps: <code>backups/models/YYYYMMDD_HHMMSS/</code></li>
+<li>You can still use scripts directly with paths if you prefer</li>
+<li>All interactive commands can be cancelled with Ctrl+C</li>
+</ol>
+<h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="quick-test-of-example-model">Quick Test of Example Model<a class="headerlink" href="#quick-test-of-example-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up<span class="w">                 </span><span class="c1"># Start Ollama</span>
+make<span class="w"> </span>pull-base<span class="w">          </span><span class="c1"># Get base models</span>
+make<span class="w"> </span>create-model<span class="w">       </span><span class="c1"># Select example, name it</span>
+make<span class="w"> </span>chat<span class="w">               </span><span class="c1"># Select your model and start chatting!</span>
+</code></pre></div>
+<h3 id="deploy-to-production">Deploy to Production<a class="headerlink" href="#deploy-to-production" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># On dev server:</span>
+make<span class="w"> </span>save-model<span class="w">         </span><span class="c1"># Select your model</span>
+
+<span class="c1"># Transfer file:</span>
+scp<span class="w"> </span>./models/saved/my-model.Modelfile<span class="w"> </span>user@prod:/opt/ollama/models/saved/
+
+<span class="c1"># On prod server:</span>
+make<span class="w"> </span>deploy-model<span class="w">       </span><span class="c1"># Select the transferred file</span>
+</code></pre></div>
+<h3 id="regular-backup">Regular Backup<a class="headerlink" href="#regular-backup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>backup-models<span class="w">      </span><span class="c1"># Backs up all custom models</span>
+<span class="c1"># Files saved to: ./backups/models/YYYYMMDD_HHMMSS/</span>
+</code></pre></div>
+<h3 id="quick-test">Quick Test<a class="headerlink" href="#quick-test" title="Permanent link">&para;</a></h3>
+<p>Test the complete workflow:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>quick-test
+</code></pre></div>
+<p><strong>What happens:</strong>
+1. Asks for confirmation
+2. Creates a temporary test model
+3. Sends a test prompt: "Hello! Can you introduce yourself in one sentence?"
+4. Displays the response
+5. Deletes the test model
+6. Shows success summary</p>
+<p><strong>Example output:</strong>
+<div class="highlight"><pre><span></span><code>🧪 Quick Model Test
+
+This will:
+  1. Create a test model from an example
+  2. Send a test prompt to it
+  3. Delete the test model
+
+Continue? (y/N): y
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 Step 1/3: Creating test model &#39;test-chatbot-1701234567&#39;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Test Details:
+  Base Model: llama3.2:1b
+  Modelfile:  ./models/examples/chatbot/Modelfile
+  Test Model: test-chatbot-1701234567
+
+🔨 Creating custom model: test-chatbot-1701234567
+✅ Model created successfully!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 Step 2/3: Testing model with a prompt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Sending test prompt: &#39;Hello! Can you introduce yourself in one sentence?&#39;
+
+Response:
+─────────────────────────────────────────────────────
+I&#39;m a helpful AI assistant designed to provide accurate and
+clear answers to your questions.
+─────────────────────────────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗑️  Step 3/3: Cleaning up test model
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+deleted &#39;test-chatbot-1701234567&#39;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Quick test completed successfully!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Summary:
+  ✓ Model creation works (base: llama3.2:1b)
+  ✓ Model responds to prompts
+  ✓ Model cleanup works
+
+You can now create your own models with:
+  make create-model
+</code></pre></div></p>
+<p><strong>Note:</strong> Output is automatically cleaned for readability (ANSI escape codes removed).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

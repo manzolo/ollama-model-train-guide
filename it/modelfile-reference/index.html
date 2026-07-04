@@ -1,0 +1,1956 @@
+
+<!doctype html>
+<html lang="it" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/it/modelfile-reference/">
+      
+      
+        <link rel="prev" href="../parameter-guide/">
+      
+      
+        <link rel="next" href="../personal-model-guide/">
+      
+      
+        
+          <link rel="alternate" href="../../modelfile-reference/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Riferimento Modelfile - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#riferimento-modelfile-di-ollama" class="md-skip">
+          Vai al contenuto
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Intestazione">
+    <a href="../" title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Riferimento Modelfile
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleziona la lingua">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../modelfile-reference/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Cerca" placeholder="Cerca" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Cerca">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Cancella" aria-label="Cancella" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inizializza la ricerca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigazione" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per iniziare
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Per iniziare
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concetti (inizia qui)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installazione
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento rapido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usare l'ambiente
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usare l'ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso quotidiano
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaccia Web (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile di esempio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personalizzare i modelli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Personalizzare i modelli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scegliere un metodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida ai parametri
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento Modelfile
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento Modelfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sintassi-del-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sintassi del Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#istruzioni-principali" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Istruzioni principali
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Istruzioni principali">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-obbligatoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FROM (obbligatoria)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PARAMETER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SYSTEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TEMPLATE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADAPTER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MESSAGE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LICENSE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#riferimento-dei-parametri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riferimento dei parametri
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esempio-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-inizia-con-parametri-bilanciati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Inizia con parametri bilanciati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ottimizza-per-il-tuo-caso-duso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ottimizza per il tuo caso d'uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bilancia-finestra-di-contesto-e-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bilancia finestra di contesto e memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-testa-in-modo-incrementale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testa in modo incrementale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-usa-system-prompt-chiari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Usa system prompt chiari
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-controllo-di-versione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Controllo di versione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debug-dei-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug dei Modelfile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debug dei Modelfile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valida-prima-di-creare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valida prima di creare
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controlla-i-parametri-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlla i parametri del modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prova-con-prompt-diversi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prova con prompt diversi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risorse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risorse
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida all'assistente personale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esempio di training con dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al fine-tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operazioni
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operazioni
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso delle API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso avanzato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risoluzione dei problemi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sintassi-del-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sintassi del Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#istruzioni-principali" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Istruzioni principali
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Istruzioni principali">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-obbligatoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FROM (obbligatoria)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PARAMETER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SYSTEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TEMPLATE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADAPTER
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MESSAGE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LICENSE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#riferimento-dei-parametri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riferimento dei parametri
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esempio-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-inizia-con-parametri-bilanciati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Inizia con parametri bilanciati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ottimizza-per-il-tuo-caso-duso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ottimizza per il tuo caso d'uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bilancia-finestra-di-contesto-e-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bilancia finestra di contesto e memoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-testa-in-modo-incrementale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testa in modo incrementale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-usa-system-prompt-chiari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Usa system prompt chiari
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-controllo-di-versione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Controllo di versione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debug-dei-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug dei Modelfile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debug dei Modelfile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valida-prima-di-creare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valida prima di creare
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controlla-i-parametri-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlla i parametri del modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prova-con-prompt-diversi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prova con prompt diversi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risorse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risorse
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="riferimento-modelfile-di-ollama">Riferimento Modelfile di Ollama<a class="headerlink" href="#riferimento-modelfile-di-ollama" title="Permanent link">&para;</a></h1>
+<p>Guida completa alla sintassi e ai parametri del Modelfile di Ollama per personalizzare i modelli.</p>
+<h2 id="sintassi-del-modelfile">Sintassi del Modelfile<a class="headerlink" href="#sintassi-del-modelfile" title="Permanent link">&para;</a></h2>
+<p>Un Modelfile utilizza un semplice formato basato su istruzioni, simile ai Dockerfile. Le istruzioni non sono sensibili alle maiuscole/minuscole e possono comparire in qualsiasi ordine (anche se per convenzione <code>FROM</code> è la prima).</p>
+<h2 id="istruzioni-principali">Istruzioni principali<a class="headerlink" href="#istruzioni-principali" title="Permanent link">&para;</a></h2>
+<h3 id="from-obbligatoria">FROM (obbligatoria)<a class="headerlink" href="#from-obbligatoria" title="Permanent link">&para;</a></h3>
+<p>Specifica il modello base da usare.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Use an existing Ollama model</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+<span class="c"># Use a specific model version</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">mistral:7b-instruct-v0.2</span>
+
+<span class="c"># Use a local GGUF file</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">/data/gguf/my-model.gguf</span>
+
+<span class="c"># Use a Safetensors model</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">/path/to/safetensors</span>
+</code></pre></div>
+<h3 id="parameter">PARAMETER<a class="headerlink" href="#parameter" title="Permanent link">&para;</a></h3>
+<p>Imposta i parametri di runtime del modello che ne controllano il comportamento.</p>
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_k<span class="w"> </span><span class="m">40</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+</code></pre></div>
+<h3 id="system">SYSTEM<a class="headerlink" href="#system" title="Permanent link">&para;</a></h3>
+<p>Definisce il system prompt che stabilisce la persona e le istruzioni del modello.</p>
+<div class="highlight"><pre><span></span><code>SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>helpful<span class="w"> </span>AI<span class="w"> </span>assistant<span class="w"> </span>specialized<span class="w"> </span><span class="k">in</span><span class="w"> </span>Python<span class="w"> </span>programming.
+You<span class="w"> </span>provide<span class="w"> </span>clear,<span class="w"> </span>well-commented<span class="w"> </span>code<span class="w"> </span>examples<span class="w"> </span>and<span class="w"> </span>explain<span class="w"> </span>concepts<span class="w"> </span>thoroughly.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<p><strong>Nota</strong>: i system prompt su più righe usano le triple virgolette <code>"""</code></p>
+<h3 id="template">TEMPLATE<a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
+<p>Specifica il template completo del prompt inviato al modello.</p>
+<div class="highlight"><pre><span></span><code>TEMPLATE<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="o">{{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>.System<span class="w"> </span><span class="o">}}</span>System:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>.System<span class="w"> </span><span class="o">}}</span>
+
+<span class="o">{{</span><span class="w"> </span>end<span class="w"> </span><span class="o">}}{{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>.Prompt<span class="w"> </span><span class="o">}}</span>User:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>.Prompt<span class="w"> </span><span class="o">}}</span>
+
+<span class="o">{{</span><span class="w"> </span>end<span class="w"> </span><span class="o">}}</span>Assistant:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>.Response<span class="w"> </span><span class="o">}}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="adapter">ADAPTER<a class="headerlink" href="#adapter" title="Permanent link">&para;</a></h3>
+<p>Applica un adapter LoRA o QLoRA sottoposto a fine-tuning al modello base.</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:3b</span>
+ADAPTER<span class="w"> </span>/data/adapters/my-lora-adapter.bin
+</code></pre></div>
+<h3 id="message">MESSAGE<a class="headerlink" href="#message" title="Permanent link">&para;</a></h3>
+<p>Definisce la cronologia della conversazione per il few-shot learning.</p>
+<div class="highlight"><pre><span></span><code>MESSAGE<span class="w"> </span>user<span class="w"> </span>Tell<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>Python
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Python<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>high-level,<span class="w"> </span>interpreted<span class="w"> </span>programming<span class="w"> </span>language...
+MESSAGE<span class="w"> </span>user<span class="w"> </span>What<span class="w"> </span>about<span class="w"> </span>its<span class="w"> </span>uses?
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span>Python<span class="w"> </span>is<span class="w"> </span>used<span class="w"> </span><span class="k">for</span><span class="w"> </span>web<span class="w"> </span>development,<span class="w"> </span>data<span class="w"> </span>science,<span class="w"> </span>automation...
+</code></pre></div>
+<h3 id="license">LICENSE<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
+<p>Specifica la licenza legale con cui il modello viene distribuito.</p>
+<div class="highlight"><pre><span></span><code>LICENSE<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+MIT<span class="w"> </span>License
+
+Copyright<span class="w"> </span><span class="o">(</span>c<span class="o">)</span><span class="w"> </span><span class="m">2024</span>...
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="riferimento-dei-parametri">Riferimento dei parametri<a class="headerlink" href="#riferimento-dei-parametri" title="Permanent link">&para;</a></h2>
+<p>Tutti i valori si impostano con <code>PARAMETER &lt;name&gt; &lt;value&gt;</code>. Per <strong>consigli di tuning e preset pronti da copiare e incollare per ogni caso d'uso</strong>, consulta la <a href="../parameter-guide/">Guida ai parametri</a> — la guida canonica sulla scelta dei valori. Questa tabella documenta i parametri disponibili:</p>
+<table>
+<thead>
+<tr>
+<th>Parametro</th>
+<th>Intervallo / Valori</th>
+<th>Predefinito</th>
+<th>Scopo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>temperature</code></td>
+<td>0.0 - 2.0</td>
+<td>0.8</td>
+<td>Casualità: basso = deterministico/fattuale, alto = creativo</td>
+</tr>
+<tr>
+<td><code>num_ctx</code></td>
+<td>512 - 32768</td>
+<td>2048</td>
+<td>Finestra di contesto in token (più = più memoria)</td>
+</tr>
+<tr>
+<td><code>top_k</code></td>
+<td>1 - 100</td>
+<td>40</td>
+<td>Limita la selezione ai K token più probabili</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>0.0 - 1.0</td>
+<td>0.9</td>
+<td>Nucleus sampling: soglia di probabilità cumulativa</td>
+</tr>
+<tr>
+<td><code>repeat_penalty</code></td>
+<td>0.0 - 2.0</td>
+<td>1.1</td>
+<td>Penalizza la ripetizione dei token (consigliato 1.1-1.2)</td>
+</tr>
+<tr>
+<td><code>repeat_last_n</code></td>
+<td>0 - 512</td>
+<td>64</td>
+<td>Token considerati per la penalità di ripetizione</td>
+</tr>
+<tr>
+<td><code>num_predict</code></td>
+<td>-1, 1 - 4096</td>
+<td>-1 (illimitato)</td>
+<td>Numero massimo di token da generare</td>
+</tr>
+<tr>
+<td><code>mirostat</code></td>
+<td>0, 1, 2</td>
+<td>0 (disabilitato)</td>
+<td>Campionamento Mirostat (con <code>mirostat_tau</code>, <code>mirostat_eta</code>)</td>
+</tr>
+<tr>
+<td><code>stop</code></td>
+<td>stringa/e</td>
+<td>—</td>
+<td>Sequenza/e di stop che terminano la generazione; ripetibile</td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td>intero</td>
+<td>casuale</td>
+<td>Seed fisso per output riproducibili</td>
+</tr>
+<tr>
+<td><code>num_gpu</code></td>
+<td>0 - N</td>
+<td>automatico</td>
+<td>Numero di layer del modello da eseguire su GPU (0 = solo CPU)</td>
+</tr>
+<tr>
+<td><code>num_thread</code></td>
+<td>1 - N</td>
+<td>rilevato automaticamente</td>
+<td>Numero di thread CPU da usare</td>
+</tr>
+</tbody>
+</table>
+<p>Esempi:</p>
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+
+<span class="c"># Stop sequences (repeatable)</span>
+PARAMETER<span class="w"> </span>stop<span class="w"> </span><span class="s2">&quot;&lt;|im_end|&gt;&quot;</span>
+PARAMETER<span class="w"> </span>stop<span class="w"> </span><span class="s2">&quot;User:&quot;</span>
+
+<span class="c"># Mirostat sampling</span>
+PARAMETER<span class="w"> </span>mirostat<span class="w"> </span><span class="m">2</span>
+PARAMETER<span class="w"> </span>mirostat_tau<span class="w"> </span><span class="m">5</span>.0
+PARAMETER<span class="w"> </span>mirostat_eta<span class="w"> </span><span class="m">0</span>.1
+</code></pre></div>
+<h2 id="esempio-completo">Esempio completo<a class="headerlink" href="#esempio-completo" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c"># Advanced Modelfile example</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:3b</span>
+
+<span class="c"># Model behavior parameters</span>
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">8192</span>
+PARAMETER<span class="w"> </span>top_k<span class="w"> </span><span class="m">40</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.15
+PARAMETER<span class="w"> </span>repeat_last_n<span class="w"> </span><span class="m">128</span>
+
+<span class="c"># Stop sequences</span>
+PARAMETER<span class="w"> </span>stop<span class="w"> </span><span class="s2">&quot;User:&quot;</span>
+PARAMETER<span class="w"> </span>stop<span class="w"> </span><span class="s2">&quot;###&quot;</span>
+
+<span class="c"># System prompt</span>
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>an<span class="w"> </span>expert<span class="w"> </span>software<span class="w"> </span>architect<span class="w"> </span>with<span class="w"> </span>deep<span class="w"> </span>knowledge<span class="w"> </span>of:
+-<span class="w"> </span>Distributed<span class="w"> </span>systems<span class="w"> </span>design
+-<span class="w"> </span>Cloud-native<span class="w"> </span>architectures
+-<span class="w"> </span>Microservices<span class="w"> </span>patterns
+-<span class="w"> </span>Database<span class="w"> </span>design
+
+When<span class="w"> </span>answering<span class="w"> </span>questions:
+<span class="m">1</span>.<span class="w"> </span>Provide<span class="w"> </span>clear,<span class="w"> </span>well-structured<span class="w"> </span>explanations
+<span class="m">2</span>.<span class="w"> </span>Include<span class="w"> </span>practical<span class="w"> </span>examples<span class="w"> </span>and<span class="w"> </span>code<span class="w"> </span>snippets
+<span class="m">3</span>.<span class="w"> </span>Consider<span class="w"> </span>trade-offs<span class="w"> </span>and<span class="w"> </span>alternatives
+<span class="m">4</span>.<span class="w"> </span>Reference<span class="w"> </span>industry<span class="w"> </span>best<span class="w"> </span>practices
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># Custom template (optional)</span>
+TEMPLATE<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="o">{{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>.System<span class="w"> </span><span class="o">}}</span>###<span class="w"> </span>System
+<span class="o">{{</span><span class="w"> </span>.System<span class="w"> </span><span class="o">}}</span>
+
+<span class="o">{{</span><span class="w"> </span>end<span class="w"> </span><span class="o">}}{{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>.Prompt<span class="w"> </span><span class="o">}}</span>###<span class="w"> </span>User
+<span class="o">{{</span><span class="w"> </span>.Prompt<span class="w"> </span><span class="o">}}</span>
+
+<span class="o">{{</span><span class="w"> </span>end<span class="w"> </span><span class="o">}}</span>###<span class="w"> </span>Assistant
+<span class="o">{{</span><span class="w"> </span>.Response<span class="w"> </span><span class="o">}}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># License</span>
+LICENSE<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+Apache<span class="w"> </span>License<span class="w"> </span><span class="m">2</span>.0
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="best-practice">Best practice<a class="headerlink" href="#best-practice" title="Permanent link">&para;</a></h2>
+<h3 id="1-inizia-con-parametri-bilanciati">1. Inizia con parametri bilanciati<a class="headerlink" href="#1-inizia-con-parametri-bilanciati" title="Permanent link">&para;</a></h3>
+<p>Parti da valori moderati e regolali in base ai risultati:</p>
+<div class="highlight"><pre><span></span><code>PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_k<span class="w"> </span><span class="m">40</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+</code></pre></div>
+<h3 id="2-ottimizza-per-il-tuo-caso-duso">2. Ottimizza per il tuo caso d'uso<a class="headerlink" href="#2-ottimizza-per-il-tuo-caso-duso" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Fattuale/Tecnico</strong>: temperature più bassa (0.2-0.4)</li>
+<li><strong>Conversazionale</strong>: temperature media (0.6-0.8)</li>
+<li><strong>Creativo</strong>: temperature più alta (0.9-1.2)</li>
+</ul>
+<h3 id="3-bilancia-finestra-di-contesto-e-memoria">3. Bilancia finestra di contesto e memoria<a class="headerlink" href="#3-bilancia-finestra-di-contesto-e-memoria" title="Permanent link">&para;</a></h3>
+<p>Un contesto più grande = maggiore utilizzo di memoria. Inizia con 4096 e aumenta solo se necessario.</p>
+<h3 id="4-testa-in-modo-incrementale">4. Testa in modo incrementale<a class="headerlink" href="#4-testa-in-modo-incrementale" title="Permanent link">&para;</a></h3>
+<p>Cambia un parametro alla volta per capirne l'effetto. Esporta e versiona i tuoi Modelfile.</p>
+<h3 id="5-usa-system-prompt-chiari">5. Usa system prompt chiari<a class="headerlink" href="#5-usa-system-prompt-chiari" title="Permanent link">&para;</a></h3>
+<p>Sii specifico riguardo a:
+- Il ruolo e le competenze del modello
+- Il comportamento atteso
+- Il formato dell'output
+- Vincoli e limitazioni</p>
+<h3 id="6-controllo-di-versione">6. Controllo di versione<a class="headerlink" href="#6-controllo-di-versione" title="Permanent link">&para;</a></h3>
+<p>Mantieni i tuoi Modelfile in Git:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>models/custom/my-model/Modelfile
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add custom model for technical documentation&quot;</span>
+</code></pre></div>
+<h2 id="debug-dei-modelfile">Debug dei Modelfile<a class="headerlink" href="#debug-dei-modelfile" title="Permanent link">&para;</a></h2>
+<h3 id="valida-prima-di-creare">Valida prima di creare<a class="headerlink" href="#valida-prima-di-creare" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>show<span class="w"> </span>test-model<span class="w"> </span>--modelfile
+</code></pre></div>
+<h3 id="controlla-i-parametri-del-modello">Controlla i parametri del modello<a class="headerlink" href="#controlla-i-parametri-del-modello" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>show<span class="w"> </span>my-model
+</code></pre></div>
+<h3 id="prova-con-prompt-diversi">Prova con prompt diversi<a class="headerlink" href="#prova-con-prompt-diversi" title="Permanent link">&para;</a></h3>
+<p>Crea prompt di esempio che coprano i tuoi casi d'uso e testali sistematicamente.</p>
+<h2 id="risorse">Risorse<a class="headerlink" href="#risorse" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/ollama/ollama/blob/main/docs/modelfile.md">Documentazione ufficiale del Modelfile</a></li>
+<li><a href="https://github.com/ollama/ollama">Repository GitHub di Ollama</a></li>
+<li><a href="https://ollama.com/library">Libreria dei modelli</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Torna su
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiato", "clipboard.copy": "Copia", "search.result.more.one": "1 altro in questa pagina", "search.result.more.other": "# altri in questa pagina", "search.result.none": "Nessun documento trovato", "search.result.one": "1 documento trovato", "search.result.other": "# documenti trovati", "search.result.placeholder": "Scrivi per iniziare a cercare", "search.result.term.missing": "Non presente", "select.version": "Seleziona la versione"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2810 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/examples/">
+      
+      
+        <link rel="prev" href="../chat-ui/">
+      
+      
+        <link rel="next" href="../customization-guide/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/examples/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Example Modelfiles - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-modelfiles" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Example Modelfiles
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/examples/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-chatbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Chatbot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Chatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-code-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Code Assistant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Code Assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-translator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Translator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Translator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-creative-writer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Creative Writer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Creative Writer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-personal-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Personal Assistant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Personal Assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-techcorp-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. TechCorp Support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. TechCorp Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learn More
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-copy-the-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Copy the Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-edit-the-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Edit the Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-your-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Create Your Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-your-custom-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Your Custom Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Your Custom Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprehensive Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-chatbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Chatbot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Chatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-code-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Code Assistant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Code Assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-translator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Translator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Translator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-creative-writer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Creative Writer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Creative Writer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-personal-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Personal Assistant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Personal Assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-techcorp-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. TechCorp Support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. TechCorp Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-for_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-notes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learn More
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-copy-the-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Copy the Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-edit-the-modelfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Edit the Modelfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-your-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Create Your Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-your-custom-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Your Custom Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Your Custom Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprehensive Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-modelfiles">Example Modelfiles<a class="headerlink" href="#example-modelfiles" title="Permanent link">&para;</a></h1>
+<p>The project includes pre-configured Modelfile templates for common use cases. These examples demonstrate best practices and different parameter configurations.</p>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Base Model</th>
+<th>Temperature</th>
+<th>Context</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#1-chatbot">Chatbot</a></td>
+<td>llama3.2:1b</td>
+<td>0.7</td>
+<td>4096</td>
+<td>General conversation</td>
+</tr>
+<tr>
+<td><a href="#2-code-assistant">Code Assistant</a></td>
+<td>llama3.2:1b</td>
+<td>0.3</td>
+<td>8192</td>
+<td>Programming help</td>
+</tr>
+<tr>
+<td><a href="#3-translator">Translator</a></td>
+<td>llama3.2:1b</td>
+<td>0.5</td>
+<td>4096</td>
+<td>Language translation</td>
+</tr>
+<tr>
+<td><a href="#4-creative-writer">Creative Writer</a></td>
+<td>llama3.2:1b</td>
+<td>1.2</td>
+<td>8192</td>
+<td>Content creation</td>
+</tr>
+<tr>
+<td><a href="#5-personal-assistant">Personal Assistant</a></td>
+<td>llama3.2:1b</td>
+<td>0.6</td>
+<td>4096</td>
+<td>Task management</td>
+</tr>
+<tr>
+<td><a href="#6-techcorp-support">TechCorp Support</a></td>
+<td>llama3.2:1b</td>
+<td>0.3</td>
+<td>4096</td>
+<td>Customer support</td>
+</tr>
+</tbody>
+</table>
+<h2 id="using-examples">Using Examples<a class="headerlink" href="#using-examples" title="Permanent link">&para;</a></h2>
+<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
+<p>Create a model from any example:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Interactive selection</span>
+make<span class="w"> </span>create-model
+
+<span class="c1"># Or directly</span>
+bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>&lt;model-name&gt;<span class="w"> </span>./models/examples/&lt;example&gt;/Modelfile
+
+<span class="c1"># Example:</span>
+bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-chatbot<span class="w"> </span>./models/examples/chatbot/Modelfile
+</code></pre></div>
+<p>Test the model:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>chat
+<span class="c1"># Select your newly created model</span>
+</code></pre></div></p>
+<hr />
+<h2 id="1-chatbot">1. Chatbot<a class="headerlink" href="#1-chatbot" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/chatbot/Modelfile</code></p>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<p>General-purpose conversational AI for customer service, Q&amp;A, and casual chat.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>friendly<span class="w"> </span>and<span class="w"> </span>helpful<span class="w"> </span>AI<span class="w"> </span>assistant.
+Provide<span class="w"> </span>clear,<span class="w"> </span>accurate,<span class="w"> </span>and<span class="w"> </span>concise<span class="w"> </span>responses.
+Be<span class="w"> </span>conversational<span class="w"> </span>but<span class="w"> </span>professional.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="best-for">Best For<a class="headerlink" href="#best-for" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Customer support</li>
+<li>General Q&amp;A</li>
+<li>Interactive help systems</li>
+<li>Educational chatbots</li>
+</ul>
+<h3 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>friendly-bot<span class="w"> </span>./models/examples/chatbot/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>friendly-bot<span class="w"> </span><span class="s2">&quot;How can I track my order?&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes">Parameter Notes<a class="headerlink" href="#parameter-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 0.7</strong>: Balanced between consistency and variety</li>
+<li><strong>Context 4096</strong>: Handles medium-length conversations</li>
+<li><strong>Top P 0.9</strong>: Good diversity without being random</li>
+</ul>
+<hr />
+<h2 id="2-code-assistant">2. Code Assistant<a class="headerlink" href="#2-code-assistant" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/code-assistant/Modelfile</code></p>
+<h3 id="purpose_1">Purpose<a class="headerlink" href="#purpose_1" title="Permanent link">&para;</a></h3>
+<p>Programming help, code generation, debugging, and technical explanations.</p>
+<h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">8192</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.15
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>an<span class="w"> </span>expert<span class="w"> </span>programming<span class="w"> </span>assistant.
+-<span class="w"> </span>Provide<span class="w"> </span>clear,<span class="w"> </span>well-commented<span class="w"> </span>code
+-<span class="w"> </span>Explain<span class="w"> </span>your<span class="w"> </span>reasoning
+-<span class="w"> </span>Follow<span class="w"> </span>best<span class="w"> </span>practices<span class="w"> </span>and<span class="w"> </span>design<span class="w"> </span>patterns
+-<span class="w"> </span>Suggest<span class="w"> </span>optimizations<span class="w"> </span>when<span class="w"> </span>relevant
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="best-for_1">Best For<a class="headerlink" href="#best-for_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Code generation</li>
+<li>Debugging help</li>
+<li>Code review</li>
+<li>Technical documentation</li>
+<li>Algorithm explanations</li>
+</ul>
+<h3 id="example-usage_1">Example Usage<a class="headerlink" href="#example-usage_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>code-helper<span class="w"> </span>./models/examples/code-assistant/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>code-helper<span class="w"> </span><span class="s2">&quot;Write a Python function to validate email addresses&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes_1">Parameter Notes<a class="headerlink" href="#parameter-notes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 0.3</strong>: Deterministic, consistent code generation</li>
+<li><strong>Context 8192</strong>: Can handle large code files</li>
+<li><strong>Repeat Penalty 1.15</strong>: Prevents repetitive code patterns</li>
+</ul>
+<hr />
+<h2 id="3-translator">3. Translator<a class="headerlink" href="#3-translator" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/translator/Modelfile</code></p>
+<h3 id="purpose_2">Purpose<a class="headerlink" href="#purpose_2" title="Permanent link">&para;</a></h3>
+<p>Language translation and localization.</p>
+<h3 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.5
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>professional<span class="w"> </span>translator.
+Translate<span class="w"> </span>text<span class="w"> </span>accurately<span class="w"> </span><span class="k">while</span><span class="w"> </span>preserving:
+-<span class="w"> </span>Meaning<span class="w"> </span>and<span class="w"> </span>intent
+-<span class="w"> </span>Cultural<span class="w"> </span>context
+-<span class="w"> </span>Tone<span class="w"> </span>and<span class="w"> </span>formality
+-<span class="w"> </span>Idiomatic<span class="w"> </span>expressions
+
+Provide<span class="w"> </span>natural-sounding<span class="w"> </span>translations<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>target<span class="w"> </span>language.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="best-for_2">Best For<a class="headerlink" href="#best-for_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Text translation</li>
+<li>Localization</li>
+<li>Language learning</li>
+<li>Multilingual content creation</li>
+</ul>
+<h3 id="example-usage_2">Example Usage<a class="headerlink" href="#example-usage_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>translator<span class="w"> </span>./models/examples/translator/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>translator<span class="w"> </span><span class="s2">&quot;Translate to Spanish: Hello, how are you today?&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes_2">Parameter Notes<a class="headerlink" href="#parameter-notes_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 0.5</strong>: Moderate creativity for natural phrasing</li>
+<li><strong>Context 4096</strong>: Handles paragraphs and documents</li>
+<li><strong>Top P 0.9</strong>: Balanced translation variety</li>
+</ul>
+<hr />
+<h2 id="4-creative-writer">4. Creative Writer<a class="headerlink" href="#4-creative-writer" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/creative-writer/Modelfile</code></p>
+<h3 id="purpose_3">Purpose<a class="headerlink" href="#purpose_3" title="Permanent link">&para;</a></h3>
+<p>Creative content generation, storytelling, and ideation.</p>
+<h3 id="configuration_3">Configuration<a class="headerlink" href="#configuration_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">1</span>.2
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">8192</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.95
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.2
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>creative<span class="w"> </span>writing<span class="w"> </span>assistant.
+Generate<span class="w"> </span>engaging,<span class="w"> </span>imaginative,<span class="w"> </span>and<span class="w"> </span>original<span class="w"> </span>content.
+Use<span class="w"> </span>vivid<span class="w"> </span>descriptions,<span class="w"> </span>varied<span class="w"> </span>vocabulary,<span class="w"> </span>and<span class="w"> </span>interesting<span class="w"> </span>narratives.
+Adapt<span class="w"> </span>your<span class="w"> </span>style<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>genre<span class="w"> </span>and<span class="w"> </span>tone<span class="w"> </span>requested.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="best-for_3">Best For<a class="headerlink" href="#best-for_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Story writing</li>
+<li>Content creation</li>
+<li>Brainstorming ideas</li>
+<li>Marketing copy</li>
+<li>Poetry and creative text</li>
+</ul>
+<h3 id="example-usage_3">Example Usage<a class="headerlink" href="#example-usage_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>creative<span class="w"> </span>./models/examples/creative-writer/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>creative<span class="w"> </span><span class="s2">&quot;Write a short story about a robot learning to paint&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes_3">Parameter Notes<a class="headerlink" href="#parameter-notes_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 1.2</strong>: High creativity and variety</li>
+<li><strong>Context 8192</strong>: Long-form content generation</li>
+<li><strong>Top P 0.95</strong>: Wide vocabulary range</li>
+<li><strong>Repeat Penalty 1.2</strong>: Avoids repetitive phrasing</li>
+</ul>
+<hr />
+<h2 id="5-personal-assistant">5. Personal Assistant<a class="headerlink" href="#5-personal-assistant" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/personal-assistant/Modelfile</code></p>
+<h3 id="purpose_4">Purpose<a class="headerlink" href="#purpose_4" title="Permanent link">&para;</a></h3>
+<p>Task management, scheduling, reminders, and personal productivity.</p>
+<h3 id="configuration_4">Configuration<a class="headerlink" href="#configuration_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.6
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>personal<span class="w"> </span>assistant<span class="w"> </span>helping<span class="w"> </span>with:
+-<span class="w"> </span>Task<span class="w"> </span>organization<span class="w"> </span>and<span class="w"> </span>prioritization
+-<span class="w"> </span>Schedule<span class="w"> </span>management
+-<span class="w"> </span>Reminders<span class="w"> </span>and<span class="w"> </span>follow-ups
+-<span class="w"> </span>Information<span class="w"> </span>lookup
+-<span class="w"> </span>Productivity<span class="w"> </span>tips
+
+Be<span class="w"> </span>efficient,<span class="w"> </span>organized,<span class="w"> </span>and<span class="w"> </span>proactive.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="best-for_4">Best For<a class="headerlink" href="#best-for_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>To-do list management</li>
+<li>Calendar assistance</li>
+<li>Email drafting</li>
+<li>Meeting scheduling</li>
+<li>Personal organization</li>
+</ul>
+<h3 id="example-usage_4">Example Usage<a class="headerlink" href="#example-usage_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>assistant<span class="w"> </span>./models/examples/personal-assistant/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;Help me plan my day. I have a meeting at 2pm and need to finish a report.&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes_4">Parameter Notes<a class="headerlink" href="#parameter-notes_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 0.6</strong>: Consistent but not rigid</li>
+<li><strong>Context 4096</strong>: Tracks tasks and conversations</li>
+<li><strong>Top P 0.9</strong>: Natural conversational flow</li>
+</ul>
+<hr />
+<h2 id="6-techcorp-support">6. TechCorp Support<a class="headerlink" href="#6-techcorp-support" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>models/examples/techcorp-support/Modelfile</code></p>
+<h3 id="purpose_5">Purpose<a class="headerlink" href="#purpose_5" title="Permanent link">&para;</a></h3>
+<p>Demonstrates few-shot learning with dataset examples for specialized customer support.</p>
+<h3 id="configuration_5">Configuration<a class="headerlink" href="#configuration_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+PARAMETER<span class="w"> </span>repeat_penalty<span class="w"> </span><span class="m">1</span>.1
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>customer<span class="w"> </span>support<span class="w"> </span>agent<span class="w"> </span><span class="k">for</span><span class="w"> </span>TechCorp.
+Provide<span class="w"> </span>accurate,<span class="w"> </span>helpful,<span class="w"> </span>and<span class="w"> </span>professional<span class="w"> </span>responses.
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># Few-shot examples from dataset</span>
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;How do I reset my password?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;Click &#39;Forgot Password&#39; on the login page...&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;What are your business hours?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;We&#39;re open Monday-Friday, 9am-5pm EST...&quot;</span>
+
+<span class="c"># (additional examples...)</span>
+</code></pre></div>
+<h3 id="dataset">Dataset<a class="headerlink" href="#dataset" title="Permanent link">&para;</a></h3>
+<p>The model uses examples from <code>data/training/techcorp-support.jsonl</code> (10 Q&amp;A pairs).</p>
+<h3 id="best-for_5">Best For<a class="headerlink" href="#best-for_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Company-specific support bots</li>
+<li>FAQ automation</li>
+<li>Consistent branded responses</li>
+<li>Knowledge base queries</li>
+</ul>
+<h3 id="example-usage_5">Example Usage<a class="headerlink" href="#example-usage_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>support-bot<span class="w"> </span>./models/examples/techcorp-support/Modelfile
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>support-bot<span class="w"> </span><span class="s2">&quot;How do I reset my password?&quot;</span>
+</code></pre></div>
+<h3 id="parameter-notes_5">Parameter Notes<a class="headerlink" href="#parameter-notes_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Temperature 0.3</strong>: Factual, consistent responses</li>
+<li><strong>Few-shot Learning</strong>: MESSAGE examples train the model</li>
+<li><strong>Context 4096</strong>: Handles support conversations</li>
+</ul>
+<h3 id="learn-more">Learn More<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h3>
+<p>See <a href="../dataset-training-example/">Dataset Training Example</a> for complete guide on creating custom support bots.</p>
+<hr />
+<h2 id="customizing-examples">Customizing Examples<a class="headerlink" href="#customizing-examples" title="Permanent link">&para;</a></h2>
+<p>All examples can be customized for your needs:</p>
+<h3 id="1-copy-the-example">1. Copy the Example<a class="headerlink" href="#1-copy-the-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>-r<span class="w"> </span>./models/examples/chatbot<span class="w"> </span>./models/custom/my-chatbot
+</code></pre></div>
+<h3 id="2-edit-the-modelfile">2. Edit the Modelfile<a class="headerlink" href="#2-edit-the-modelfile" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>nano<span class="w"> </span>./models/custom/my-chatbot/Modelfile
+</code></pre></div>
+<p>Modify:
+- <strong>Base model</strong>: Change <code>FROM</code> line to use different model
+- <strong>Parameters</strong>: Adjust temperature, context, etc.
+- <strong>System prompt</strong>: Customize behavior and personality
+- <strong>Examples</strong>: Add MESSAGE pairs for few-shot learning</p>
+<h3 id="3-create-your-model">3. Create Your Model<a class="headerlink" href="#3-create-your-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-chatbot<span class="w"> </span>./models/custom/my-chatbot/Modelfile
+</code></pre></div>
+<h2 id="parameter-tuning">Parameter Tuning<a class="headerlink" href="#parameter-tuning" title="Permanent link">&para;</a></h2>
+<p>Quick reference for the values used in the examples above:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Factual/support</th>
+<th>Balanced chat</th>
+<th>Creative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>temperature</code></td>
+<td>0.2-0.3</td>
+<td>0.6-0.8</td>
+<td>1.0-1.2</td>
+</tr>
+<tr>
+<td><code>num_ctx</code></td>
+<td>4096</td>
+<td>4096</td>
+<td>8192</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>0.9</td>
+<td>0.9</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td><code>repeat_penalty</code></td>
+<td>1.0-1.1</td>
+<td>1.1</td>
+<td>1.2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For detailed tuning advice, copy-paste presets, and troubleshooting, see the <a href="../parameter-guide/">Parameter Guide</a></strong> — the canonical parameter reference.</p>
+<h2 id="testing-your-custom-model">Testing Your Custom Model<a class="headerlink" href="#testing-your-custom-model" title="Permanent link">&para;</a></h2>
+<h3 id="quick-test">Quick Test<a class="headerlink" href="#quick-test" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>&lt;model-name&gt;<span class="w"> </span><span class="s2">&quot;Test prompt&quot;</span>
+</code></pre></div>
+<h3 id="interactive-test">Interactive Test<a class="headerlink" href="#interactive-test" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>chat
+<span class="c1"># Select your model</span>
+</code></pre></div>
+<h3 id="api-test">API Test<a class="headerlink" href="#api-test" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/generate<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;your-model&quot;,</span>
+<span class="s1">  &quot;prompt&quot;: &quot;Test prompt&quot;,</span>
+<span class="s1">  &quot;stream&quot;: false</span>
+<span class="s1">}&#39;</span>
+</code></pre></div>
+<h3 id="comprehensive-test">Comprehensive Test<a class="headerlink" href="#comprehensive-test" title="Permanent link">&para;</a></h3>
+<p>Use the quick-test script:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>quick-test
+</code></pre></div></p>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../parameter-guide/">Parameter Guide</a> - Canonical parameter presets and tuning</li>
+<li><a href="../modelfile-reference/">Modelfile Reference</a> - Complete syntax guide</li>
+<li><a href="../dataset-training-example/">Dataset Training Example</a> - Train with custom data</li>
+<li><a href="../advanced-usage/">Advanced Usage</a> - Templates, LoRA adapters, and more</li>
+<li><a href="../api-usage/">API Usage</a> - Integrate models into applications</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

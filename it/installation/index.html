@@ -1,0 +1,1928 @@
+
+<!doctype html>
+<html lang="it" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/it/installation/">
+      
+      
+        <link rel="prev" href="../concepts/">
+      
+      
+        <link rel="next" href="../quick-reference/">
+      
+      
+        
+          <link rel="alternate" href="../../installation/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Installazione - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guida-allinstallazione" class="md-skip">
+          Vai al contenuto
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Intestazione">
+    <a href="../" title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Installazione
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleziona la lingua">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../installation/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Cerca" placeholder="Cerca" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Cerca">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Cancella" aria-label="Cancella" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inizializza la ricerca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigazione" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per iniziare
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Per iniziare
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concetti (inizia qui)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installazione
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installazione
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#avvio-rapido-60-secondi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avvio rapido (60 secondi)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisiti
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisiti">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controlla-il-tuo-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlla il tuo sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passaggi-dettagliati-di-installazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passaggi dettagliati di installazione
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passaggi dettagliati di installazione">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clona-il-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Clona il repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-controlla-i-requisiti-di-sistema-opzionale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Controlla i requisiti di sistema (opzionale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-esegui-la-configurazione-iniziale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Esegui la configurazione iniziale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-avvia-i-servizi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Avvia i servizi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-scarica-i-modelli-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scarica i modelli base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verifica-linstallazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Verifica l'installazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supporto-gpu-opzionale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supporto GPU (opzionale)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporto GPU (opzionale)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-installa-lnvidia-container-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Installa l'NVIDIA Container Toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-avvia-con-loverride-per-la-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Avvia con l'override per la GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verifica-il-rilevamento-della-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verifica il rilevamento della GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantaggi-in-termini-di-prestazioni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantaggi in termini di prestazioni
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurazione-dellambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione dell'ambiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#struttura-delle-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Struttura delle directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prossimi-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prossimi passi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi-di-installazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei problemi di installazione
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei problemi di installazione">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#il-daemon-docker-non-e-in-esecuzione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Il daemon Docker non è in esecuzione
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errori-di-permesso-negato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errori di permesso negato
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porta-gia-in-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porta già in uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spazio-su-disco-insufficiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spazio su disco insufficiente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento rapido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usare l'ambiente
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usare l'ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso quotidiano
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaccia Web (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile di esempio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personalizzare i modelli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Personalizzare i modelli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scegliere un metodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida ai parametri
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento Modelfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida all'assistente personale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esempio di training con dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al fine-tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operazioni
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operazioni
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso delle API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso avanzato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risoluzione dei problemi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#avvio-rapido-60-secondi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avvio rapido (60 secondi)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisiti
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisiti">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controlla-il-tuo-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlla il tuo sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passaggi-dettagliati-di-installazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passaggi dettagliati di installazione
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passaggi dettagliati di installazione">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clona-il-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Clona il repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-controlla-i-requisiti-di-sistema-opzionale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Controlla i requisiti di sistema (opzionale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-esegui-la-configurazione-iniziale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Esegui la configurazione iniziale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-avvia-i-servizi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Avvia i servizi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-scarica-i-modelli-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scarica i modelli base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verifica-linstallazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Verifica l'installazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supporto-gpu-opzionale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supporto GPU (opzionale)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporto GPU (opzionale)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-installa-lnvidia-container-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Installa l'NVIDIA Container Toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-avvia-con-loverride-per-la-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Avvia con l'override per la GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verifica-il-rilevamento-della-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verifica il rilevamento della GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantaggi-in-termini-di-prestazioni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantaggi in termini di prestazioni
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurazione-dellambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione dell'ambiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#struttura-delle-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Struttura delle directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prossimi-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prossimi passi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi-di-installazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei problemi di installazione
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei problemi di installazione">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#il-daemon-docker-non-e-in-esecuzione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Il daemon Docker non è in esecuzione
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errori-di-permesso-negato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errori di permesso negato
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porta-gia-in-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porta già in uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spazio-su-disco-insufficiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spazio su disco insufficiente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="guida-allinstallazione">Guida all'installazione<a class="headerlink" href="#guida-allinstallazione" title="Permanent link">&para;</a></h1>
+<h2 id="avvio-rapido-60-secondi">Avvio rapido (60 secondi)<a class="headerlink" href="#avvio-rapido-60-secondi" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clone and enter directory</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/manzolo/ollama-model-train-guide.git
+<span class="nb">cd</span><span class="w"> </span>ollama-model-train-guide
+
+<span class="c1"># Check requirements, then setup and start services</span>
+make<span class="w"> </span>preflight
+make<span class="w"> </span>setup<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>up
+
+<span class="c1"># Pull a base model and test</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2:1b
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.2:1b<span class="w"> </span><span class="s2">&quot;Hello!&quot;</span>
+</code></pre></div>
+<p><strong>Accedi alla Web UI</strong>: Apri <code>http://localhost:8080</code> nel tuo browser.</p>
+<hr />
+<h2 id="prerequisiti">Prerequisiti<a class="headerlink" href="#prerequisiti" title="Permanent link">&para;</a></h2>
+<p>Prima di iniziare, assicurati che il tuo sistema soddisfi questi requisiti:</p>
+<ul>
+<li><strong>Docker</strong>: Versione 20.10 o superiore</li>
+<li><strong>Docker Compose</strong>: Versione 2.0 o superiore</li>
+<li><strong>Spazio su disco</strong>: Almeno 10GB per i modelli base (di più per modelli più grandi)</li>
+<li><strong>RAM</strong>: Minimo 8GB (consigliati 16GB)</li>
+<li><strong>Opzionale</strong>: GPU NVIDIA con Container Toolkit per l'accelerazione GPU</li>
+</ul>
+<h3 id="controlla-il-tuo-sistema">Controlla il tuo sistema<a class="headerlink" href="#controlla-il-tuo-sistema" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Docker version</span>
+docker<span class="w"> </span>--version
+
+<span class="c1"># Check Docker Compose version</span>
+docker<span class="w"> </span>compose<span class="w"> </span>version
+
+<span class="c1"># Check available disk space</span>
+df<span class="w"> </span>-h
+
+<span class="c1"># Check available RAM</span>
+free<span class="w"> </span>-h
+</code></pre></div>
+<h2 id="passaggi-dettagliati-di-installazione">Passaggi dettagliati di installazione<a class="headerlink" href="#passaggi-dettagliati-di-installazione" title="Permanent link">&para;</a></h2>
+<h3 id="1-clona-il-repository">1. Clona il repository<a class="headerlink" href="#1-clona-il-repository" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/manzolo/ollama-model-train-guide.git
+<span class="nb">cd</span><span class="w"> </span>ollama-model-train-guide
+</code></pre></div>
+<h3 id="2-controlla-i-requisiti-di-sistema-opzionale">2. Controlla i requisiti di sistema (opzionale)<a class="headerlink" href="#2-controlla-i-requisiti-di-sistema-opzionale" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>preflight
+</code></pre></div>
+<p>Questo verifica Docker, Docker Compose, lo spazio libero su disco e la RAM prima di iniziare.</p>
+<h3 id="3-esegui-la-configurazione-iniziale">3. Esegui la configurazione iniziale<a class="headerlink" href="#3-esegui-la-configurazione-iniziale" title="Permanent link">&para;</a></h3>
+<p>Questo crea il file <code>.env</code> (a partire da <code>.env.example</code>) e le directory necessarie:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>setup
+</code></pre></div>
+<h3 id="4-avvia-i-servizi">4. Avvia i servizi<a class="headerlink" href="#4-avvia-i-servizi" title="Permanent link">&para;</a></h3>
+<p>Avvia sia Ollama che la Chat UI:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up
+</code></pre></div>
+<p>Questo avvia due servizi:
+- <strong>API Ollama</strong>: Disponibile su <code>http://localhost:11434</code>
+- <strong>Chat Web UI</strong>: Disponibile su <code>http://localhost:8080</code> (chat, convertitore e wizard per Modelfile)</p>
+<p>Per avviare Ollama <strong>senza</strong> la web UI:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up-core
+</code></pre></div>
+<p>Per avviare con l'<strong>accelerazione GPU NVIDIA</strong> (vedi <a href="#supporto-gpu-opzionale">Supporto GPU</a>):</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up-gpu
+</code></pre></div>
+<h3 id="5-scarica-i-modelli-base">5. Scarica i modelli base<a class="headerlink" href="#5-scarica-i-modelli-base" title="Permanent link">&para;</a></h3>
+<p>Scarica i modelli base più comuni per iniziare:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>pull-base
+</code></pre></div>
+<p>Questo scarica:
+- <code>llama3.2:1b</code> (piccolo, veloce)
+- <code>llama3.2:3b</code> (bilanciato)
+- <code>mistral:7b</code> (alta qualità)
+- <code>phi3:mini</code> (compatto)</p>
+<p>In alternativa, scarica i modelli tramite la Web UI:
+1. Apri <code>http://localhost:8080</code>
+2. Clicca su "Manage Models"
+3. Inserisci il nome del modello (ad es. <code>llama3.2:1b</code>)
+4. Clicca su "Pull" e osserva l'avanzamento in tempo reale</p>
+<h3 id="6-verifica-linstallazione">6. Verifica l'installazione<a class="headerlink" href="#6-verifica-linstallazione" title="Permanent link">&para;</a></h3>
+<p>Controlla che tutto funzioni:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List available models</span>
+make<span class="w"> </span>list-models
+
+<span class="c1"># Run quick test</span>
+make<span class="w"> </span>quick-test
+
+<span class="c1"># Check service status</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div>
+<p>Dovresti vedere entrambi i servizi <code>ollama</code> e <code>ollama-chat</code> in esecuzione.</p>
+<h2 id="supporto-gpu-opzionale">Supporto GPU (opzionale)<a class="headerlink" href="#supporto-gpu-opzionale" title="Permanent link">&para;</a></h2>
+<p>Per abilitare l'accelerazione GPU NVIDIA e velocizzare l'inferenza:</p>
+<h3 id="1-installa-lnvidia-container-toolkit">1. Installa l'NVIDIA Container Toolkit<a class="headerlink" href="#1-installa-lnvidia-container-toolkit" title="Permanent link">&para;</a></h3>
+<p><strong>Ubuntu/Debian</strong>:
+<div class="highlight"><pre><span></span><code><span class="nv">distribution</span><span class="o">=</span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="p">;</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$ID$VERSION_ID</span><span class="k">)</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/nvidia-docker/gpgkey<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
+curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/nvidia-docker/<span class="nv">$distribution</span>/nvidia-docker.list<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nvidia-docker.list
+
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</code></pre></div></p>
+<p><strong>Fedora/RHEL/CentOS</strong>:
+<div class="highlight"><pre><span></span><code><span class="nv">distribution</span><span class="o">=</span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="p">;</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$ID$VERSION_ID</span><span class="k">)</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/nvidia-docker/<span class="nv">$distribution</span>/nvidia-docker.repo<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/nvidia-docker.repo
+
+sudo<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</code></pre></div></p>
+<h3 id="2-avvia-con-loverride-per-la-gpu">2. Avvia con l'override per la GPU<a class="headerlink" href="#2-avvia-con-loverride-per-la-gpu" title="Permanent link">&para;</a></h3>
+<p>Il supporto GPU è fornito da un file di override Compose separato, <code>docker-compose.gpu.yml</code> — non c'è nulla da decommentare o modificare in <code>docker-compose.yml</code>:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up-gpu
+
+<span class="c1"># Equivalent to:</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.gpu.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>L'override riserva tutte le GPU NVIDIA disponibili al servizio Ollama:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.gpu.yml</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ollama</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">reservations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">devices</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvidia</span>
+<span class="w">              </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
+<span class="w">              </span><span class="nt">capabilities</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">gpu</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h3 id="3-verifica-il-rilevamento-della-gpu">3. Verifica il rilevamento della GPU<a class="headerlink" href="#3-verifica-il-rilevamento-della-gpu" title="Permanent link">&para;</a></h3>
+<p>Controlla che la GPU sia disponibile all'interno del container:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>nvidia-smi
+</code></pre></div>
+<p>Dovresti vedere la tua GPU elencata con l'utilizzo della memoria e le informazioni sul driver.</p>
+<h3 id="vantaggi-in-termini-di-prestazioni">Vantaggi in termini di prestazioni<a class="headerlink" href="#vantaggi-in-termini-di-prestazioni" title="Permanent link">&para;</a></h3>
+<p>Con l'accelerazione GPU:
+- <strong>Velocità di inferenza</strong>: 5-10 volte più veloce per i modelli grandi
+- <strong>Elaborazione del contesto</strong>: Significativamente più veloce per prompt lunghi
+- <strong>Utenti concorrenti</strong>: Migliori prestazioni con richieste multiple</p>
+<h2 id="configurazione-dellambiente">Configurazione dell'ambiente<a class="headerlink" href="#configurazione-dellambiente" title="Permanent link">&para;</a></h2>
+<p>Il file <code>.env</code> (creato da <code>make setup</code> a partire da <code>.env.example</code>) contiene le opzioni di configurazione. Questi valori vengono interpolati direttamente in <code>docker-compose.yml</code> (ad es. la mappatura della porta di Ollama è <code>"${OLLAMA_PORT:-11434}:11434"</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Host port for the Ollama API</span>
+<span class="nv">OLLAMA_PORT</span><span class="o">=</span><span class="m">11434</span>
+
+<span class="c1"># Host port for the Chat web UI</span>
+<span class="nv">CHAT_PORT</span><span class="o">=</span><span class="m">8080</span>
+
+<span class="c1"># Compose profiles started by default with `docker compose up`.</span>
+<span class="c1"># Set to empty (COMPOSE_PROFILES=) to run Ollama only, without the chat web UI.</span>
+<span class="nv">COMPOSE_PROFILES</span><span class="o">=</span>chat
+
+<span class="c1"># Which origins may call the Ollama API (CORS). &quot;*&quot; is fine for local use.</span>
+<span class="nv">OLLAMA_ORIGINS</span><span class="o">=</span>*
+
+<span class="c1"># Pin a specific Ollama version instead of &quot;latest&quot; for reproducible setups,</span>
+<span class="c1"># e.g. OLLAMA_IMAGE_TAG=0.30.10</span>
+<span class="nv">OLLAMA_IMAGE_TAG</span><span class="o">=</span>latest
+</code></pre></div>
+<p>Dopo aver modificato <code>.env</code>, ricrea i container affinché le modifiche abbiano effetto:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>down<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>up
+</code></pre></div>
+<h2 id="struttura-delle-directory">Struttura delle directory<a class="headerlink" href="#struttura-delle-directory" title="Permanent link">&para;</a></h2>
+<p>Dopo la configurazione, il tuo progetto avrà questa struttura:</p>
+<div class="highlight"><pre><span></span><code>ollama-model-train-guide/
+├── .env                    # Environment variables (ports, profiles, image tag)
+├── docker-compose.yml      # Service configuration
+├── docker-compose.gpu.yml  # NVIDIA GPU override (make up-gpu)
+├── models/
+│   ├── examples/          # Pre-configured Modelfiles
+│   ├── custom/            # Your custom Modelfiles
+│   └── saved/             # Exported models
+├── data/
+│   ├── gguf/             # External GGUF files
+│   ├── adapters/         # LoRA adapters
+│   └── training/         # Training datasets
+└── chat/                  # Web UI application
+</code></pre></div>
+<h2 id="prossimi-passi">Prossimi passi<a class="headerlink" href="#prossimi-passi" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../usage/">Guida all'uso</a> - Impara a lavorare con i modelli</li>
+<li><a href="../chat-ui/">Guida alla Chat UI</a> - Usa l'interfaccia web</li>
+<li><a href="../modelfile-reference/">Creare modelli personalizzati</a> - Personalizza i tuoi modelli</li>
+<li><a href="../examples/">Esempi</a> - Template preconfigurati</li>
+</ul>
+<h2 id="risoluzione-dei-problemi-di-installazione">Risoluzione dei problemi di installazione<a class="headerlink" href="#risoluzione-dei-problemi-di-installazione" title="Permanent link">&para;</a></h2>
+<h3 id="il-daemon-docker-non-e-in-esecuzione">Il daemon Docker non è in esecuzione<a class="headerlink" href="#il-daemon-docker-non-e-in-esecuzione" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start Docker service</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
+
+<span class="c1"># Enable Docker at boot</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker
+</code></pre></div>
+<h3 id="errori-di-permesso-negato">Errori di permesso negato<a class="headerlink" href="#errori-di-permesso-negato" title="Permanent link">&para;</a></h3>
+<p>Aggiungi il tuo utente al gruppo docker:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+<span class="c1"># Log out and back in for changes to take effect</span>
+</code></pre></div>
+<h3 id="porta-gia-in-uso">Porta già in uso<a class="headerlink" href="#porta-gia-in-uso" title="Permanent link">&para;</a></h3>
+<p>Se la porta 11434 o 8080 è già in uso, modifica <code>.env</code> per usare porte diverse:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">OLLAMA_PORT</span><span class="o">=</span><span class="m">11435</span>
+<span class="nv">CHAT_PORT</span><span class="o">=</span><span class="m">8081</span>
+</code></pre></div>
+<p>Poi ricrea i container:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>down<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>up
+</code></pre></div>
+<h3 id="spazio-su-disco-insufficiente">Spazio su disco insufficiente<a class="headerlink" href="#spazio-su-disco-insufficiente" title="Permanent link">&para;</a></h3>
+<p>Controlla e pulisci le risorse Docker:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check disk usage</span>
+docker<span class="w"> </span>system<span class="w"> </span>df
+
+<span class="c1"># Clean up unused resources</span>
+docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-a
+
+<span class="c1"># Remove old images</span>
+docker<span class="w"> </span>image<span class="w"> </span>prune<span class="w"> </span>-a
+</code></pre></div>
+<p>Per ulteriore aiuto nella risoluzione dei problemi, vedi la <a href="../troubleshooting/">Guida alla risoluzione dei problemi</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Torna su
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiato", "clipboard.copy": "Copia", "search.result.more.one": "1 altro in questa pagina", "search.result.more.other": "# altri in questa pagina", "search.result.none": "Nessun documento trovato", "search.result.one": "1 documento trovato", "search.result.other": "# documenti trovati", "search.result.placeholder": "Scrivi per iniziare a cercare", "search.result.term.missing": "Non presente", "select.version": "Seleziona la versione"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

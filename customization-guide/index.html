@@ -1,0 +1,2514 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/customization-guide/">
+      
+      
+        <link rel="prev" href="../examples/">
+      
+      
+        <link rel="next" href="../parameter-guide/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../it/customization-guide/" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Choosing a Method - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-customization-guide-which-method-should-i-use" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Choosing a Method
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../it/customization-guide/" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts (start here)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Environment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Using the Environment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day-to-day Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web UI (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Modelfiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customizing Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Method
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Quick Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Comparison Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-system-prompt-easiest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Method 1: System Prompt (Easiest)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Method 1: System Prompt (Easiest)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-do-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Do It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-few-shot-learning-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Method 2: Few-Shot Learning (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Method 2: Few-Shot Learning (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-do-it_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Do It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-3-fine-tuning-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Method 3: Fine-Tuning (Advanced)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Method 3: Fine-Tuning (Advanced)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-level-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progressive-learning-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎓 Progressive Learning Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Progressive Learning Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-start-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1: Start Simple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-system-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 2: System Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-few-shot-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3: Few-Shot Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-advanced-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 4+: Advanced (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Real-World Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-personal-assistant-system-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Personal Assistant (System Prompt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-faq-bot-few-shot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: FAQ Bot (Few-Shot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-medical-coding-assistant-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Medical Coding Assistant (Fine-Tuning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-not-sure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤔 Still Not Sure?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤔 Still Not Sure?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ask-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ask Yourself:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-light-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚦 Traffic Light Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personal Assistant Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Training Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fine-Tuning Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Quick Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Comparison Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-system-prompt-easiest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Method 1: System Prompt (Easiest)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Method 1: System Prompt (Easiest)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-do-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Do It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-few-shot-learning-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Method 2: Few-Shot Learning (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Method 2: Few-Shot Learning (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-do-it_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Do It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-3-fine-tuning-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Method 3: Fine-Tuning (Advanced)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Method 3: Fine-Tuning (Advanced)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-need_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-required_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-level-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progressive-learning-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎓 Progressive Learning Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Progressive Learning Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-start-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1: Start Simple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-system-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 2: System Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-few-shot-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3: Few-Shot Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-advanced-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 4+: Advanced (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Real-World Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-personal-assistant-system-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Personal Assistant (System Prompt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-faq-bot-few-shot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: FAQ Bot (Few-Shot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-medical-coding-assistant-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Medical Coding Assistant (Fine-Tuning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-not-sure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤔 Still Not Sure?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤔 Still Not Sure?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ask-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ask Yourself:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-light-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚦 Traffic Light Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="model-customization-guide-which-method-should-i-use">Model Customization Guide - Which Method Should I Use?<a class="headerlink" href="#model-customization-guide-which-method-should-i-use" title="Permanent link">&para;</a></h1>
+<p><strong>Confused about how to customize your model?</strong> This guide helps you choose the right approach.</p>
+<hr />
+<h2 id="quick-decision-tree">🎯 Quick Decision Tree<a class="headerlink" href="#quick-decision-tree" title="Permanent link">&para;</a></h2>
+<p><strong>TL;DR:</strong> Change behavior → <strong>System Prompt</strong> (5 min). Have &lt; 50 example Q&amp;As → <strong>Few-Shot Learning</strong> (30 min). Have 100+ examples and need deep specialization → <strong>Fine-Tuning</strong> (hours/days, GPU).</p>
+<p>For the full step-by-step decision tree, see <a href="../concepts/#decision-tree-which-method-should-i-use">Essential Concepts - Decision Tree</a>.</p>
+<hr />
+<h2 id="comparison-table">📊 Comparison Table<a class="headerlink" href="#comparison-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Time</th>
+<th>Difficulty</th>
+<th>When to Use</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>System Prompt</strong></td>
+<td>5 min</td>
+<td>⭐ Easy</td>
+<td>Change behavior, add rules</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><strong>Few-Shot</strong></td>
+<td>30 min</td>
+<td>⭐⭐ Medium</td>
+<td>Add 5-50 examples</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><strong>Fine-Tuning</strong></td>
+<td>Hours+</td>
+<td>⭐⭐⭐⭐ Hard</td>
+<td>100+ examples, deep specialization</td>
+<td>GPU time</td>
+</tr>
+</tbody>
+</table>
+<p><strong>90% of users only need Methods 1 or 2!</strong></p>
+<hr />
+<h2 id="method-1-system-prompt-easiest">🔧 Method 1: System Prompt (Easiest)<a class="headerlink" href="#method-1-system-prompt-easiest" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Change model personality (formal, casual, technical, etc.)</li>
+<li>Add specific rules or constraints</li>
+<li>Define role (customer support, tutor, assistant)</li>
+<li>Set output format (JSON, markdown, etc.)</li>
+</ul>
+<h3 id="what-you-need">What You Need<a class="headerlink" href="#what-you-need" title="Permanent link">&para;</a></h3>
+<ul>
+<li>No training data required</li>
+<li>Just clear instructions</li>
+</ul>
+<h3 id="time-required">Time Required<a class="headerlink" href="#time-required" title="Permanent link">&para;</a></h3>
+<ul>
+<li>5-15 minutes</li>
+</ul>
+<h3 id="example-use-cases">Example Use Cases<a class="headerlink" href="#example-use-cases" title="Permanent link">&para;</a></h3>
+<p>✅ Make a chatbot more professional
+✅ Create a code assistant that explains step-by-step
+✅ Build a translator with specific style
+✅ Design a creative writer that uses certain themes</p>
+<h3 id="how-to-do-it">How to Do It<a class="headerlink" href="#how-to-do-it" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1:</strong> Create a Modelfile
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>./models/custom/my-assistant
+nano<span class="w"> </span>./models/custom/my-assistant/Modelfile
+</code></pre></div></p>
+<p><strong>Step 2:</strong> Define behavior with SYSTEM prompt
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+PARAMETER<span class="w"> </span>top_p<span class="w"> </span><span class="m">0</span>.9
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>helpful<span class="w"> </span>programming<span class="w"> </span>tutor.
+
+Your<span class="w"> </span>role:
+-<span class="w"> </span>Explain<span class="w"> </span>concepts<span class="w"> </span><span class="k">in</span><span class="w"> </span>simple<span class="w"> </span>terms
+-<span class="w"> </span>Provide<span class="w"> </span>code<span class="w"> </span>examples
+-<span class="w"> </span>Ask<span class="w"> </span>clarifying<span class="w"> </span>questions<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>request<span class="w"> </span>is<span class="w"> </span>unclear
+-<span class="w"> </span>Break<span class="w"> </span>down<span class="w"> </span>complex<span class="w"> </span>topics<span class="w"> </span>into<span class="w"> </span>steps
+
+Style:
+-<span class="w"> </span>Use<span class="w"> </span>clear,<span class="w"> </span>beginner-friendly<span class="w"> </span>language
+-<span class="w"> </span>Include<span class="w"> </span>emojis<span class="w"> </span><span class="k">for</span><span class="w"> </span>readability
+-<span class="w"> </span>Always<span class="w"> </span><span class="nb">test</span><span class="w"> </span>code<span class="w"> </span>before<span class="w"> </span>suggesting<span class="w"> </span>it
+-<span class="w"> </span>Admit<span class="w"> </span>when<span class="w"> </span>you<span class="err">&#39;</span>re<span class="w"> </span>unsure
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div></p>
+<p><strong>Step 3:</strong> Create the model
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-assistant<span class="w"> </span>./models/custom/my-assistant/Modelfile
+</code></pre></div></p>
+<p><strong>Step 4:</strong> Test it
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>chat
+<span class="c1"># Select &quot;my-assistant&quot; and start chatting</span>
+</code></pre></div></p>
+<h3 id="pros">Pros<a class="headerlink" href="#pros" title="Permanent link">&para;</a></h3>
+<p>✅ Fastest method
+✅ No training data needed
+✅ Easy to iterate and improve
+✅ Works immediately</p>
+<h3 id="cons">Cons<a class="headerlink" href="#cons" title="Permanent link">&para;</a></h3>
+<p>❌ Limited knowledge beyond base model
+❌ Can't add complex specialized knowledge
+❌ May not follow instructions perfectly every time</p>
+<hr />
+<h2 id="method-2-few-shot-learning-recommended">📚 Method 2: Few-Shot Learning (Recommended)<a class="headerlink" href="#method-2-few-shot-learning-recommended" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use_1">When to Use<a class="headerlink" href="#when-to-use_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>You have 5-50 example interactions</li>
+<li>Want model to respond in a specific way</li>
+<li>Need consistent tone/format</li>
+<li>Teaching specific domain knowledge</li>
+</ul>
+<h3 id="what-you-need_1">What You Need<a class="headerlink" href="#what-you-need_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Question/answer pairs</li>
+<li>Examples of ideal responses</li>
+<li>JSONL file (optional, can use converter)</li>
+</ul>
+<h3 id="time-required_1">Time Required<a class="headerlink" href="#time-required_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>30 minutes to 2 hours</li>
+</ul>
+<h3 id="example-use-cases_1">Example Use Cases<a class="headerlink" href="#example-use-cases_1" title="Permanent link">&para;</a></h3>
+<p>✅ Customer support with FAQs
+✅ Product documentation Q&amp;A
+✅ Style-specific content generation
+✅ Domain-specific terminology</p>
+<h3 id="how-to-do-it_1">How to Do It<a class="headerlink" href="#how-to-do-it_1" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1:</strong> Prepare your examples</p>
+<p>Option A: Manual (for small datasets)
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>TechCorp<span class="err">&#39;</span>s<span class="w"> </span>customer<span class="w"> </span>support<span class="w"> </span>assistant.
+Be<span class="w"> </span>helpful,<span class="w"> </span>professional,<span class="w"> </span>and<span class="w"> </span>concise.
+<span class="s2">&quot;&quot;&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;What are your business hours?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;We&#39;re open Monday-Friday, 9am-6pm EST. Weekend support is available via email.&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;How do I reset my password?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;To reset your password: 1) Click &#39;Forgot Password&#39; on the login page. 2) Enter your email. 3) Check your inbox for a reset link. 4) Create a new password. If you don&#39;t receive the email within 5 minutes, check your spam folder.&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;What&#39;s your return policy?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;We offer a 30-day money-back guarantee. Items must be unused and in original packaging. Simply contact support to initiate a return and we&#39;ll email you a prepaid shipping label.&quot;</span>
+</code></pre></div></p>
+<p>Option B: Using a JSONL file
+<div class="highlight"><pre><span></span><code><span class="c1"># Use the Web UI converter</span>
+<span class="c1"># 1. Go to http://localhost:8080/converter</span>
+<span class="c1"># 2. Upload your Excel/CSV with questions and answers</span>
+<span class="c1"># 3. Download the JSONL file</span>
+<span class="c1"># 4. Save to ./data/training/my-data.jsonl</span>
+</code></pre></div></p>
+<p>Then reference in Modelfile:
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>customer<span class="w"> </span>support<span class="w"> </span>assistant.
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># Load examples from JSONL (if using external data)</span>
+<span class="c"># Note: Currently requires manual MESSAGE blocks</span>
+<span class="c"># Future: We may support direct JSONL import</span>
+</code></pre></div></p>
+<p><strong>Step 2:</strong> Create the model
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>support-bot<span class="w"> </span>./models/custom/support-bot/Modelfile
+</code></pre></div></p>
+<p><strong>Step 3:</strong> Test with real questions
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>support-bot<span class="w"> </span><span class="s2">&quot;How can I track my order?&quot;</span>
+</code></pre></div></p>
+<h3 id="pros_1">Pros<a class="headerlink" href="#pros_1" title="Permanent link">&para;</a></h3>
+<p>✅ More consistent than System Prompt alone
+✅ Teaches specific knowledge
+✅ Still fast and easy
+✅ No GPU required</p>
+<h3 id="cons_1">Cons<a class="headerlink" href="#cons_1" title="Permanent link">&para;</a></h3>
+<p>❌ Limited to ~50 examples (Modelfile size)
+❌ Doesn't deeply "learn" patterns
+❌ May not generalize well beyond examples</p>
+<h3 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Start with 5-10 examples, test, then add more</li>
+<li>Include edge cases and common variations</li>
+<li>Make examples diverse (different question styles)</li>
+<li>Test after adding each batch</li>
+</ul>
+<hr />
+<h2 id="method-3-fine-tuning-advanced">🚀 Method 3: Fine-Tuning (Advanced)<a class="headerlink" href="#method-3-fine-tuning-advanced" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use_2">When to Use<a class="headerlink" href="#when-to-use_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>You have 100+ training examples</li>
+<li>Need deep domain specialization (medical, legal, technical)</li>
+<li>Want model to learn complex patterns</li>
+<li>Require consistent structured outputs</li>
+</ul>
+<h3 id="what-you-need_2">What You Need<a class="headerlink" href="#what-you-need_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Large dataset (100-10,000+ examples)</li>
+<li>GPU access (local or cloud)</li>
+<li>Technical skills (Python, ML frameworks)</li>
+<li>Time for training and evaluation</li>
+</ul>
+<h3 id="time-required_2">Time Required<a class="headerlink" href="#time-required_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Setup: 1-2 hours</li>
+<li>Training: 30 minutes to 8+ hours (depends on size)</li>
+<li>Evaluation: 1-2 hours</li>
+</ul>
+<h3 id="example-use-cases_2">Example Use Cases<a class="headerlink" href="#example-use-cases_2" title="Permanent link">&para;</a></h3>
+<p>✅ Medical diagnosis assistant
+✅ Legal document analyzer
+✅ Code generation for specific framework
+✅ Technical troubleshooting expert</p>
+<h3 id="high-level-process">High-Level Process<a class="headerlink" href="#high-level-process" title="Permanent link">&para;</a></h3>
+<p>Ollama itself doesn't fine-tune models — you train with external tools and import the result:</p>
+<ol>
+<li><strong>Prepare a JSONL dataset</strong> (100+ examples)</li>
+<li><strong>Train externally</strong> with Unsloth or Hugging Face Transformers (locally or on Google Colab's free GPU), typically with LoRA/QLoRA</li>
+<li><strong>Export to GGUF</strong> format with llama.cpp</li>
+<li><strong>Import into Ollama</strong>: <code>bash scripts/import-model.sh my-finetuned ./data/gguf/my-model.gguf</code></li>
+</ol>
+<p><strong>📖 Complete walkthrough with training scripts: <a href="../fine-tuning-guide/">Fine-Tuning Guide</a></strong> (canonical deep-dive). For a concrete worked example, see the <a href="../dataset-training-example/">Dataset Training Example</a>.</p>
+<h3 id="pros_2">Pros<a class="headerlink" href="#pros_2" title="Permanent link">&para;</a></h3>
+<p>✅ Deep learning of patterns
+✅ Can handle complex domain knowledge
+✅ Better generalization
+✅ Consistent structured outputs</p>
+<h3 id="cons_2">Cons<a class="headerlink" href="#cons_2" title="Permanent link">&para;</a></h3>
+<p>❌ Time-consuming
+❌ Requires GPU
+❌ Technical complexity
+❌ Risk of overfitting
+❌ Expensive (GPU time/cloud costs)</p>
+<h3 id="important-notes">Important Notes<a class="headerlink" href="#important-notes" title="Permanent link">&para;</a></h3>
+<p>⚠️ <strong>Try Method 2 first!</strong> Few-shot learning often works surprisingly well.
+⚠️ <strong>More data ≠ better</strong> - Quality matters more than quantity.
+⚠️ <strong>Start small</strong> - Fine-tune on 100 examples, evaluate, then scale up.</p>
+<hr />
+<h2 id="progressive-learning-path">🎓 Progressive Learning Path<a class="headerlink" href="#progressive-learning-path" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-start-simple">Week 1: Start Simple<a class="headerlink" href="#week-1-start-simple" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Use existing models from Ollama library</li>
+<li>Test with Web UI</li>
+<li>Understand basic prompting</li>
+</ol>
+<h3 id="week-2-system-prompts">Week 2: System Prompts<a class="headerlink" href="#week-2-system-prompts" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create first custom Modelfile</li>
+<li>Experiment with SYSTEM prompts</li>
+<li>Adjust parameters (temperature, etc.)</li>
+</ol>
+<h3 id="week-3-few-shot-learning">Week 3: Few-Shot Learning<a class="headerlink" href="#week-3-few-shot-learning" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Collect 10-20 example Q&amp;As</li>
+<li>Add MESSAGE blocks to Modelfile</li>
+<li>Test and refine</li>
+</ol>
+<h3 id="week-4-advanced-optional">Week 4+: Advanced (Optional)<a class="headerlink" href="#week-4-advanced-optional" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Consider fine-tuning for specialized needs</li>
+<li>Explore LoRA adapters</li>
+<li>Deploy to production</li>
+</ol>
+<hr />
+<h2 id="real-world-examples">📖 Real-World Examples<a class="headerlink" href="#real-world-examples" title="Permanent link">&para;</a></h2>
+<h3 id="example-1-personal-assistant-system-prompt">Example 1: Personal Assistant (System Prompt)<a class="headerlink" href="#example-1-personal-assistant-system-prompt" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Friendly helper that keeps responses concise</p>
+<p><strong>Method:</strong> System Prompt
+<strong>Time:</strong> 5 minutes</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>helpful<span class="w"> </span>personal<span class="w"> </span>assistant.
+Keep<span class="w"> </span>responses<span class="w"> </span>under<span class="w"> </span><span class="m">3</span><span class="w"> </span>sentences<span class="w"> </span>unless<span class="w"> </span>asked<span class="w"> </span><span class="k">for</span><span class="w"> </span>details.
+Be<span class="w"> </span>friendly<span class="w"> </span>and<span class="w"> </span>use<span class="w"> </span>a<span class="w"> </span>conversational<span class="w"> </span>tone.
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="example-2-faq-bot-few-shot">Example 2: FAQ Bot (Few-Shot)<a class="headerlink" href="#example-2-faq-bot-few-shot" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Answer common questions about a product</p>
+<p><strong>Method:</strong> Few-Shot Learning
+<strong>Time:</strong> 30 minutes
+<strong>Data:</strong> 20 Q&amp;A pairs from support tickets</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>support<span class="w"> </span>bot<span class="w"> </span><span class="k">for</span><span class="w"> </span>WidgetPro<span class="w"> </span><span class="m">3000</span>.
+Answer<span class="w"> </span>questions<span class="w"> </span>based<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>manual.
+<span class="s2">&quot;&quot;&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;How do I charge the battery?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;Connect the USB-C cable to the charging port on the bottom. A red light indicates charging; green means fully charged (takes ~2 hours).&quot;</span>
+
+<span class="c"># ... 19 more examples ...</span>
+</code></pre></div>
+<h3 id="example-3-medical-coding-assistant-fine-tuning">Example 3: Medical Coding Assistant (Fine-Tuning)<a class="headerlink" href="#example-3-medical-coding-assistant-fine-tuning" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Convert medical notes to billing codes</p>
+<p><strong>Method:</strong> Fine-Tuning
+<strong>Time:</strong> 8 hours
+<strong>Data:</strong> 5,000 labeled examples</p>
+<p><strong>Reason for fine-tuning:</strong>
+- Requires learning complex ICD-10 code patterns
+- Needs high accuracy (billing consequences)
+- Large labeled dataset available
+- Structured output format</p>
+<hr />
+<h2 id="still-not-sure">🤔 Still Not Sure?<a class="headerlink" href="#still-not-sure" title="Permanent link">&para;</a></h2>
+<h3 id="ask-yourself">Ask Yourself:<a class="headerlink" href="#ask-yourself" title="Permanent link">&para;</a></h3>
+<p><strong>Q: Do I just want to change how it talks?</strong>
+→ Use <strong>System Prompt</strong></p>
+<p><strong>Q: Do I have specific examples of ideal responses?</strong>
+→ Use <strong>Few-Shot Learning</strong> (if &lt; 50 examples)
+→ Use <strong>Fine-Tuning</strong> (if 100+ examples)</p>
+<p><strong>Q: Is it mission-critical with regulatory requirements?</strong>
+→ Consider <strong>Fine-Tuning</strong> (after thorough testing)</p>
+<p><strong>Q: Am I on a tight deadline?</strong>
+→ Use <strong>System Prompt</strong> or <strong>Few-Shot Learning</strong></p>
+<p><strong>Q: Do I have a GPU and ML expertise?</strong>
+→ Consider <strong>Fine-Tuning</strong> (but try simpler methods first!)</p>
+<hr />
+<h2 id="traffic-light-guide">🚦 Traffic Light Guide<a class="headerlink" href="#traffic-light-guide" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>🟢 Start Here</th>
+<th>🟡 Next Step</th>
+<th>🔴 Advanced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System Prompt</td>
+<td>Few-Shot Learning</td>
+<td>Fine-Tuning</td>
+</tr>
+<tr>
+<td>5 minutes</td>
+<td>30 minutes</td>
+<td>Hours/Days</td>
+</tr>
+<tr>
+<td>No data needed</td>
+<td>5-50 examples</td>
+<td>100+ examples</td>
+</tr>
+<tr>
+<td>Easy iteration</td>
+<td>Medium complexity</td>
+<td>High complexity</td>
+</tr>
+<tr>
+<td><strong>Use for 80% of cases</strong></td>
+<td><strong>Use for 15% of cases</strong></td>
+<td><strong>Use for 5% of cases</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../concepts/">Essential Concepts</a> - Learn the basics</li>
+<li><a href="../parameter-guide/">Parameter Guide</a> - Optimize your settings</li>
+<li><a href="../examples/">Example Modelfiles</a> - Ready-to-use templates</li>
+<li><a href="../fine-tuning-guide/">Fine-Tuning Guide</a> - Complete fine-tuning deep-dive</li>
+<li><a href="../dataset-training-example/">Dataset Training Example</a> - Worked dataset example</li>
+</ul>
+<hr />
+<p><strong>Remember: Start simple, test, iterate!</strong> Most users achieve their goals with just a well-crafted system prompt. Don't overcomplicate! 🎯</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

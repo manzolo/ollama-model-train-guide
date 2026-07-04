@@ -1,0 +1,2305 @@
+
+<!doctype html>
+<html lang="it" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/it/fine-tuning-guide/">
+      
+      
+        <link rel="prev" href="../dataset-training-example/">
+      
+      
+        <link rel="next" href="../api-usage/">
+      
+      
+        
+          <link rel="alternate" href="../../fine-tuning-guide/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Guida al fine-tuning - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guida-al-fine-tuning-per-ollama" class="md-skip">
+          Vai al contenuto
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Intestazione">
+    <a href="../" title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Guida al fine-tuning
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleziona la lingua">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../fine-tuning-guide/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Cerca" placeholder="Cerca" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Cerca">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Cancella" aria-label="Cancella" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inizializza la ricerca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigazione" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per iniziare
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Per iniziare
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concetti (inizia qui)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installazione
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento rapido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usare l'ambiente
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usare l'ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso quotidiano
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaccia Web (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile di esempio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personalizzare i modelli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Personalizzare i modelli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scegliere un metodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida ai parametri
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento Modelfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida all'assistente personale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esempio di training con dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al fine-tuning
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al fine-tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#panoramica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panoramica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-del-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow del Fine-Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-1-prepara-i-dati-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1: Prepara i Dati di Addestramento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 1: Prepara i Dati di Addestramento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-dei-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato dei Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consigli-sulla-qualita-dei-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consigli sulla Qualità dei Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esempio-di-struttura-del-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio di Struttura del Dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-2-fine-tuning-con-strumenti-esterni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2: Fine-Tuning con Strumenti Esterni
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 2: Fine-Tuning con Strumenti Esterni">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opzione-a-unsloth-consigliato-per-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione A: Unsloth (Consigliato per LoRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzione-b-hugging-face-transformers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione B: Hugging Face Transformers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzione-c-google-colab-gpu-gratuita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione C: Google Colab (GPU Gratuita)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-3-esporta-in-formato-gguf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3: Esporta in Formato GGUF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 3: Esporta in Formato GGUF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usare-llamacpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare llama.cpp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzioni-di-quantizzazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzioni di Quantizzazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-4-importa-in-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 4: Importa in Ollama
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 4: Importa in Ollama">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metodo-1-importa-il-modello-gguf-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metodo 1: Importa il Modello GGUF Completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metodo-2-usa-un-adattatore-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metodo 2: Usa un Adattatore LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esempio-workflow-completo-di-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio: Workflow Completo di Fine-Tuning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Esempio: Workflow Completo di Fine-Tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepara-i-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Prepara i Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fine-tuning-con-unsloth-colab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fine-Tuning con Unsloth (Colab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-converti-in-gguf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Converti in GGUF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-importa-in-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Importa in Ollama
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-testa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Testa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dati-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dati di Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametri-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametri LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iperparametri-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iperparametri di Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei Problemi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei Problemi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-memory-durante-laddestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Memory Durante l'Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problemi-di-qualita-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problemi di Qualità del Modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-conversione-in-gguf-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La Conversione in GGUF Fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risorse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risorse
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operazioni
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operazioni
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso delle API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso avanzato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risoluzione dei problemi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#panoramica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panoramica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-del-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow del Fine-Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-1-prepara-i-dati-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1: Prepara i Dati di Addestramento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 1: Prepara i Dati di Addestramento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formato-dei-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato dei Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consigli-sulla-qualita-dei-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consigli sulla Qualità dei Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esempio-di-struttura-del-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio di Struttura del Dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-2-fine-tuning-con-strumenti-esterni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2: Fine-Tuning con Strumenti Esterni
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 2: Fine-Tuning con Strumenti Esterni">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opzione-a-unsloth-consigliato-per-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione A: Unsloth (Consigliato per LoRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzione-b-hugging-face-transformers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione B: Hugging Face Transformers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzione-c-google-colab-gpu-gratuita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzione C: Google Colab (GPU Gratuita)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-3-esporta-in-formato-gguf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3: Esporta in Formato GGUF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 3: Esporta in Formato GGUF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usare-llamacpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare llama.cpp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opzioni-di-quantizzazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opzioni di Quantizzazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passo-4-importa-in-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 4: Importa in Ollama
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passo 4: Importa in Ollama">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metodo-1-importa-il-modello-gguf-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metodo 1: Importa il Modello GGUF Completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metodo-2-usa-un-adattatore-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metodo 2: Usa un Adattatore LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esempio-workflow-completo-di-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Esempio: Workflow Completo di Fine-Tuning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Esempio: Workflow Completo di Fine-Tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepara-i-dati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Prepara i Dati
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fine-tuning-con-unsloth-colab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fine-Tuning con Unsloth (Colab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-converti-in-gguf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Converti in GGUF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-importa-in-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Importa in Ollama
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-testa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Testa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dati-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dati di Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametri-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametri LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iperparametri-di-addestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iperparametri di Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei Problemi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei Problemi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-memory-durante-laddestramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Memory Durante l'Addestramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problemi-di-qualita-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problemi di Qualità del Modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-conversione-in-gguf-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La Conversione in GGUF Fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risorse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risorse
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="guida-al-fine-tuning-per-ollama">Guida al Fine-Tuning per Ollama<a class="headerlink" href="#guida-al-fine-tuning-per-ollama" title="Permanent link">&para;</a></h1>
+<p>Guida all'integrazione con Ollama di modelli sottoposti a fine-tuning esternamente. <strong>Questo è il riferimento canonico sul fine-tuning</strong> per il progetto — altri documenti (<a href="../customization-guide/">Guida alla Personalizzazione</a>, <a href="../dataset-training-example/">Esempio di Addestramento con Dataset</a>, <a href="../advanced-usage/">Utilizzo Avanzato</a>) rimandano qui per il workflow completo.</p>
+<h2 id="panoramica">Panoramica<a class="headerlink" href="#panoramica" title="Permanent link">&para;</a></h2>
+<p>Ollama di per sé non offre funzionalità di fine-tuning dei modelli. Tuttavia, puoi eseguire il fine-tuning dei modelli utilizzando strumenti esterni e poi importarli in Ollama per l'inferenza.</p>
+<p><strong>Prima del fine-tuning</strong>: la maggior parte dei casi d'uso si risolve più rapidamente con un system prompt o con esempi MESSAGE few-shot — vedi la <a href="../customization-guide/">Guida alla Personalizzazione</a>. Per un esempio concreto e completo di questo intero workflow (dataset → addestramento → GGUF → Ollama), vedi l'<a href="../dataset-training-example/">Esempio di Addestramento con Dataset</a>.</p>
+<h2 id="workflow-del-fine-tuning">Workflow del Fine-Tuning<a class="headerlink" href="#workflow-del-fine-tuning" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────┐
+│ Choose Base     │
+│ Model           │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Prepare         │
+│ Training Data   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Fine-Tune with  │
+│ External Tools  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Export to GGUF  │
+│ or LoRA Adapter │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Import into     │
+│ Ollama          │
+└─────────────────┘
+</code></pre></div>
+<h2 id="passo-1-prepara-i-dati-di-addestramento">Passo 1: Prepara i Dati di Addestramento<a class="headerlink" href="#passo-1-prepara-i-dati-di-addestramento" title="Permanent link">&para;</a></h2>
+<h3 id="formato-dei-dati">Formato dei Dati<a class="headerlink" href="#formato-dei-dati" title="Permanent link">&para;</a></h3>
+<p>La maggior parte degli strumenti di fine-tuning si aspetta dati in formato JSON o JSONL:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;instruction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The capital of France is Paris.&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;instruction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Explain photosynthesis&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Photosynthesis is the process by which plants...&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>Oppure, per dataset conversazionali:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello!&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hi! How can I help you?&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<h3 id="consigli-sulla-qualita-dei-dati">Consigli sulla Qualità dei Dati<a class="headerlink" href="#consigli-sulla-qualita-dei-dati" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Coerenza</strong>: Usa formattazione e stile coerenti</li>
+<li><strong>Diversità</strong>: Includi esempi variegati che coprano i tuoi casi d'uso</li>
+<li><strong>Qualità più che Quantità</strong>: 50 esempi di alta qualità &gt; 500 mediocri</li>
+<li><strong>Bilanciamento</strong>: Mantieni una rappresentazione bilanciata tra le categorie</li>
+</ol>
+<h3 id="esempio-di-struttura-del-dataset">Esempio di Struttura del Dataset<a class="headerlink" href="#esempio-di-struttura-del-dataset" title="Permanent link">&para;</a></h3>
+<p>Salva in <code>./data/training/my-dataset.jsonl</code>:</p>
+<div class="highlight"><pre><span></span><code>{&quot;instruction&quot;: &quot;Convert 100°F to Celsius&quot;, &quot;output&quot;: &quot;100°F is equal to 37.78°C&quot;}
+{&quot;instruction&quot;: &quot;What is 50 km in miles?&quot;, &quot;output&quot;: &quot;50 kilometers is approximately 31.07 miles&quot;}
+</code></pre></div>
+<h2 id="passo-2-fine-tuning-con-strumenti-esterni">Passo 2: Fine-Tuning con Strumenti Esterni<a class="headerlink" href="#passo-2-fine-tuning-con-strumenti-esterni" title="Permanent link">&para;</a></h2>
+<h3 id="opzione-a-unsloth-consigliato-per-lora">Opzione A: Unsloth (Consigliato per LoRA)<a class="headerlink" href="#opzione-a-unsloth-consigliato-per-lora" title="Permanent link">&para;</a></h3>
+<p><strong>Vantaggi</strong>: Veloce, efficiente, supporta molti modelli</p>
+<ol>
+<li>
+<p><strong>Prepara l'ambiente</strong>:
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>unsloth
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Crea lo script di addestramento</strong> (<code>train.py</code>):
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">unsloth</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastLanguageModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="c1"># Load model</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;unsloth/llama-3-8b-bnb-4bit&quot;</span><span class="p">,</span>
+    <span class="n">max_seq_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">load_in_4bit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Add LoRA adapters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="o">.</span><span class="n">get_peft_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">r</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">target_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;q_proj&quot;</span><span class="p">,</span> <span class="s2">&quot;k_proj&quot;</span><span class="p">,</span> <span class="s2">&quot;v_proj&quot;</span><span class="p">,</span> <span class="s2">&quot;o_proj&quot;</span><span class="p">],</span>
+    <span class="n">lora_alpha</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">lora_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">bias</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Load dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;data.jsonl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Train</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingArguments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trl</span><span class="w"> </span><span class="kn">import</span> <span class="n">SFTTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SFTTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span>
+    <span class="n">args</span><span class="o">=</span><span class="n">TrainingArguments</span><span class="p">(</span>
+        <span class="n">per_device_train_batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">warmup_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">2e-4</span><span class="p">,</span>
+        <span class="n">fp16</span><span class="o">=</span><span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_bf16_supported</span><span class="p">(),</span>
+        <span class="n">bf16</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_bf16_supported</span><span class="p">(),</span>
+        <span class="n">logging_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+<span class="c1"># Save LoRA adapter</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="s2">&quot;lora_adapter&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Avvia l'addestramento</strong>:
+   <div class="highlight"><pre><span></span><code>python<span class="w"> </span>train.py
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="opzione-b-hugging-face-transformers">Opzione B: Hugging Face Transformers<a class="headerlink" href="#opzione-b-hugging-face-transformers" title="Permanent link">&para;</a></h3>
+<p><strong>Vantaggi</strong>: Standard di settore, documentazione estesa</p>
+<ol>
+<li>
+<p><strong>Installa le dipendenze</strong>:
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>transformers<span class="w"> </span>datasets<span class="w"> </span>peft<span class="w"> </span>accelerate
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Esempio di script di addestramento</strong>:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AutoModelForCausalLM</span><span class="p">,</span>
+    <span class="n">AutoTokenizer</span><span class="p">,</span>
+    <span class="n">TrainingArguments</span><span class="p">,</span>
+    <span class="n">Trainer</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">peft</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoraConfig</span><span class="p">,</span> <span class="n">get_peft_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+
+<span class="c1"># Load model and tokenizer</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;meta-llama/Llama-2-7b-hf&quot;</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+
+<span class="c1"># Configure LoRA</span>
+<span class="n">lora_config</span> <span class="o">=</span> <span class="n">LoraConfig</span><span class="p">(</span>
+    <span class="n">r</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">lora_alpha</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">target_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;q_proj&quot;</span><span class="p">,</span> <span class="s2">&quot;v_proj&quot;</span><span class="p">],</span>
+    <span class="n">lora_dropout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">bias</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;CAUSAL_LM&quot;</span>
+<span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">get_peft_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">lora_config</span><span class="p">)</span>
+
+<span class="c1"># Load and prepare dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;data.jsonl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Train</span>
+<span class="n">training_args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./results&quot;</span><span class="p">,</span>
+    <span class="n">num_train_epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">per_device_train_batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">save_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">save_total_limit</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="n">training_args</span><span class="p">,</span>
+    <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="s2">&quot;./finetuned_model&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="opzione-c-google-colab-gpu-gratuita">Opzione C: Google Colab (GPU Gratuita)<a class="headerlink" href="#opzione-c-google-colab-gpu-gratuita" title="Permanent link">&para;</a></h3>
+<p>Per gli utenti senza GPU locale:</p>
+<ol>
+<li>Apri <a href="https://colab.research.google.com/">Google Colab</a></li>
+<li>Abilita la GPU: Runtime &gt; Change runtime type &gt; GPU</li>
+<li>Usa Unsloth o Transformers come sopra</li>
+<li>Scarica il modello/adattatore sottoposto a fine-tuning</li>
+</ol>
+<h2 id="passo-3-esporta-in-formato-gguf">Passo 3: Esporta in Formato GGUF<a class="headerlink" href="#passo-3-esporta-in-formato-gguf" title="Permanent link">&para;</a></h2>
+<h3 id="usare-llamacpp">Usare llama.cpp<a class="headerlink" href="#usare-llamacpp" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Installa llama.cpp</strong>:
+   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ggerganov/llama.cpp
+<span class="nb">cd</span><span class="w"> </span>llama.cpp
+make
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Converti il modello in GGUF</strong>:
+   <div class="highlight"><pre><span></span><code>python<span class="w"> </span>convert.py<span class="w"> </span>/path/to/your/model<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--outtype<span class="w"> </span>f16<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--outfile<span class="w"> </span>model.gguf
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Opzionalmente quantizza</strong> (riduci la dimensione):
+   <div class="highlight"><pre><span></span><code>./quantize<span class="w"> </span>model.gguf<span class="w"> </span>model-q4_0.gguf<span class="w"> </span>q4_0
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="opzioni-di-quantizzazione">Opzioni di Quantizzazione<a class="headerlink" href="#opzioni-di-quantizzazione" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>f16</strong>: Precisione piena (più grande, qualità migliore)</li>
+<li><strong>q8_0</strong>: Quantizzazione a 8 bit (buon equilibrio)</li>
+<li><strong>q4_0</strong>: Quantizzazione a 4 bit (più piccolo, più veloce)</li>
+<li><strong>q4_K_M</strong>: 4 bit con miglioramenti di qualità</li>
+</ul>
+<h2 id="passo-4-importa-in-ollama">Passo 4: Importa in Ollama<a class="headerlink" href="#passo-4-importa-in-ollama" title="Permanent link">&para;</a></h2>
+<h3 id="metodo-1-importa-il-modello-gguf-completo">Metodo 1: Importa il Modello GGUF Completo<a class="headerlink" href="#metodo-1-importa-il-modello-gguf-completo" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Copia il GGUF nella directory data</strong>:
+   <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>model.gguf<span class="w"> </span>./data/gguf/
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Importa usando lo script</strong>:
+   <div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/import-model.sh<span class="w"> </span>my-finetuned-model<span class="w"> </span>./data/gguf/model.gguf
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Testa il modello</strong>:
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>my-finetuned-model<span class="w"> </span><span class="s2">&quot;Test prompt&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="metodo-2-usa-un-adattatore-lora">Metodo 2: Usa un Adattatore LoRA<a class="headerlink" href="#metodo-2-usa-un-adattatore-lora" title="Permanent link">&para;</a></h3>
+<p>Se disponi solo di un adattatore LoRA:</p>
+<ol>
+<li>
+<p><strong>Copia l'adattatore nella directory data</strong>:
+   <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>lora_adapter/*<span class="w"> </span>./data/adapters/my-adapter/
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Crea il Modelfile</strong>:
+   <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:3b</span>
+ADAPTER<span class="w"> </span>/data/adapters/my-adapter/adapter_model.bin
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.7
+PARAMETER<span class="w"> </span>num_ctx<span class="w"> </span><span class="m">4096</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Crea il modello</strong>:
+   <div class="highlight"><pre><span></span><code>bash<span class="w"> </span>scripts/create-custom-model.sh<span class="w"> </span>my-custom-model<span class="w"> </span>./models/custom/my-adapter-model
+</code></pre></div></p>
+</li>
+</ol>
+<h2 id="esempio-workflow-completo-di-fine-tuning">Esempio: Workflow Completo di Fine-Tuning<a class="headerlink" href="#esempio-workflow-completo-di-fine-tuning" title="Permanent link">&para;</a></h2>
+<h3 id="1-prepara-i-dati">1. Prepara i Dati<a class="headerlink" href="#1-prepara-i-dati" title="Permanent link">&para;</a></h3>
+<p><code>./data/training/tech-support.jsonl</code>:
+<div class="highlight"><pre><span></span><code>{&quot;instruction&quot;: &quot;How do I reset my password?&quot;, &quot;output&quot;: &quot;To reset your password: 1. Click &#39;Forgot Password&#39; 2. Enter your email 3. Check your inbox for reset link&quot;}
+{&quot;instruction&quot;: &quot;My account is locked&quot;, &quot;output&quot;: &quot;If your account is locked, please contact support@example.com with your username&quot;}
+</code></pre></div></p>
+<h3 id="2-fine-tuning-con-unsloth-colab">2. Fine-Tuning con Unsloth (Colab)<a class="headerlink" href="#2-fine-tuning-con-unsloth-colab" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># In Google Colab</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">unsloth</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">unsloth</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastLanguageModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+
+<span class="c1"># Load model</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="s2">&quot;unsloth/llama-3-8b-bnb-4bit&quot;</span><span class="p">,</span>
+    <span class="n">max_seq_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">load_in_4bit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Add LoRA</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="o">.</span><span class="n">get_peft_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+<span class="c1"># Load data</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;tech-support.jsonl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Train</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trl</span><span class="w"> </span><span class="kn">import</span> <span class="n">SFTTrainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingArguments</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SFTTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span>
+    <span class="n">max_seq_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+<span class="c1"># Save</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save_pretrained_merged</span><span class="p">(</span><span class="s2">&quot;tech_support_model&quot;</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="3-converti-in-gguf">3. Converti in GGUF<a class="headerlink" href="#3-converti-in-gguf" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Download from Colab</span>
+<span class="c1"># Then convert</span>
+python<span class="w"> </span>llama.cpp/convert.py<span class="w"> </span>tech_support_model<span class="w"> </span>--outfile<span class="w"> </span>tech-support.gguf
+./llama.cpp/quantize<span class="w"> </span>tech-support.gguf<span class="w"> </span>tech-support-q4.gguf<span class="w"> </span>q4_0
+</code></pre></div>
+<h3 id="4-importa-in-ollama">4. Importa in Ollama<a class="headerlink" href="#4-importa-in-ollama" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>tech-support-q4.gguf<span class="w"> </span>./data/gguf/
+bash<span class="w"> </span>scripts/import-model.sh<span class="w"> </span>tech-support<span class="w"> </span>./data/gguf/tech-support-q4.gguf
+</code></pre></div>
+<h3 id="5-testa">5. Testa<a class="headerlink" href="#5-testa" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>tech-support<span class="w"> </span><span class="s2">&quot;How do I reset my password?&quot;</span>
+</code></pre></div>
+<h2 id="best-practice">Best Practice<a class="headerlink" href="#best-practice" title="Permanent link">&para;</a></h2>
+<h3 id="dati-di-addestramento">Dati di Addestramento<a class="headerlink" href="#dati-di-addestramento" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Minimo</strong>: 50-100 esempi di alta qualità</li>
+<li><strong>Ideale</strong>: 1.000-10.000 esempi</li>
+<li><strong>Coerenza del formato</strong>: Fai corrispondere lo stile input/output all'uso previsto</li>
+<li><strong>Suddivisione per la validazione</strong>: Tieni da parte il 10-20% per la validazione</li>
+</ul>
+<h3 id="parametri-lora">Parametri LoRA<a class="headerlink" href="#parametri-lora" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>r (rank)</strong>: 8-32 (più alto = più capacità, più lento)</li>
+<li><strong>alpha</strong>: Solitamente 2×r (16-64)</li>
+<li><strong>dropout</strong>: 0.05-0.1</li>
+<li><strong>Target modules</strong>: q_proj, v_proj come minimo</li>
+</ul>
+<h3 id="iperparametri-di-addestramento">Iperparametri di Addestramento<a class="headerlink" href="#iperparametri-di-addestramento" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Learning rate</strong>: da 1e-4 a 5e-4</li>
+<li><strong>Batch size</strong>: Inizia in piccolo (1-4), aumenta se possibile</li>
+<li><strong>Epoche</strong>: 3-5 solitamente sufficienti</li>
+<li><strong>Gradient accumulation</strong>: Usalo se la memoria della GPU è limitata</li>
+</ul>
+<h2 id="risoluzione-dei-problemi">Risoluzione dei Problemi<a class="headerlink" href="#risoluzione-dei-problemi" title="Permanent link">&para;</a></h2>
+<h3 id="out-of-memory-durante-laddestramento">Out of Memory Durante l'Addestramento<a class="headerlink" href="#out-of-memory-durante-laddestramento" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Riduci il batch size</li>
+<li>Abilita il gradient checkpointing</li>
+<li>Usa una variante di modello più piccola</li>
+<li>Aumenta gli step di gradient accumulation</li>
+</ul>
+<h3 id="problemi-di-qualita-del-modello">Problemi di Qualità del Modello<a class="headerlink" href="#problemi-di-qualita-del-modello" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Controlla la qualità e la coerenza dei dati</li>
+<li>Aumenta gli esempi di addestramento</li>
+<li>Regola il learning rate</li>
+<li>Addestra per più epoche</li>
+<li>Prova diversi rank LoRA</li>
+</ul>
+<h3 id="la-conversione-in-gguf-fallisce">La Conversione in GGUF Fallisce<a class="headerlink" href="#la-conversione-in-gguf-fallisce" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Assicurati che il formato del modello sia supportato</li>
+<li>Verifica la compatibilità della versione di llama.cpp</li>
+<li>Verifica che i file del modello siano completi</li>
+</ul>
+<h2 id="risorse">Risorse<a class="headerlink" href="#risorse" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/unslothai/unsloth">Documentazione di Unsloth</a></li>
+<li><a href="https://huggingface.co/docs/peft">Hugging Face PEFT</a></li>
+<li><a href="https://github.com/ggerganov/llama.cpp">Guida GGUF di llama.cpp</a></li>
+<li><a href="https://arxiv.org/abs/2106.09685">Paper su LoRA</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Torna su
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiato", "clipboard.copy": "Copia", "search.result.more.one": "1 altro in questa pagina", "search.result.more.other": "# altri in questa pagina", "search.result.none": "Nessun documento trovato", "search.result.one": "1 documento trovato", "search.result.other": "# documenti trovati", "search.result.placeholder": "Scrivi per iniziare a cercare", "search.result.term.missing": "Non presente", "select.version": "Seleziona la versione"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

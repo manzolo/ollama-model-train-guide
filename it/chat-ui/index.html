@@ -1,0 +1,2372 @@
+
+<!doctype html>
+<html lang="it" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docker Compose environment for creating, customizing, and managing Ollama language models">
+      
+      
+      
+        <link rel="canonical" href="https://manzolo.github.io/ollama-model-train-guide/it/chat-ui/">
+      
+      
+        <link rel="prev" href="../usage/">
+      
+      
+        <link rel="next" href="../examples/">
+      
+      
+        
+          <link rel="alternate" href="../../chat-ui/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="it">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Interfaccia Web (Chat, Converter, Wizard) - Ollama Model Training Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guida-alla-web-ui-di-chat" class="md-skip">
+          Vai al contenuto
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Intestazione">
+    <a href="../" title="Ollama Model Training Guide" class="md-header__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ollama Model Training Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Interfaccia Web (Chat, Converter, Wizard)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleziona la lingua">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../chat-ui/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="it" class="md-select__link">
+              Italiano
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Cerca" placeholder="Cerca" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Cerca">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Cancella" aria-label="Cancella" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inizializza la ricerca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigazione" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Ollama Model Training Guide" class="md-nav__button md-logo" aria-label="Ollama Model Training Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ollama Model Training Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/manzolo/ollama-model-train-guide" title="Apri repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    manzolo/ollama-model-train-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per iniziare
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Per iniziare
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concetti (inizia qui)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installazione
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento rapido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usare l'ambiente
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usare l'ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso quotidiano
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaccia Web (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaccia Web (Chat, Converter, Wizard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#accesso-alla-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso alla Web UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#panoramica-delle-funzionalita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panoramica delle Funzionalità
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaccia-di-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaccia di Chat
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaccia di Chat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avviare-una-conversazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avviare una Conversazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selettore-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selettore del Modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#funzionalita-della-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funzionalità della Chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestione-dei-modelli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestione dei Modelli
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Gestione dei Modelli">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scaricare-i-modelli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaricare i Modelli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizzare-i-modelli-installati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualizzare i Modelli Installati
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convertitore-da-foglio-di-calcolo-a-jsonl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convertitore da Foglio di Calcolo a JSONL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Convertitore da Foglio di Calcolo a JSONL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accesso-al-convertitore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso al Convertitore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convertire-i-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convertire i File
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Convertire i File">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passo-1-carica-il-tuo-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1: Carica il tuo File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-2-configura-le-colonne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2: Configura le Colonne
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-3-anteprima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3: Anteprima
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-4-converti-e-salva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 4: Converti e Salva
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formato-di-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato di Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usare-i-dati-convertiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare i Dati Convertiti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelfile-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelfile Wizard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelfile Wizard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accesso-al-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso al Wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#i-6-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I 6 Passi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggerimenti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggerimenti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurazione-della-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione della Web UI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurazione della Web UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configurazione-della-porta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione della Porta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connessione-allapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connessione all'API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei Problemi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei Problemi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-chat-ui-non-si-carica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La Chat UI non si carica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#i-modelli-non-appaiono-nel-menu-a-tendina" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I modelli non appaiono nel menu a tendina
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lo-scaricamento-del-modello-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lo scaricamento del modello fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#il-caricamento-nel-convertitore-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Il caricamento nel convertitore fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problemi-di-stile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problemi di stile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-avanzato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso Avanzato
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Uso Avanzato">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#personalizzare-la-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Personalizzare la UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usare-lapi-direttamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare l'API Direttamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scorciatoie-da-tastiera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scorciatoie da Tastiera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prossimi-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prossimi Passi
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelfile di esempio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personalizzare i modelli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Personalizzare i modelli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scegliere un metodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida ai parametri
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelfile-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riferimento Modelfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../personal-model-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida all'assistente personale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset-training-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esempio di training con dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fine-tuning-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al fine-tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operazioni
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operazioni
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso delle API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guida al deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso avanzato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risoluzione dei problemi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Indice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Indice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#accesso-alla-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso alla Web UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#panoramica-delle-funzionalita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panoramica delle Funzionalità
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaccia-di-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaccia di Chat
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaccia di Chat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avviare-una-conversazione" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avviare una Conversazione
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selettore-del-modello" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selettore del Modello
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#funzionalita-della-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funzionalità della Chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestione-dei-modelli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestione dei Modelli
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Gestione dei Modelli">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scaricare-i-modelli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaricare i Modelli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizzare-i-modelli-installati" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualizzare i Modelli Installati
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convertitore-da-foglio-di-calcolo-a-jsonl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convertitore da Foglio di Calcolo a JSONL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Convertitore da Foglio di Calcolo a JSONL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accesso-al-convertitore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso al Convertitore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convertire-i-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convertire i File
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Convertire i File">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passo-1-carica-il-tuo-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1: Carica il tuo File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-2-configura-le-colonne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2: Configura le Colonne
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-3-anteprima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3: Anteprima
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-4-converti-e-salva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 4: Converti e Salva
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formato-di-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato di Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usare-i-dati-convertiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare i Dati Convertiti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelfile-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelfile Wizard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelfile Wizard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accesso-al-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accesso al Wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#i-6-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I 6 Passi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggerimenti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggerimenti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurazione-della-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione della Web UI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurazione della Web UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configurazione-della-porta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurazione della Porta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connessione-allapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connessione all'API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risoluzione-dei-problemi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risoluzione dei Problemi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risoluzione dei Problemi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-chat-ui-non-si-carica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La Chat UI non si carica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#i-modelli-non-appaiono-nel-menu-a-tendina" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I modelli non appaiono nel menu a tendina
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lo-scaricamento-del-modello-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lo scaricamento del modello fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#il-caricamento-nel-convertitore-fallisce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Il caricamento nel convertitore fallisce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problemi-di-stile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problemi di stile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-avanzato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso Avanzato
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Uso Avanzato">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#personalizzare-la-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Personalizzare la UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usare-lapi-direttamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usare l'API Direttamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scorciatoie-da-tastiera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scorciatoie da Tastiera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prossimi-passi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prossimi Passi
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="guida-alla-web-ui-di-chat">Guida alla Web UI di Chat<a class="headerlink" href="#guida-alla-web-ui-di-chat" title="Permanent link">&para;</a></h1>
+<p>La Ollama Model Training Guide include una moderna interfaccia web per interagire con i tuoi modelli, gestirli e convertire i dati di addestramento.</p>
+<h2 id="accesso-alla-web-ui">Accesso alla Web UI<a class="headerlink" href="#accesso-alla-web-ui" title="Permanent link">&para;</a></h2>
+<p>Avvia i servizi:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>up
+</code></pre></div></p>
+<p>Poi apri il browser all'indirizzo: <strong>http://localhost:8080</strong></p>
+<p>La UI viene avviata automaticamente insieme a Ollama e si connette all'API su <code>http://ollama:11434</code>. Il servizio di chat gira sotto il profilo Compose <code>chat</code>; usa <code>make up-core</code> (oppure imposta <code>COMPOSE_PROFILES=</code> in <code>.env</code>) per eseguire Ollama senza di esso.</p>
+<p>L'applicazione web ha tre pagine:</p>
+<table>
+<thead>
+<tr>
+<th>Pagina</th>
+<th>URL</th>
+<th>Scopo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chat</strong></td>
+<td>http://localhost:8080</td>
+<td>Chatta con i modelli, scarica/gestisci i modelli, modifica i Modelfile</td>
+</tr>
+<tr>
+<td><strong>Converter</strong></td>
+<td>http://localhost:8080/converter</td>
+<td>Converti fogli di calcolo Excel/CSV in dati di addestramento JSONL</td>
+</tr>
+<tr>
+<td><strong>Wizard</strong></td>
+<td>http://localhost:8080/wizard</td>
+<td>Creazione guidata passo-passo di un Modelfile</td>
+</tr>
+</tbody>
+</table>
+<h2 id="panoramica-delle-funzionalita">Panoramica delle Funzionalità<a class="headerlink" href="#panoramica-delle-funzionalita" title="Permanent link">&para;</a></h2>
+<p>La Chat UI offre:
+- <strong>Chat interattiva</strong>: dialoga con i tuoi modelli in una moderna interfaccia di chat
+- <strong>Selezione del modello</strong>: passa facilmente tra i modelli installati
+- <strong>Gestione dei modelli</strong>: scarica modelli dalla libreria Ollama con avanzamento in tempo reale
+- <strong>Convertitore di fogli di calcolo</strong>: converti file Excel/CSV nel formato di addestramento JSONL
+- <strong>Modelfile Wizard</strong>: crea un modello personalizzato in 6 passi guidati, senza sintassi richiesta
+- <strong>Menu a tendina di selezione del modello</strong>: menu a tendina migliorato con stile moderno e ricerca</p>
+<h2 id="interfaccia-di-chat">Interfaccia di Chat<a class="headerlink" href="#interfaccia-di-chat" title="Permanent link">&para;</a></h2>
+<h3 id="avviare-una-conversazione">Avviare una Conversazione<a class="headerlink" href="#avviare-una-conversazione" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Seleziona un modello</strong>: clicca sul menu a tendina di selezione del modello in alto</li>
+<li><strong>Scegli tra i modelli disponibili</strong>: tutti i modelli installati appaiono nell'elenco</li>
+<li><strong>Inizia a digitare</strong>: inserisci il tuo messaggio nella casella di input</li>
+<li><strong>Invia</strong>: premi Invio o clicca su Invia</li>
+</ol>
+<h3 id="selettore-del-modello">Selettore del Modello<a class="headerlink" href="#selettore-del-modello" title="Permanent link">&para;</a></h3>
+<p>Il selettore del modello migliorato offre:
+- <strong>Stile moderno</strong>: aspetto pulito e professionale con stile personalizzato
+- <strong>Stati interattivi</strong>: effetti di hover e focus per una migliore UX
+- <strong>Freccia personalizzata</strong>: freccia del menu a tendina con stile dedicato
+- <strong>Design responsive</strong>: funziona su desktop e mobile</p>
+<p>Per cambiare modello durante la conversazione:
+1. Clicca sul menu a tendina del modello
+2. Seleziona un modello diverso
+3. Continua a chattare (il contesto della conversazione precedente potrebbe andare perso)</p>
+<h3 id="funzionalita-della-chat">Funzionalità della Chat<a class="headerlink" href="#funzionalita-della-chat" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Risposte in streaming</strong>: guarda la risposta del modello mentre viene generata</li>
+<li><strong>Cronologia dei messaggi</strong>: scorri i messaggi precedenti</li>
+<li><strong>Copia delle risposte</strong>: copia le risposte del modello negli appunti</li>
+<li><strong>Pulisci chat</strong>: avvia una nuova conversazione</li>
+</ul>
+<h2 id="gestione-dei-modelli">Gestione dei Modelli<a class="headerlink" href="#gestione-dei-modelli" title="Permanent link">&para;</a></h2>
+<h3 id="scaricare-i-modelli">Scaricare i Modelli<a class="headerlink" href="#scaricare-i-modelli" title="Permanent link">&para;</a></h3>
+<p>Clicca sul pulsante <strong>"Manage Models"</strong> per accedere allo scaricamento dei modelli:</p>
+<ol>
+<li><strong>Inserisci il nome del modello</strong>: digita il nome del modello (es. <code>llama3.2</code>, <code>mistral:7b</code>)</li>
+<li><strong>Clicca su "Pull Model"</strong>: avvia il download</li>
+<li><strong>Osserva l'avanzamento</strong>: la barra di avanzamento in tempo reale mostra:</li>
+<li>Velocità di download</li>
+<li>Percentuale completata</li>
+<li>Tempo stimato rimanente</li>
+<li>Stato corrente (download, verifica, ecc.)</li>
+</ol>
+<p><strong>Modelli popolari da provare</strong>:
+- <code>llama3.2:1b</code> - Veloce, leggero (1.3GB)
+- <code>llama3.2:3b</code> - Qualità bilanciata (2GB)
+- <code>mistral:7b</code> - Alta qualità (4.1GB)
+- <code>phi3:mini</code> - Compatto e veloce (2.3GB)
+- <code>codellama:7b</code> - Generazione di codice (3.8GB)</p>
+<p>Sfoglia tutti i modelli su <a href="https://ollama.com/library">Ollama Library</a>.</p>
+<h3 id="visualizzare-i-modelli-installati">Visualizzare i Modelli Installati<a class="headerlink" href="#visualizzare-i-modelli-installati" title="Permanent link">&para;</a></h3>
+<p>Il menu a tendina di selezione del modello mostra automaticamente tutti i modelli installati. I modelli vengono recuperati dall'API di Ollama e aggiornati quando:
+- Ricarichi la pagina
+- Scarichi un nuovo modello
+- Elimini un modello (tramite CLI)</p>
+<h2 id="convertitore-da-foglio-di-calcolo-a-jsonl">Convertitore da Foglio di Calcolo a JSONL<a class="headerlink" href="#convertitore-da-foglio-di-calcolo-a-jsonl" title="Permanent link">&para;</a></h2>
+<p>Il convertitore ti aiuta a preparare dataset di addestramento a partire da fogli di calcolo.</p>
+<h3 id="accesso-al-convertitore">Accesso al Convertitore<a class="headerlink" href="#accesso-al-convertitore" title="Permanent link">&para;</a></h3>
+<p>Due modi per accedere:</p>
+<ol>
+<li><strong>Tramite la barra laterale</strong>: clicca su "Converter" nella barra laterale della Chat UI</li>
+<li><strong>URL diretto</strong>: vai su <code>http://localhost:8080/converter</code></li>
+</ol>
+<h3 id="convertire-i-file">Convertire i File<a class="headerlink" href="#convertire-i-file" title="Permanent link">&para;</a></h3>
+<h4 id="passo-1-carica-il-tuo-file">Passo 1: Carica il tuo File<a class="headerlink" href="#passo-1-carica-il-tuo-file" title="Permanent link">&para;</a></h4>
+<p><strong>Formati supportati</strong>:
+- Excel: <code>.xlsx</code>, <code>.xls</code>
+- CSV: <code>.csv</code></p>
+<p><strong>Metodi di caricamento</strong>:
+- <strong>Trascina e rilascia</strong>: trascina il file sull'area di caricamento
+- <strong>Clicca per sfogliare</strong>: clicca sull'area di caricamento e seleziona un file</p>
+<h4 id="passo-2-configura-le-colonne">Passo 2: Configura le Colonne<a class="headerlink" href="#passo-2-configura-le-colonne" title="Permanent link">&para;</a></h4>
+<p>Il convertitore:
+- <strong>Rileva automaticamente</strong> i nomi di colonna che contengono "question", "query", "prompt", "answer", "response"
+- Mostra un'anteprima dei tuoi dati
+- Ti permette di selezionare manualmente le colonne se il rilevamento automatico fallisce</p>
+<p><strong>Mappatura delle colonne</strong>:
+- <strong>Colonna Domanda/Prompt</strong>: contiene le domande o i prompt dell'utente
+- <strong>Colonna Risposta/Response</strong>: contiene le risposte dell'assistente</p>
+<p>Esempio di struttura del foglio di calcolo:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>How do I reset my password?</td>
+<td>Click "Forgot Password" on the login page...</td>
+</tr>
+<tr>
+<td>What are your business hours?</td>
+<td>We're open Monday-Friday, 9am-5pm EST.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="passo-3-anteprima">Passo 3: Anteprima<a class="headerlink" href="#passo-3-anteprima" title="Permanent link">&para;</a></h4>
+<p>Rivedi l'anteprima per assicurarti che:
+- Le colonne siano mappate correttamente
+- I dati appaiano corretti
+- Non ci siano voci mancanti o malformate</p>
+<h4 id="passo-4-converti-e-salva">Passo 4: Converti e Salva<a class="headerlink" href="#passo-4-converti-e-salva" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Clicca su "Convert"</strong></li>
+<li><strong>Salva il file</strong>: il file JSONL viene salvato automaticamente in <code>./data/training/</code></li>
+<li><strong>Usalo nell'addestramento</strong>: fai riferimento al file nel tuo Modelfile</li>
+</ol>
+<h3 id="formato-di-output">Formato di Output<a class="headerlink" href="#formato-di-output" title="Permanent link">&para;</a></h3>
+<p>Il convertitore crea il formato JSONL (JSON Lines):</p>
+<div class="highlight"><pre><span></span><code>{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;How do I reset my password?&quot;}
+{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;Click &#39;Forgot Password&#39; on the login page...&quot;}
+{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;What are your business hours?&quot;}
+{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;We&#39;re open Monday-Friday, 9am-5pm EST.&quot;}
+</code></pre></div>
+<h3 id="usare-i-dati-convertiti">Usare i Dati Convertiti<a class="headerlink" href="#usare-i-dati-convertiti" title="Permanent link">&para;</a></h3>
+<p>Dopo la conversione, usa i dati in un Modelfile:</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">llama3.2:1b</span>
+
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.3
+
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+You<span class="w"> </span>are<span class="w"> </span>a<span class="w"> </span>customer<span class="w"> </span>support<span class="w"> </span>assistant.
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c"># Load examples from converted data</span>
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;How do I reset my password?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;Click &#39;Forgot Password&#39; on the login page and follow the instructions sent to your email.&quot;</span>
+
+MESSAGE<span class="w"> </span>user<span class="w"> </span><span class="s2">&quot;What are your business hours?&quot;</span>
+MESSAGE<span class="w"> </span>assistant<span class="w"> </span><span class="s2">&quot;We&#39;re open Monday-Friday, 9am-5pm EST.&quot;</span>
+</code></pre></div>
+<p>Consulta l'<a href="../dataset-training-example/">Esempio di Addestramento su Dataset</a> per la guida completa.</p>
+<h2 id="modelfile-wizard">Modelfile Wizard<a class="headerlink" href="#modelfile-wizard" title="Permanent link">&para;</a></h2>
+<p>Il wizard ti guida nella creazione di un modello personalizzato senza scrivere a mano alcuna sintassi Modelfile.</p>
+<h3 id="accesso-al-wizard">Accesso al Wizard<a class="headerlink" href="#accesso-al-wizard" title="Permanent link">&para;</a></h3>
+<p>Vai su <code>http://localhost:8080/wizard</code> (oppure usa il link dalla Chat UI).</p>
+<h3 id="i-6-passi">I 6 Passi<a class="headerlink" href="#i-6-passi" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Caso d'uso</strong>: scegli cosa farà il tuo modello — Chatbot, Assistente al Codice, Supporto Clienti, Scrittura Creativa, Traduttore o Estrazione Dati. Ogni caso d'uso applica un preset di parametri collaudato (temperature, <code>num_ctx</code>, <code>top_p</code> e <code>repeat_penalty</code> dove rilevante), corrispondente ai preset nella <a href="../parameter-guide/">Guida ai Parametri</a>. Ad esempio, "Scrittura Creativa" imposta temperature 1.2 con un contesto di 8192 token, mentre "Estrazione Dati" imposta temperature 0.1.</p>
+</li>
+<li>
+<p><strong>Modello base</strong>: scegli il modello base da un menu a tendina (<code>llama3.2:1b</code> è il punto di partenza consigliato; sono offerti anche <code>llama3.2:3b</code>, <code>mistral:7b</code> e <code>phi3:mini</code>). Puoi modificare il Modelfile generato in seguito per usare qualsiasi altro modello che hai scaricato.</p>
+</li>
+<li>
+<p><strong>Personalità</strong>: scrivi il system prompt che descrive come il modello dovrebbe comportarsi e rispondere. Sii specifico — "spiega passo-passo" funziona meglio di "sii utile".</p>
+</li>
+<li>
+<p><strong>Regole (opzionale)</strong>: aggiungi vincoli individuali come "Mantieni le risposte entro 3 frasi" o "Usa la formattazione markdown". Questi vengono aggiunti al system prompt come elenco di regole.</p>
+</li>
+<li>
+<p><strong>Esempi (opzionale)</strong>: aggiungi coppie di esempio domanda/risposta. Queste diventano esempi few-shot <code>MESSAGE user</code> / <code>MESSAGE assistant</code> nel Modelfile; 3-5 esempi di qualità sono di solito sufficienti.</p>
+</li>
+<li>
+<p><strong>Risultato</strong>: il wizard genera il Modelfile (tramite l'endpoint <code>POST /api/wizard/generate</code> dell'app) e lo mostra per la revisione. Inserisci un nome per il modello (lettere minuscole, numeri e trattini) e clicca su <strong>Save &amp; Create Model</strong>:</p>
+</li>
+<li>Il Modelfile viene salvato in <code>models/custom/&lt;name&gt;/Modelfile</code></li>
+<li>Il modello viene costruito immediatamente nell'istanza Ollama</li>
+<li>Puoi poi selezionarlo nel menu a tendina della chat o eseguirlo con <code>make chat</code></li>
+</ol>
+<h3 id="suggerimenti">Suggerimenti<a class="headerlink" href="#suggerimenti" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Il modello base che scegli deve essere scaricato prima (tramite "Manage Models" o <code>docker compose exec ollama ollama pull &lt;model&gt;</code>), altrimenti la creazione del modello fallisce.</li>
+<li>Il Modelfile generato è un normale file sotto <code>models/custom/</code> — puoi modificarlo in seguito e ricreare il modello, oppure versionarlo in Git.</li>
+<li>Per capire cosa fa ogni parametro generato, consulta la <a href="../parameter-guide/">Guida ai Parametri</a>.</li>
+</ul>
+<h2 id="configurazione-della-web-ui">Configurazione della Web UI<a class="headerlink" href="#configurazione-della-web-ui" title="Permanent link">&para;</a></h2>
+<h3 id="configurazione-della-porta">Configurazione della Porta<a class="headerlink" href="#configurazione-della-porta" title="Permanent link">&para;</a></h3>
+<p>La porta predefinita è <code>8080</code>. Per cambiarla:</p>
+<ol>
+<li>
+<p>Modifica <code>.env</code> (il valore viene interpolato nel file compose come <code>${CHAT_PORT:-8080}:8080</code>):
+   <div class="highlight"><pre><span></span><code><span class="nv">CHAT_PORT</span><span class="o">=</span><span class="m">8081</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Ricrea i container (necessario per le modifiche alla porta):
+   <div class="highlight"><pre><span></span><code>make<span class="w"> </span>down<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>up
+</code></pre></div></p>
+</li>
+<li>
+<p>Accedi alla nuova porta: <code>http://localhost:8081</code></p>
+</li>
+</ol>
+<h3 id="connessione-allapi">Connessione all'API<a class="headerlink" href="#connessione-allapi" title="Permanent link">&para;</a></h3>
+<p>La Chat UI si connette all'API di Ollama su <code>http://ollama:11434</code> per impostazione predefinita (rete Docker interna).</p>
+<p>Se hai bisogno di connetterti a un'istanza Ollama esterna, modifica <code>docker-compose.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">chat</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OLLAMA_API=http://external-ollama-host:11434</span>
+</code></pre></div>
+<h2 id="risoluzione-dei-problemi">Risoluzione dei Problemi<a class="headerlink" href="#risoluzione-dei-problemi" title="Permanent link">&para;</a></h2>
+<h3 id="la-chat-ui-non-si-carica">La Chat UI non si carica<a class="headerlink" href="#la-chat-ui-non-si-carica" title="Permanent link">&para;</a></h3>
+<p><strong>Verifica che i servizi siano in esecuzione</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div></p>
+<p>Sia <code>ollama</code> che <code>ollama-chat</code> dovrebbero essere "Up".</p>
+<p><strong>Controlla i log</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>chat
+</code></pre></div></p>
+<p><strong>Riavvia i servizi</strong>:
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>restart
+</code></pre></div></p>
+<h3 id="i-modelli-non-appaiono-nel-menu-a-tendina">I modelli non appaiono nel menu a tendina<a class="headerlink" href="#i-modelli-non-appaiono-nel-menu-a-tendina" title="Permanent link">&para;</a></h3>
+<p><strong>Verifica che Ollama sia in esecuzione</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>list
+</code></pre></div></p>
+<p><strong>Controlla la connessione all'API</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/tags
+</code></pre></div></p>
+<p>Se questo fallisce, controlla <code>docker-compose.yml</code> per l'URL API corretto.</p>
+<h3 id="lo-scaricamento-del-modello-fallisce">Lo scaricamento del modello fallisce<a class="headerlink" href="#lo-scaricamento-del-modello-fallisce" title="Permanent link">&para;</a></h3>
+<p><strong>Controlla la connessione a internet</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>ollama.com
+</code></pre></div></p>
+<p><strong>Controlla lo spazio su disco</strong>:
+<div class="highlight"><pre><span></span><code>df<span class="w"> </span>-h
+docker<span class="w"> </span>system<span class="w"> </span>df
+</code></pre></div></p>
+<p><strong>Prova tramite CLI</strong>:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2:1b
+</code></pre></div></p>
+<h3 id="il-caricamento-nel-convertitore-fallisce">Il caricamento nel convertitore fallisce<a class="headerlink" href="#il-caricamento-nel-convertitore-fallisce" title="Permanent link">&para;</a></h3>
+<p><strong>Controlla i permessi del file</strong>:
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>./data/training/
+</code></pre></div></p>
+<p>La directory deve essere scrivibile dal container Docker.</p>
+<p><strong>Controlla la dimensione del file</strong>:
+File molto grandi potrebbero andare in timeout. Prova a suddividerli in file più piccoli.</p>
+<p><strong>Controlla il formato del file</strong>:
+- Assicurati che i file Excel siano <code>.xlsx</code> o <code>.xls</code>
+- Assicurati che i file CSV siano formattati correttamente</p>
+<h3 id="problemi-di-stile">Problemi di stile<a class="headerlink" href="#problemi-di-stile" title="Permanent link">&para;</a></h3>
+<p><strong>Svuota la cache del browser</strong>:
+- Premi <code>Ctrl+Shift+R</code> (Windows/Linux)
+- Premi <code>Cmd+Shift+R</code> (Mac)</p>
+<p><strong>Prova un browser diverso</strong>:
+La UI è testata su Chrome, Firefox e Safari.</p>
+<h2 id="uso-avanzato">Uso Avanzato<a class="headerlink" href="#uso-avanzato" title="Permanent link">&para;</a></h2>
+<h3 id="personalizzare-la-ui">Personalizzare la UI<a class="headerlink" href="#personalizzare-la-ui" title="Permanent link">&para;</a></h3>
+<p>Il codice della Chat UI si trova in <code>./chat/</code>:</p>
+<div class="highlight"><pre><span></span><code>chat/
+├── app.py              # Flask application (chat, converter, wizard)
+├── templates/          # HTML templates
+│   ├── chat.html      # Chat interface
+│   ├── converter.html # Converter interface
+│   └── wizard.html    # Modelfile wizard
+├── Dockerfile          # Container configuration
+└── requirements.txt    # Python dependencies
+</code></pre></div>
+<p>Per personalizzare:
+1. Modifica i file in <code>./chat/</code>
+2. Ricostruisci il container:
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>build<span class="w"> </span>chat
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div></p>
+<h3 id="usare-lapi-direttamente">Usare l'API Direttamente<a class="headerlink" href="#usare-lapi-direttamente" title="Permanent link">&para;</a></h3>
+<p>La Chat UI usa l'API di Ollama. Puoi chiamarla direttamente:</p>
+<p><strong>Genera una risposta</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/generate<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;llama3.2:1b&quot;,</span>
+<span class="s1">  &quot;prompt&quot;: &quot;Hello!&quot;,</span>
+<span class="s1">  &quot;stream&quot;: true</span>
+<span class="s1">}&#39;</span>
+</code></pre></div></p>
+<p><strong>Chatta con contesto</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/chat<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;llama3.2:1b&quot;,</span>
+<span class="s1">  &quot;messages&quot;: [</span>
+<span class="s1">    {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;What is Docker?&quot;}</span>
+<span class="s1">  ],</span>
+<span class="s1">  &quot;stream&quot;: true</span>
+<span class="s1">}&#39;</span>
+</code></pre></div></p>
+<p>Consulta la <a href="../api-usage/">Guida all'Uso dell'API</a> per la documentazione completa dell'API.</p>
+<h2 id="scorciatoie-da-tastiera">Scorciatoie da Tastiera<a class="headerlink" href="#scorciatoie-da-tastiera" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Enter</strong>: invia il messaggio</li>
+<li><strong>Shift+Enter</strong>: nuova riga nel messaggio</li>
+<li><strong>Esc</strong>: pulisci l'input (quando è a fuoco)</li>
+<li><strong>Ctrl+L</strong>: pulisci la cronologia della chat (prossimamente)</li>
+</ul>
+<h2 id="prossimi-passi">Prossimi Passi<a class="headerlink" href="#prossimi-passi" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../usage/">Guida all'Uso</a> - Impara i comandi CLI e la gestione dei modelli</li>
+<li><a href="../examples/">Esempi</a> - Template di modello preconfigurati</li>
+<li><a href="../dataset-training-example/">Esempio di Addestramento su Dataset</a> - Addestra con i tuoi dati</li>
+<li><a href="../api-usage/">Uso dell'API</a> - Accesso programmatico ai modelli</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Torna su
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiato", "clipboard.copy": "Copia", "search.result.more.one": "1 altro in questa pagina", "search.result.more.other": "# altri in questa pagina", "search.result.none": "Nessun documento trovato", "search.result.one": "1 documento trovato", "search.result.other": "# documenti trovati", "search.result.placeholder": "Scrivi per iniziare a cercare", "search.result.term.missing": "Non presente", "select.version": "Seleziona la versione"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
