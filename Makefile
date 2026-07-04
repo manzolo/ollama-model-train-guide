@@ -1,5 +1,8 @@
-.PHONY: help preflight setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model backup-models test quick-test clean
-.PHONY: help preflight setup up down restart logs shell pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean build
+.PHONY: help preflight setup build up up-core up-gpu down restart logs shell chat-web pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean
+
+# All compose commands include the "chat" profile so the web UI is managed
+# together with Ollama. Use `make up-core` for an Ollama-only stack.
+COMPOSE := docker compose --profile chat
 
 # Default target
 help:
@@ -7,7 +10,9 @@ help:
 	@echo ""
 	@echo "  make preflight    - Check system requirements before setup"
 	@echo "  make setup        - Initial setup (copy .env.example to .env)"
-	@echo "  make up           - Start all services (Ollama + Chat)"
+	@echo "  make up           - Start all services (Ollama + Chat UI)"
+	@echo "  make up-core      - Start Ollama only (no chat web UI)"
+	@echo "  make up-gpu       - Start all services with NVIDIA GPU support"
 	@echo "  make down         - Stop all services"
 	@echo "  make restart      - Restart all services"
 	@echo "  make logs         - View Ollama logs"
@@ -25,7 +30,7 @@ help:
 	@echo "  make clean        - Stop services and remove volumes"
 	@echo ""
 	@echo "  Web Services:"
-	@echo "  make chat-web     - Open chat web interface (port 8080)"
+	@echo "  make chat-web     - Open chat web interface (port $${CHAT_PORT:-8080})"
 	@echo "  make build        - Build/rebuild all services"
 	@echo ""
 
@@ -52,15 +57,28 @@ setup:
 
 build:
 	@echo "🔨 Building services..."
-	@docker compose build
+	@$(COMPOSE) build
 
 up:
 	@echo "🚀 Starting all services..."
-	@docker compose up -d
+	@$(COMPOSE) up -d
 	@echo "✅ Services are running:"
 	@echo "  - Ollama: http://localhost:11434"
 	@echo "  - Chat: http://localhost:8080"
 	@echo "  - Converter: http://localhost:8080/converter"
+	@echo "  - Wizard: http://localhost:8080/wizard"
+
+up-core:
+	@echo "🚀 Starting Ollama (no chat UI)..."
+	@docker compose up -d ollama
+	@echo "✅ Ollama is running: http://localhost:11434"
+
+up-gpu:
+	@echo "🚀 Starting all services with GPU support..."
+	@$(COMPOSE) -f docker-compose.yml -f docker-compose.gpu.yml up -d
+	@echo "✅ Services are running (GPU enabled):"
+	@echo "  - Ollama: http://localhost:11434"
+	@echo "  - Chat: http://localhost:8080"
 
 chat-web:
 	@echo "🌐 Opening chat web interface..."
@@ -68,15 +86,13 @@ chat-web:
 	 command -v open > /dev/null && open http://localhost:8080 || \
 	 echo "Please visit: http://localhost:8080"
 
-
-
 down:
-	@echo "🛑 Stopping Ollama service..."
-	@docker compose down
+	@echo "🛑 Stopping services..."
+	@$(COMPOSE) down
 
 restart:
-	@echo "🔄 Restarting Ollama service..."
-	@docker compose restart
+	@echo "🔄 Restarting services..."
+	@$(COMPOSE) restart
 
 logs:
 	@docker compose logs -f ollama
@@ -120,7 +136,7 @@ clean:
 	@echo "⚠️  This will remove all Docker volumes and models!"
 	@read -p "Are you sure? (y/N): " confirm; \
 	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
-		docker compose down -v; \
+		$(COMPOSE) down -v; \
 		echo "✅ Cleanup complete"; \
 	else \
 		echo "❌ Cleanup cancelled"; \
