@@ -58,6 +58,42 @@ make backup-models
 bash scripts/backup-models.sh /mnt/backup/ollama-models
 ```
 
+### Full Export/Import (Weights Included)
+
+`make save-model` exports only the *recipe* (Modelfile): the target instance must
+re-download the base model from the Ollama library. When the target is air-gapped
+or on a slow connection, export the model **with its weights** instead:
+
+```bash
+# Interactive
+make export-full
+
+# Or specify directly (default output: ./backups/full/)
+bash scripts/export-model-full.sh my-chatbot
+bash scripts/export-model-full.sh llama3.2:1b ./exports
+```
+
+This creates a tar archive containing the model's manifest and all its blobs
+(weights, system prompt, parameters). Transfer it to the target machine, then:
+
+```bash
+# Interactive (lists archives in ./backups/full/)
+make import-full
+
+# Or specify directly
+bash scripts/import-model-full.sh ./backups/full/my-chatbot-20260704_120000.tar
+```
+
+The model is available immediately after import — nothing is downloaded.
+
+**Notes:**
+- Archives include the full weights: expect **1-5 GB+** per model. For everyday
+  sharing between connected instances, `make save-model` stays the better option.
+- The archive layout is Ollama's internal storage format. Keep source and target
+  on similar Ollama versions — pin `OLLAMA_IMAGE_TAG` in `.env` on both sides.
+- Blobs are content-addressed: importing a model whose base blobs already exist
+  on the target simply overwrites them (no duplication).
+
 ## Deployment Workflows
 
 ### Workflow 1: Development to Production

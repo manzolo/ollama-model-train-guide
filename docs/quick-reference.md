@@ -182,6 +182,8 @@ bash scripts/deploy-model.sh ./models/saved/my-chatbot.Modelfile renamed-bot
 | **Save model** | `make save-model` | **Yes - select model** |
 | **Deploy model** | `make deploy-model` | **Yes - select saved file** |
 | **Publish model to registry** | `make publish-model` | **Yes - select model** |
+| **Export model + weights (tar)** | `make export-full` | **Yes - select model** |
+| **Import full model archive** | `make import-full` | **Yes - select archive** |
 | Backup all models | `make backup-models` | No |
 | Quick test | `make quick-test` | Yes - confirmation |
 | Validation tests | `make test` | No |

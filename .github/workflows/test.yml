@@ -44,6 +44,19 @@ jobs:
         echo ""
         echo "Test completed! Check output above for model response."
 
+    - name: Test full model export/import roundtrip
+      run: |
+        echo "Exporting llama3.2:1b with weights..."
+        bash scripts/export-model-full.sh llama3.2:1b ./backups/full
+        ARCHIVE=$(ls ./backups/full/llama3.2-1b-*.tar)
+        echo "Removing the model to prove the archive restores it..."
+        docker compose exec ollama ollama rm llama3.2:1b
+        echo "Importing archive..."
+        bash scripts/import-model-full.sh "$ARCHIVE"
+        echo "Verifying the restored model responds..."
+        docker compose exec -T ollama ollama run llama3.2:1b "Reply with the single word: OK"
+        rm -rf ./backups/full
+
     - name: List models (for debugging)
       if: always()
       run: make list-models

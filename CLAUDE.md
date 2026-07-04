@@ -97,6 +97,12 @@ make deploy-model   # Shows numbered list of saved Modelfiles
 # Backup all custom models
 make backup-models
 # Or: bash scripts/backup-models.sh [output-directory]
+
+# Full export/import WITH weights (tar of manifest + blobs, for air-gapped targets)
+make export-full    # Interactive; or: bash scripts/export-model-full.sh <model-name> [output-dir]
+make import-full    # Interactive; or: bash scripts/import-model-full.sh <archive.tar>
+# Archives default to ./backups/full/; source and target should run similar
+# Ollama versions (pin OLLAMA_IMAGE_TAG in .env)
 ```
 
 ### API Usage

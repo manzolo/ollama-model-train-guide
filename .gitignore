@@ -22,6 +22,9 @@ data/training/*
 # MkDocs build output
 site/
 
+# Model backups and full exports (large binaries)
+backups/
+
 # Docker volumes
 *.log
 

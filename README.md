@@ -145,6 +145,8 @@ make save-model         # Save model for deployment (interactive)
 make deploy-model       # Deploy saved model (interactive)
 make publish-model      # Publish model to external registry (interactive)
 make backup-models      # Backup all custom models
+make export-full        # Export model WITH weights to tar (interactive)
+make import-full        # Import a full model archive (interactive)
 ```
 
 ### Testing

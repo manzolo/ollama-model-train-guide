@@ -1,4 +1,4 @@
-.PHONY: help preflight setup build up up-core up-gpu down restart logs shell chat-web pull-base create-model list-models chat save-model deploy-model publish-model backup-models test quick-test clean
+.PHONY: help preflight setup build up up-core up-gpu down restart logs shell chat-web pull-base create-model list-models chat save-model deploy-model publish-model backup-models export-full import-full test quick-test clean
 
 # All compose commands include the "chat" profile so the web UI is managed
 # together with Ollama. Use `make up-core` for an Ollama-only stack.
@@ -25,6 +25,8 @@ help:
 	@echo "  make deploy-model - Deploy saved model (interactive)"
 	@echo "  make publish-model - Publish model to external registry (interactive)"
 	@echo "  make backup-models - Backup all custom models"
+	@echo "  make export-full  - Export model WITH weights to tar (interactive)"
+	@echo "  make import-full  - Import a full model archive (interactive)"
 	@echo "  make test         - Run validation tests"
 	@echo "  make quick-test   - Quick test: create, chat, and delete a model"
 	@echo "  make clean        - Stop services and remove volumes"
@@ -124,6 +126,12 @@ publish-model:
 
 backup-models:
 	@bash scripts/backup-models.sh
+
+export-full:
+	@bash scripts/interactive-export-full.sh
+
+import-full:
+	@bash scripts/interactive-import-full.sh
 
 test:
 	@bash scripts/test.sh
