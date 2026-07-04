@@ -11,15 +11,27 @@ Complete guide to managing your Ollama environment and working with models.
 make up
 ```
 
+**Start Ollama only** (no chat web UI):
+```bash
+make up-core
+```
+
+**Start with NVIDIA GPU acceleration** (uses the `docker-compose.gpu.yml` override):
+```bash
+make up-gpu
+```
+
 **Stop all services**:
 ```bash
 make down
 ```
 
-**Restart services** (after configuration changes):
+**Restart services**:
 ```bash
 make restart
 ```
+
+**Note**: After changing ports or other values in `.env`, use `make down && make up` (a plain restart does not re-read port mappings).
 
 **Check service status**:
 ```bash
@@ -338,58 +350,17 @@ If you have a LoRA adapter file:
 
 ## Model Parameters
 
-Key parameters you can adjust in Modelfiles:
+Quick overview of the parameters you can adjust in Modelfiles:
 
-### Temperature (0.0 - 2.0)
-Controls randomness and creativity:
-- **0.1-0.3**: Deterministic, factual (code, technical docs)
-- **0.6-0.8**: Balanced, conversational (chat, general Q&A)
-- **0.9-1.5**: Creative, varied (story writing, brainstorming)
-- **1.6-2.0**: Highly random (experimental)
+| Parameter | Range | Recommended | Purpose |
+|-----------|-------|-------------|---------|
+| `temperature` | 0.0-2.0 | 0.7 (0.3 factual, 1.2 creative) | Randomness / creativity |
+| `num_ctx` | 512-32768 | 4096 | Context window (tokens remembered) |
+| `top_p` | 0.0-1.0 | 0.9 | Nucleus sampling / output diversity |
+| `top_k` | 1-100 | 40 | Token selection pool size |
+| `repeat_penalty` | 0.0-2.0 | 1.1 | Repetition control |
 
-### Context Window (num_ctx)
-Number of tokens the model can "remember":
-- **2048**: Default, suitable for short conversations
-- **4096**: Standard for most uses
-- **8192**: Long conversations, large documents
-- **16384+**: Very long context (requires more RAM)
-
-### Top P (0.0 - 1.0)
-Nucleus sampling threshold:
-- **0.9**: Recommended for most uses
-- Lower values = more focused, deterministic
-- Higher values = more diverse outputs
-
-### Top K (1 - 100)
-Limits token selection pool:
-- **40**: Default, good balance
-- Lower values = more focused
-- Higher values = more diverse
-
-### Repeat Penalty (0.0 - 2.0)
-Reduces repetition:
-- **1.0**: No penalty
-- **1.1-1.2**: Recommended for most uses
-- Higher values = stronger anti-repetition
-
-Example Modelfile with tuned parameters:
-
-```dockerfile
-FROM mistral:7b
-
-PARAMETER temperature 0.4
-PARAMETER num_ctx 8192
-PARAMETER top_p 0.9
-PARAMETER top_k 40
-PARAMETER repeat_penalty 1.15
-
-SYSTEM """
-You are a technical documentation assistant.
-Provide clear, accurate, well-structured responses.
-"""
-```
-
-See [Modelfile Reference](./modelfile-reference.md) for all available parameters.
+**The [Parameter Guide](./parameter-guide.md) is the canonical reference** — it has copy-paste presets per use case (chatbot, code, support, creative, translator, data extraction) and troubleshooting advice. For the complete list of parameters and syntax, see the [Modelfile Reference](./modelfile-reference.md).
 
 ## Advanced Operations
 
@@ -419,13 +390,13 @@ Validates:
 
 ### Interactive Model Selection
 
-Helper scripts provide numbered menus:
+The interactive numbered menus are provided directly by the `scripts/interactive-*.sh` scripts, which share helper functions from `scripts/lib/common.sh`:
 
-- **`scripts/select-modelfile.sh`**: Lists Modelfiles for creation
-- **`scripts/select-model.sh`**: Lists installed models
-- **`scripts/select-saved-model.sh`**: Lists saved Modelfiles
-
-These are used by `make create-model`, `make save-model`, and `make deploy-model`.
+- **`scripts/interactive-create-model.sh`**: Select a Modelfile and create a model (`make create-model`)
+- **`scripts/interactive-chat.sh`**: Select an installed model and chat (`make chat`)
+- **`scripts/interactive-save-model.sh`**: Select a model to save (`make save-model`)
+- **`scripts/interactive-deploy-model.sh`**: Select a saved Modelfile to deploy (`make deploy-model`)
+- **`scripts/interactive-publish-model.sh`**: Select a model to publish to a registry (`make publish-model`)
 
 All menus include option `[0]` to manually enter a custom path.
 

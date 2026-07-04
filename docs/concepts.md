@@ -39,6 +39,39 @@ A pre-trained model from the Ollama library (e.g., `llama3.2:1b`, `mistral:7b`).
 - Use `make pull-base` to get common ones
 - Or pull via Web UI
 
+### Choosing a Base Model (2026)
+
+This project deliberately targets **lightweight models** — everything in the guides and examples uses `llama3.2:1b`, which remains a great, fast default for learning and prototyping. The model landscape keeps evolving, though, and these modern lightweight alternatives are worth trying with a simple `ollama pull`:
+
+| Model | Approx. size | Approx. RAM needed | Notes |
+|-------|-------------|--------------------|-------|
+| `llama3.2:1b` | ~1.3 GB | ~4 GB | Project default; fast, well documented |
+| `qwen3:0.6b` | ~0.5 GB | ~2 GB | Tiny but surprisingly strong; optional thinking mode |
+| `qwen3:1.7b` | ~1.4 GB | ~4 GB | Small and strong; optional thinking mode |
+| `gemma3:1b` | ~815 MB | ~4 GB | Compact Google model |
+| `gemma3:4b` | ~3.3 GB | ~8 GB | Multimodal (images), 128K context |
+| `phi4-mini` | ~2.5 GB | ~8 GB | Compact and efficient Microsoft model |
+| `llama3.2:3b` | ~2 GB | ~8 GB | Balanced quality and speed |
+| `mistral:7b` | ~4.1 GB | ~8-16 GB | Higher quality, slower |
+
+**Heavier options for capable machines:**
+
+| Model | Approx. size | Approx. RAM needed | Notes |
+|-------|-------------|--------------------|-------|
+| `qwen3:8b` | ~5 GB | ~16 GB | Strong general-purpose model |
+| `gpt-oss:20b` | ~13 GB | ~16 GB | OpenAI's open-weight model |
+
+RAM figures are rough guidelines for CPU inference; a GPU with enough VRAM makes everything much faster. Any of these can replace `llama3.2:1b` in the `FROM` line of a Modelfile.
+
+### What's New in Ollama (2026)
+
+This guide focuses on **running models locally** — that is all you need for everything covered here. But Ollama itself has grown, and these features exist if you outgrow local:
+
+- **Cloud models**: Offload big models to Ollama's cloud while keeping the exact same API and CLI — useful when a model doesn't fit your hardware.
+- **`ollama launch`**: Bootstraps coding tools/agents preconfigured to use your local models.
+- **Web search API**: Lets models augment answers with web results.
+- **Improved scheduling**: Better multi-GPU support and memory management for larger setups.
+
 ### System Prompt
 Instructions that define your model's behavior and personality.
 
@@ -112,7 +145,7 @@ MESSAGE assistant "We're open Mon-Fri, 9am-6pm EST."
 
 **Example:** Medical diagnosis bot, legal document analyzer
 
-**How:** Train with external tools (Unsloth, Hugging Face), export to GGUF, import to Ollama
+**How:** Train with external tools (Unsloth, Hugging Face), export to GGUF, import to Ollama — see the [Fine-Tuning Guide](./fine-tuning-guide.md)
 
 **Time required:** Hours to days (requires GPU)
 
@@ -120,7 +153,7 @@ MESSAGE assistant "We're open Mon-Fri, 9am-6pm EST."
 
 ---
 
-## 📊 Decision Tree: Which Method Should I Use?
+## Decision Tree: Which Method Should I Use?
 
 ```
 Do you just want to change the model's personality/behavior?
@@ -186,7 +219,9 @@ MESSAGE assistant "example answer"
 After running `make up`, you get:
 
 - **Port 11434**: Ollama API (for programmatic access)
-- **Port 8080**: Chat Web UI (for humans)
+- **Port 8080**: Web UI — chat (`/`), spreadsheet converter (`/converter`), and Modelfile wizard (`/wizard`)
+
+Both host ports are configurable via `OLLAMA_PORT` and `CHAT_PORT` in `.env` (then `make down && make up`).
 
 **Just open http://localhost:8080** - that's all you need!
 

@@ -8,14 +8,25 @@ This is a Docker Compose-based environment for creating, customizing, and managi
 
 ## Core Architecture
 
-### Containerized Ollama Service
-- Single Docker container running `ollama/ollama:latest`
-- Persistent storage via Docker volume `ollama_data` at `/root/.ollama`
-- Three bind mounts:
-  - `./models` → `/models` (Modelfiles and custom model definitions)
-  - `./data` → `/data` (GGUF files, LoRA adapters, training datasets)
-  - Configuration via `.env` file
-- API exposed on `localhost:11434`
+### Services (docker-compose.yml)
+- **ollama**: `ollama/ollama:${OLLAMA_IMAGE_TAG:-latest}`
+  - Persistent storage via Docker volume `ollama_data` at `/root/.ollama`
+  - Bind mounts: `./models` → `/models` (Modelfiles), `./data` → `/data` (GGUF files, adapters, training datasets)
+  - API exposed on `localhost:${OLLAMA_PORT:-11434}`
+- **chat**: Flask web app (built from `./chat`), under Compose profile `chat`
+  - Serves the chat UI (`/`), spreadsheet converter (`/converter`), and Modelfile wizard (`/wizard`) on `localhost:${CHAT_PORT:-8080}`
+  - The Makefile always enables the profile (`docker compose --profile chat`); plain `docker compose up` respects `COMPOSE_PROFILES` from `.env`
+- **GPU**: `docker-compose.gpu.yml` is an override adding the NVIDIA runtime; start with `make up-gpu` (requires NVIDIA Container Toolkit). No editing of `docker-compose.yml` needed.
+
+### Environment Configuration (.env)
+Created by `make setup` from `.env.example`. Variables are interpolated by Docker Compose (e.g. `"${OLLAMA_PORT:-11434}:11434"`):
+- `OLLAMA_PORT` (default 11434): host port for the Ollama API
+- `CHAT_PORT` (default 8080): host port for the chat web UI
+- `COMPOSE_PROFILES` (default `chat`): profiles started by plain `docker compose up`; set empty to run Ollama only
+- `OLLAMA_ORIGINS` (default `*`): CORS origins allowed to call the API
+- `OLLAMA_IMAGE_TAG` (default `latest`): pin a specific Ollama version (e.g. `0.30.10`) for reproducibility
+
+After changing `.env`, run `make down && make up` to apply.
 
 ### Modelfile System
 Modelfiles define custom models by extending base models with:
@@ -37,10 +48,13 @@ Key directories:
 
 ### Environment Management
 ```bash
+make preflight      # Check system requirements before setup
 make setup          # Initial setup (creates .env, directories)
-make up             # Start Ollama (docker compose up -d)
-make down           # Stop Ollama
-make restart        # Restart service
+make up             # Start all services (Ollama + chat web UI)
+make up-core        # Start Ollama only (no chat web UI)
+make up-gpu         # Start with NVIDIA GPU support (docker-compose.gpu.yml override)
+make down           # Stop services
+make restart        # Restart services
 make logs           # View container logs
 make shell          # Access container shell
 ```
@@ -185,13 +199,9 @@ To deploy custom models to another self-hosted Ollama instance:
 
 ## Interactive Model Selection
 
-The project includes helper scripts for interactive model selection:
+Interactive numbered menus are built directly into the `scripts/interactive-*.sh` scripts (`interactive-create-model.sh`, `interactive-chat.sh`, `interactive-save-model.sh`, `interactive-deploy-model.sh`, `interactive-publish-model.sh`), which share helper functions from `scripts/lib/common.sh`.
 
-- **`scripts/select-modelfile.sh`**: Lists all Modelfiles in `models/examples/` and `models/custom/`
-- **`scripts/select-model.sh`**: Lists all models in the running Ollama instance
-- **`scripts/select-saved-model.sh`**: Lists all saved Modelfiles in `models/saved/`
-
-These scripts are automatically used by `make create-model`, `make save-model`, and `make deploy-model` to provide numbered menus instead of requiring manual path entry.
+These scripts back `make create-model`, `make chat`, `make save-model`, `make deploy-model`, and `make publish-model`, so no manual path entry is required.
 
 All selection menus include option `[0]` to manually enter a custom path/name.
 
@@ -220,7 +230,10 @@ docker compose ps | grep -qE "ollama.*(Up|running)"
 - **repeat_penalty** (0.0-2.0): Repetition control (1.1-1.2 recommended)
 
 ### GPU Support
-Optional NVIDIA GPU acceleration via Docker Compose deploy configuration (commented out by default). Requires NVIDIA Container Toolkit installation.
+Optional NVIDIA GPU acceleration via the `docker-compose.gpu.yml` override file. Start with `make up-gpu` (equivalent to `docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`). Requires NVIDIA drivers and the NVIDIA Container Toolkit on the host.
+
+### License
+The project is released under the MIT License (see `LICENSE`).
 
 ## Troubleshooting
 
@@ -282,19 +295,16 @@ The project includes a complete example of dataset-based model training:
 - Shows how to create specialized models without fine-tuning
 - Temperature: 0.3 (factual, consistent responses)
 
-**Spreadsheet to JSONL Converter**: `scripts/spreadsheet-to-jsonl.py`
+**Spreadsheet to JSONL Converter**: web UI at `http://localhost:8080/converter`
 - Convert CSV or Excel files to JSONL training format
-- Auto-detects question/answer columns
-- Supports custom column names
-- Preview mode before converting
+- Column mapping with data preview before converting
+- Download the result or save it directly to `data/training/`
 
-Usage:
-```bash
-python3 scripts/spreadsheet-to-jsonl.py input.csv output.jsonl
-python3 scripts/spreadsheet-to-jsonl.py input.xlsx output.jsonl --preview 5
-```
+**Modelfile Wizard**: web UI at `http://localhost:8080/wizard`
+- Guided 6-step Modelfile creation (use case, base model, personality, rules, examples)
+- Generates the Modelfile via `POST /api/wizard/generate`, saves it to `models/custom/<name>/`, and creates the model
 
-See `docs/spreadsheet-to-jsonl-guide.md` for complete guide.
+See `docs/chat-ui.md` for the complete web UI guide.
 
 **Complete guide**: `docs/dataset-training-example.md` covers:
 - Preparing JSONL datasets

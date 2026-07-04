@@ -11,7 +11,15 @@ make up
 
 Then open your browser to: **http://localhost:8080**
 
-The UI is automatically started alongside Ollama and connects to the API at `http://ollama:11434`.
+The UI is automatically started alongside Ollama and connects to the API at `http://ollama:11434`. The chat service runs under the Compose profile `chat`; use `make up-core` (or set `COMPOSE_PROFILES=` in `.env`) to run Ollama without it.
+
+The web app has three pages:
+
+| Page | URL | Purpose |
+|------|-----|---------|
+| **Chat** | http://localhost:8080 | Chat with models, pull/manage models, edit Modelfiles |
+| **Converter** | http://localhost:8080/converter | Convert Excel/CSV spreadsheets to JSONL training data |
+| **Wizard** | http://localhost:8080/wizard | Guided step-by-step Modelfile creation |
 
 ## Features Overview
 
@@ -20,6 +28,7 @@ The Chat UI provides:
 - **Model Selection**: Easily switch between installed models
 - **Model Management**: Pull models from Ollama library with real-time progress
 - **Spreadsheet Converter**: Convert Excel/CSV files to JSONL training format
+- **Modelfile Wizard**: Create a custom model in 6 guided steps, no syntax required
 - **Model Selector Dropdown**: Enhanced dropdown with modern styling and search
 
 ## Chat Interface
@@ -169,20 +178,51 @@ MESSAGE assistant "We're open Monday-Friday, 9am-5pm EST."
 
 See [Dataset Training Example](./dataset-training-example.md) for complete guide.
 
+## Modelfile Wizard
+
+The wizard walks you through creating a custom model without writing any Modelfile syntax by hand.
+
+### Accessing the Wizard
+
+Navigate to `http://localhost:8080/wizard` (or use the link from the Chat UI).
+
+### The 6 Steps
+
+1. **Use case**: Pick what your model will do — Chatbot, Code Assistant, Customer Support, Creative Writer, Translator, or Data Extraction. Each use case applies a proven parameter preset (temperature, `num_ctx`, `top_p`, and `repeat_penalty` where relevant), matching the presets in the [Parameter Guide](./parameter-guide.md). For example, "Creative Writer" sets temperature 1.2 with an 8192-token context, while "Data Extraction" sets temperature 0.1.
+
+2. **Base model**: Choose the base model from a dropdown (`llama3.2:1b` is the recommended starting point; `llama3.2:3b`, `mistral:7b`, and `phi3:mini` are also offered). You can edit the generated Modelfile afterwards to use any other model you have pulled.
+
+3. **Personality**: Write the system prompt describing how the model should act and respond. Be specific — "explain step-by-step" works better than "be helpful".
+
+4. **Rules (optional)**: Add individual constraints such as "Keep responses under 3 sentences" or "Use markdown formatting". These are appended to the system prompt as a rules list.
+
+5. **Examples (optional)**: Add example question/answer pairs. These become `MESSAGE user` / `MESSAGE assistant` few-shot examples in the Modelfile; 3-5 quality examples are usually enough.
+
+6. **Result**: The wizard generates the Modelfile (via the app's `POST /api/wizard/generate` endpoint) and shows it for review. Enter a model name (lowercase letters, numbers, and hyphens) and click **Save & Create Model**:
+   - The Modelfile is saved to `models/custom/<name>/Modelfile`
+   - The model is built immediately in the Ollama instance
+   - You can then select it in the chat dropdown or run it with `make chat`
+
+### Tips
+
+- The base model you choose must be pulled first (via "Manage Models" or `docker compose exec ollama ollama pull <model>`), otherwise model creation fails.
+- The generated Modelfile is a normal file under `models/custom/` — you can edit it later and re-create the model, or version it in Git.
+- To understand what each generated parameter does, see the [Parameter Guide](./parameter-guide.md).
+
 ## Web UI Configuration
 
 ### Port Configuration
 
 The default port is `8080`. To change it:
 
-1. Edit `.env`:
+1. Edit `.env` (the value is interpolated into the compose file as `${CHAT_PORT:-8080}:8080`):
    ```bash
    CHAT_PORT=8081
    ```
 
-2. Restart services:
+2. Recreate the containers (required for port changes):
    ```bash
-   make restart
+   make down && make up
    ```
 
 3. Access at new port: `http://localhost:8081`
@@ -285,10 +325,11 @@ The Chat UI code is in `./chat/`:
 
 ```
 chat/
-├── app.py              # Flask application
+├── app.py              # Flask application (chat, converter, wizard)
 ├── templates/          # HTML templates
-│   ├── index.html     # Chat interface
-│   └── converter.html # Converter interface
+│   ├── chat.html      # Chat interface
+│   ├── converter.html # Converter interface
+│   └── wizard.html    # Modelfile wizard
 ├── Dockerfile          # Container configuration
 └── requirements.txt    # Python dependencies
 ```

@@ -51,6 +51,6 @@ For a complete guide on training models with your own datasets, see:
 
 This shows:
 - How to prepare custom datasets
-- Fine-tuning with Unsloth or Hugging Face
-- Exporting to GGUF format
 - When to use few-shot vs fine-tuning
+
+For real fine-tuning (Unsloth or Hugging Face training scripts, GGUF export), see the canonical [Fine-Tuning Guide](../../../docs/fine-tuning-guide.md).

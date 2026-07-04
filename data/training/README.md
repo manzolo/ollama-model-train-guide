@@ -34,17 +34,21 @@ The easiest way to create datasets is using spreadsheets!
    - Column 1: Questions/Prompts
    - Column 2: Answers/Responses
 
-2. **Convert to JSONL**:
+2. **Convert with the web converter**:
+   - Open http://localhost:8080/converter (start with `make up`)
+   - Upload the file, map the columns, preview, and convert
+   - Choose "save to server" to write the JSONL directly into this directory
+
+3. **Or use the converter API from the command line**:
    ```bash
-   python3 scripts/spreadsheet-to-jsonl.py your-data.csv data/training/your-dataset.jsonl
+   curl -X POST http://localhost:8080/api/converter/convert \
+     -F "file=@your-data.csv" \
+     -F "instruction_col=question" \
+     -F "output_col=answer" \
+     -o data/training/your-dataset.jsonl
    ```
 
-3. **Preview before converting**:
-   ```bash
-   python3 scripts/spreadsheet-to-jsonl.py your-data.csv output.jsonl --preview 5
-   ```
-
-See [docs/spreadsheet-to-jsonl-guide.md](../../docs/spreadsheet-to-jsonl-guide.md) for complete guide.
+See the [Chat UI Guide - Converter](../../docs/chat-ui.md#spreadsheet-to-jsonl-converter) for the complete guide.
 
 ## Using Your Own Datasets
 

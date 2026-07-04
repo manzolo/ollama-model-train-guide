@@ -85,15 +85,15 @@ netstat -an | grep 11434
 netstat -an | grep 8080
 ```
 
-**Solution**: Change ports in `.env`:
+**Solution**: Change the host ports in `.env` (these are interpolated into the compose file as `${OLLAMA_PORT:-11434}:11434` and `${CHAT_PORT:-8080}:8080`):
 ```bash
 OLLAMA_PORT=11435
 CHAT_PORT=8081
 ```
 
-Then restart:
+Then recreate the containers (a plain restart is not enough for port changes):
 ```bash
-make restart
+make down && make up
 ```
 
 ### Permission denied errors
@@ -515,9 +515,13 @@ cat ./data/training/output.jsonl
 ```
 
 **Manual conversion**:
-Try using the Python script directly:
+Try the converter API directly:
 ```bash
-python3 scripts/spreadsheet-to-jsonl.py input.csv output.jsonl --preview 5
+curl -X POST http://localhost:8080/api/converter/convert \
+  -F "file=@input.csv" \
+  -F "instruction_col=question" \
+  -F "output_col=answer" \
+  -o output.jsonl
 ```
 
 ### Auto-detection fails
@@ -550,21 +554,18 @@ If this fails, install/update NVIDIA drivers.
 docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
 ```
 
-**Verify Docker Compose GPU config**:
-```yaml
-deploy:
-  resources:
-    reservations:
-      devices:
-        - driver: nvidia
-          count: 1
-          capabilities: [gpu]
+**Make sure you started with the GPU override**:
+GPU support comes from the `docker-compose.gpu.yml` override, not from `docker-compose.yml`:
+```bash
+make up-gpu
+# Equivalent to:
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
 ```
 
 **Restart Docker**:
 ```bash
 sudo systemctl restart docker
-make restart
+make up-gpu
 ```
 
 ### GPU not being used

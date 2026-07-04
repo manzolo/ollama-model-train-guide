@@ -362,42 +362,18 @@ Modify:
 bash scripts/create-custom-model.sh my-chatbot ./models/custom/my-chatbot/Modelfile
 ```
 
-## Parameter Tuning Guide
+## Parameter Tuning
 
-### Temperature Selection
+Quick reference for the values used in the examples above:
 
-```
-0.1-0.3  → Factual, deterministic (code, docs, support)
-0.4-0.6  → Balanced, consistent (assistants, education)
-0.7-0.9  → Conversational, varied (chat, discussion)
-1.0-1.5  → Creative, diverse (writing, brainstorming)
-1.6-2.0  → Highly random (experimental)
-```
+| Parameter | Factual/support | Balanced chat | Creative |
+|-----------|-----------------|---------------|----------|
+| `temperature` | 0.2-0.3 | 0.6-0.8 | 1.0-1.2 |
+| `num_ctx` | 4096 | 4096 | 8192 |
+| `top_p` | 0.9 | 0.9 | 0.95 |
+| `repeat_penalty` | 1.0-1.1 | 1.1 | 1.2 |
 
-### Context Window Selection
-
-```
-2048     → Short conversations, simple tasks
-4096     → Standard conversations, documents
-8192     → Long conversations, large code files
-16384+   → Very long context (requires more RAM)
-```
-
-### Top P Selection
-
-```
-0.7-0.8  → Focused, consistent output
-0.9      → Recommended default
-0.95-1.0 → Maximum diversity
-```
-
-### Repeat Penalty Selection
-
-```
-1.0      → No penalty
-1.1-1.2  → Standard anti-repetition
-1.3-1.5  → Strong anti-repetition (can affect quality)
-```
+**For detailed tuning advice, copy-paste presets, and troubleshooting, see the [Parameter Guide](./parameter-guide.md)** — the canonical parameter reference.
 
 ## Testing Your Custom Model
 
@@ -433,7 +409,8 @@ make quick-test
 
 ## Next Steps
 
+- [Parameter Guide](./parameter-guide.md) - Canonical parameter presets and tuning
 - [Modelfile Reference](./modelfile-reference.md) - Complete syntax guide
 - [Dataset Training Example](./dataset-training-example.md) - Train with custom data
-- [Advanced Usage](./advanced-usage.md) - Fine-tuning and LoRA adapters
+- [Advanced Usage](./advanced-usage.md) - Templates, LoRA adapters, and more
 - [API Usage](./api-usage.md) - Integrate models into applications

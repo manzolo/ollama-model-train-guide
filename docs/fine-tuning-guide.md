@@ -1,10 +1,12 @@
 # Fine-Tuning Guide for Ollama
 
-Guide for integrating externally fine-tuned models with Ollama.
+Guide for integrating externally fine-tuned models with Ollama. **This is the canonical fine-tuning reference** for the project — other docs ([Customization Guide](./customization-guide.md), [Dataset Training Example](./dataset-training-example.md), [Advanced Usage](./advanced-usage.md)) link here for the full workflow.
 
 ## Overview
 
 Ollama itself doesn't provide model fine-tuning capabilities. However, you can fine-tune models using external tools and then import them into Ollama for inference.
+
+**Before fine-tuning**: most use cases are solved faster with a system prompt or few-shot MESSAGE examples — see the [Customization Guide](./customization-guide.md). For a concrete worked example of this whole workflow (dataset → training → GGUF → Ollama), see the [Dataset Training Example](./dataset-training-example.md).
 
 ## Fine-Tuning Workflow
 

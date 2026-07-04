@@ -29,217 +29,21 @@ Create a training dataset in JSONL format with your Q&A pairs.
 
 ---
 
-## Step 2: Choose Your Training Method
+## Step 2: Fine-Tune the Model (External Tools)
 
-### Option A: Using Unsloth (Recommended - Fast & Easy)
+Ollama doesn't train models itself — you fine-tune with external tools, export to GGUF, and import the result. The two recommended options are:
 
-**Best for**: Quick fine-tuning with LoRA adapters
+- **Unsloth** (fast and easy, LoRA-based) — works well on a single GPU or Google Colab's free GPU tier
+- **Hugging Face Transformers + PEFT** — industry standard, more control over the training loop
 
-#### 1. Install Unsloth
-
-```bash
-pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
-pip install --no-deps "xformers<0.0.27" "trl<0.9.0" peft accelerate bitsandbytes
-```
-
-#### 2. Create Training Script
-
-**File**: `train_techcorp.py`
-
-```python
-from unsloth import FastLanguageModel
-from datasets import load_dataset
-from trl import SFTTrainer
-from transformers import TrainingArguments
-import torch
-
-# Configuration
-max_seq_length = 2048
-model_name = "unsloth/llama-3.2-1b-bnb-4bit"
-
-# Load model
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name=model_name,
-    max_seq_length=max_seq_length,
-    dtype=None,
-    load_in_4bit=True,
-)
-
-# Add LoRA adapters
-model = FastLanguageModel.get_peft_model(
-    model,
-    r=16,  # LoRA rank
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                    "gate_proj", "up_proj", "down_proj"],
-    lora_alpha=16,
-    lora_dropout=0,
-    bias="none",
-    use_gradient_checkpointing="unsloth",
-    random_state=3407,
-)
-
-# Load your dataset
-dataset = load_dataset("json", data_files="data/training/techcorp-support.jsonl", split="train")
-
-# Format function for the dataset
-def formatting_prompts_func(examples):
-    instructions = examples["instruction"]
-    outputs = examples["output"]
-    texts = []
-    for instruction, output in zip(instructions, outputs):
-        text = f"""Below is an instruction that describes a task. Write a response that appropriately completes the request.
-
-### Instruction:
-{instruction}
-
-### Response:
-{output}"""
-        texts.append(text)
-    return {"text": texts}
-
-dataset = dataset.map(formatting_prompts_func, batched=True)
-
-# Training arguments
-trainer = SFTTrainer(
-    model=model,
-    tokenizer=tokenizer,
-    train_dataset=dataset,
-    dataset_text_field="text",
-    max_seq_length=max_seq_length,
-    dataset_num_proc=2,
-    packing=False,
-    args=TrainingArguments(
-        per_device_train_batch_size=2,
-        gradient_accumulation_steps=4,
-        warmup_steps=5,
-        max_steps=60,  # Increase for better results
-        learning_rate=2e-4,
-        fp16=not torch.cuda.is_bf16_supported(),
-        bf16=torch.cuda.is_bf16_supported(),
-        logging_steps=1,
-        optim="adamw_8bit",
-        weight_decay=0.01,
-        lr_scheduler_type="linear",
-        seed=3407,
-        output_dir="outputs",
-    ),
-)
-
-# Train!
-trainer.train()
-
-# Save the model
-model.save_pretrained("techcorp-support-lora")
-tokenizer.save_pretrained("techcorp-support-lora")
-
-print("✅ Training complete! Model saved to techcorp-support-lora/")
-```
-
-#### 3. Run Training
+In short, with Unsloth you load a 4-bit base model (e.g. `unsloth/llama-3.2-1b-bnb-4bit`), attach LoRA adapters, format the `techcorp-support.jsonl` examples into instruction/response prompts, train for a small number of steps, then convert the merged model to GGUF with llama.cpp:
 
 ```bash
-# If you have a GPU
-python train_techcorp.py
-
-# Or use Google Colab (free GPU)
-# Upload the script and dataset to Colab and run there
+python llama.cpp/convert.py techcorp-support-lora --outtype f16 --outfile techcorp-support.gguf
+./llama.cpp/quantize techcorp-support.gguf techcorp-support-q4.gguf q4_0
 ```
 
-#### 4. Export to GGUF
-
-```bash
-# Install llama.cpp
-git clone https://github.com/ggerganov/llama.cpp
-cd llama.cpp
-make
-
-# Convert to GGUF
-python convert.py ../techcorp-support-lora --outtype f16 --outfile ../techcorp-support.gguf
-
-# Quantize (optional, makes it smaller)
-./quantize ../techcorp-support.gguf ../techcorp-support-q4.gguf q4_0
-```
-
----
-
-### Option B: Using Hugging Face Transformers
-
-**Best for**: More control over training process
-
-#### Training Script
-
-**File**: `train_hf.py`
-
-```python
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    TrainingArguments,
-    Trainer,
-    DataCollatorForLanguageModeling
-)
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-from datasets import load_dataset
-import torch
-
-# Load model and tokenizer
-model_name = "meta-llama/Llama-2-7b-hf"  # or any compatible model
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-tokenizer.pad_token = tokenizer.eos_token
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    load_in_8bit=True,
-    device_map="auto",
-    torch_dtype=torch.float16
-)
-
-# Prepare for training
-model = prepare_model_for_kbit_training(model)
-
-# LoRA configuration
-lora_config = LoraConfig(
-    r=8,
-    lora_alpha=32,
-    target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.05,
-    bias="none",
-    task_type="CAUSAL_LM"
-)
-
-model = get_peft_model(model, lora_config)
-
-# Load and prepare dataset
-dataset = load_dataset("json", data_files="data/training/techcorp-support.jsonl", split="train")
-
-def tokenize_function(examples):
-    prompts = [f"Question: {inst}\nAnswer: {out}" 
-               for inst, out in zip(examples["instruction"], examples["output"])]
-    return tokenizer(prompts, truncation=True, max_length=512)
-
-tokenized_dataset = dataset.map(tokenize_function, batched=True, remove_columns=dataset.column_names)
-
-# Training
-training_args = TrainingArguments(
-    output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=4,
-    save_steps=100,
-    save_total_limit=2,
-    learning_rate=2e-4,
-    logging_steps=10,
-)
-
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_dataset,
-    data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
-)
-
-trainer.train()
-model.save_pretrained("./techcorp-model")
-```
+**📖 The complete training scripts (Unsloth and Hugging Face), LoRA hyperparameters, quantization options, and troubleshooting live in the [Fine-Tuning Guide](./fine-tuning-guide.md)** — the canonical deep-dive for this workflow.
 
 ---
 
@@ -401,7 +205,7 @@ train_data, val_data = train_test_split(dataset, test_size=0.2, random_state=42)
 from google.colab import files
 uploaded = files.upload()  # Upload techcorp-support.jsonl
 
-# Run training (use the script from Option A above)
+# Run training (use the Unsloth script from the Fine-Tuning Guide)
 # ...
 
 # Download the result
@@ -423,7 +227,7 @@ files.download('techcorp-support.gguf')
 
 ## Resources
 
+- [Fine-Tuning Guide](./fine-tuning-guide.md) - Canonical deep-dive with full training scripts
 - [Unsloth Documentation](https://github.com/unslothai/unsloth)
 - [Hugging Face PEFT Guide](https://huggingface.co/docs/peft)
-- [Dataset Preparation Guide](../docs/fine-tuning-guide.md)
-- [Ollama Modelfile Reference](../docs/modelfile-reference.md)
+- [Ollama Modelfile Reference](./modelfile-reference.md)

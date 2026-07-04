@@ -168,8 +168,11 @@ bash scripts/deploy-model.sh ./models/saved/my-chatbot.Modelfile renamed-bot
 
 | Task | Command | Interactive? |
 |------|---------|--------------|
-| Start Ollama | `make up` | No |
-| Stop Ollama | `make down` | No |
+| Check requirements | `make preflight` | No |
+| Start all services (Ollama + Chat UI) | `make up` | No |
+| Start Ollama only (no web UI) | `make up-core` | No |
+| Start with NVIDIA GPU | `make up-gpu` | No |
+| Stop services | `make down` | No |
 | View logs | `make logs` | No |
 | Shell access | `make shell` | No |
 | Pull base models | `make pull-base` | No |
@@ -178,10 +181,27 @@ bash scripts/deploy-model.sh ./models/saved/my-chatbot.Modelfile renamed-bot
 | **Chat with model** | `make chat` | **Yes - select model** |
 | **Save model** | `make save-model` | **Yes - select model** |
 | **Deploy model** | `make deploy-model` | **Yes - select saved file** |
+| **Publish model to registry** | `make publish-model` | **Yes - select model** |
 | Backup all models | `make backup-models` | No |
 | Quick test | `make quick-test` | Yes - confirmation |
 | Validation tests | `make test` | No |
 | Clean up | `make clean` | Yes - confirmation |
+
+## Choosing a Base Model (2026)
+
+The project's examples default to the lightweight `llama3.2:1b` — keep using it for learning and quick iteration. Modern lightweight alternatives worth trying with `ollama pull`:
+
+| Model | Approx. size | Approx. RAM needed | Notes |
+|-------|-------------|--------------------|-------|
+| `llama3.2:1b` | ~1.3 GB | ~4 GB | Project default |
+| `qwen3:0.6b` / `qwen3:1.7b` | ~0.5 / ~1.4 GB | ~2 / ~4 GB | Small, strong; optional thinking mode |
+| `gemma3:1b` | ~815 MB | ~4 GB | Very compact |
+| `gemma3:4b` | ~3.3 GB | ~8 GB | Multimodal, 128K context |
+| `phi4-mini` | ~2.5 GB | ~8 GB | Compact and efficient |
+| `qwen3:8b` | ~5 GB | ~16 GB | Heavier, for capable machines |
+| `gpt-oss:20b` | ~13 GB | ~16 GB | Heavier, for capable machines |
+
+See [Essential Concepts - Choosing a Base Model](./concepts.md#choosing-a-base-model-2026) for details.
 
 ## Directory Structure
 

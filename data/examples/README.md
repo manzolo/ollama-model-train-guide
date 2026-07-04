@@ -104,8 +104,7 @@ Create in Excel or Google Sheets:
 Use `customer-support-qa.*` files to create a support bot:
 
 ```bash
-# Convert
-make converter
+# Convert: open http://localhost:8080/converter
 # Upload customer-support-qa.csv
 
 # Create model
@@ -155,7 +154,7 @@ Start with examples, then add your own data:
 **Problem:** Cannot upload file
 
 **Solution:**
-- Check file size (max 16MB)
+- Check file size (max 500MB)
 - Save as CSV UTF-8 if special characters
 - Try CSV instead of Excel
 
@@ -168,4 +167,4 @@ After converting:
 3. **Train your model** using the dataset
 4. **Test thoroughly** with various inputs
 
-See the main [README](../../README.md) for complete training guide.
+See the [Chat UI Guide - Converter](../../docs/chat-ui.md#spreadsheet-to-jsonl-converter) and the [Dataset Training Example](../../docs/dataset-training-example.md) for the complete training guide.

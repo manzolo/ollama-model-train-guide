@@ -7,7 +7,8 @@
 git clone https://github.com/manzolo/ollama-model-train-guide.git
 cd ollama-model-train-guide
 
-# Setup and start services
+# Check requirements, then setup and start services
+make preflight
 make setup && make up
 
 # Pull a base model and test
@@ -54,15 +55,23 @@ git clone https://github.com/manzolo/ollama-model-train-guide.git
 cd ollama-model-train-guide
 ```
 
-### 2. Run Initial Setup
+### 2. Check System Requirements (Optional)
 
-This creates the `.env` file and necessary directories:
+```bash
+make preflight
+```
+
+This verifies Docker, Docker Compose, free disk space, and RAM before you start.
+
+### 3. Run Initial Setup
+
+This creates the `.env` file (from `.env.example`) and necessary directories:
 
 ```bash
 make setup
 ```
 
-### 3. Start Services
+### 4. Start Services
 
 Start both Ollama and the Chat UI:
 
@@ -72,9 +81,21 @@ make up
 
 This will start two services:
 - **Ollama API**: Available at `http://localhost:11434`
-- **Chat Web UI**: Available at `http://localhost:8080`
+- **Chat Web UI**: Available at `http://localhost:8080` (chat, converter, and Modelfile wizard)
 
-### 4. Pull Base Models
+To start Ollama **without** the web UI:
+
+```bash
+make up-core
+```
+
+To start with **NVIDIA GPU acceleration** (see [GPU Support](#gpu-support-optional)):
+
+```bash
+make up-gpu
+```
+
+### 5. Pull Base Models
 
 Download common base models to get started:
 
@@ -94,7 +115,7 @@ Alternatively, pull models via the Web UI:
 3. Enter model name (e.g., `llama3.2:1b`)
 4. Click "Pull" and watch real-time progress
 
-### 5. Verify Installation
+### 6. Verify Installation
 
 Check that everything is working:
 
@@ -139,31 +160,33 @@ sudo yum install -y nvidia-container-toolkit
 sudo systemctl restart docker
 ```
 
-### 2. Enable GPU in Docker Compose
+### 2. Start with the GPU Override
 
-Edit `docker-compose.yml` and uncomment the GPU configuration:
+GPU support is provided by a separate Compose override file, `docker-compose.gpu.yml` — there is nothing to uncomment or edit in `docker-compose.yml`:
+
+```bash
+make up-gpu
+
+# Equivalent to:
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+```
+
+The override reserves all available NVIDIA GPUs for the Ollama service:
 
 ```yaml
+# docker-compose.gpu.yml
 services:
   ollama:
-    image: ollama/ollama:latest
-    # ... other config ...
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: all
               capabilities: [gpu]
 ```
 
-### 3. Restart Services
-
-```bash
-make restart
-```
-
-### 4. Verify GPU Detection
+### 3. Verify GPU Detection
 
 Check that the GPU is available inside the container:
 
@@ -182,23 +205,31 @@ With GPU acceleration:
 
 ## Environment Configuration
 
-The `.env` file (created by `make setup`) contains configuration options:
+The `.env` file (created by `make setup` from `.env.example`) contains the configuration options. These values are interpolated directly into `docker-compose.yml` (e.g. the Ollama port mapping is `"${OLLAMA_PORT:-11434}:11434"`):
 
 ```bash
-# Ollama API port
+# Host port for the Ollama API
 OLLAMA_PORT=11434
 
-# Chat UI port
+# Host port for the Chat web UI
 CHAT_PORT=8080
 
-# Ollama host (for API access)
-OLLAMA_HOST=0.0.0.0
+# Compose profiles started by default with `docker compose up`.
+# Set to empty (COMPOSE_PROFILES=) to run Ollama only, without the chat web UI.
+COMPOSE_PROFILES=chat
+
+# Which origins may call the Ollama API (CORS). "*" is fine for local use.
+OLLAMA_ORIGINS=*
+
+# Pin a specific Ollama version instead of "latest" for reproducible setups,
+# e.g. OLLAMA_IMAGE_TAG=0.30.10
+OLLAMA_IMAGE_TAG=latest
 ```
 
-You can edit these values and restart services:
+After editing `.env`, recreate the containers for the changes to take effect:
 
 ```bash
-make restart
+make down && make up
 ```
 
 ## Directory Structure
@@ -207,8 +238,9 @@ After setup, your project will have this structure:
 
 ```
 ollama-model-train-guide/
-├── .env                    # Environment variables
+├── .env                    # Environment variables (ports, profiles, image tag)
 ├── docker-compose.yml      # Service configuration
+├── docker-compose.gpu.yml  # NVIDIA GPU override (make up-gpu)
 ├── models/
 │   ├── examples/          # Pre-configured Modelfiles
 │   ├── custom/            # Your custom Modelfiles
@@ -255,6 +287,12 @@ If port 11434 or 8080 is already in use, edit `.env` to use different ports:
 ```bash
 OLLAMA_PORT=11435
 CHAT_PORT=8081
+```
+
+Then recreate the containers:
+
+```bash
+make down && make up
 ```
 
 ### Insufficient disk space

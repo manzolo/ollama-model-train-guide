@@ -6,23 +6,9 @@
 
 ## 🎯 Quick Decision Tree
 
-```
-START: What do you want to do?
+**TL;DR:** Change behavior → **System Prompt** (5 min). Have < 50 example Q&As → **Few-Shot Learning** (30 min). Have 100+ examples and need deep specialization → **Fine-Tuning** (hours/days, GPU).
 
-┌─ Change personality or behavior
-│  └─→ METHOD 1: System Prompt ✅ (5 minutes)
-│
-├─ Add specific knowledge or examples
-│  │
-│  ├─ I have < 50 examples
-│  │  └─→ METHOD 2: Few-Shot Learning ✅ (30 minutes)
-│  │
-│  └─ I have 100+ examples and need deep specialization
-│     └─→ METHOD 3: Fine-Tuning ⚠️ (hours/days, requires GPU)
-│
-└─ Just want to chat with existing models
-   └─→ NO CUSTOMIZATION NEEDED ✅ (Use web UI)
-```
+For the full step-by-step decision tree, see [Essential Concepts - Decision Tree](./concepts.md#decision-tree-which-method-should-i-use).
 
 ---
 
@@ -245,35 +231,14 @@ docker compose exec ollama ollama run support-bot "How can I track my order?"
 
 ### High-Level Process
 
-**Step 1:** Prepare dataset
-```bash
-# Create JSONL with many examples
-# Format:
-# {"messages": [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]}
-```
+Ollama itself doesn't fine-tune models — you train with external tools and import the result:
 
-**Step 2:** Choose training platform
-- **Unsloth** (easiest, recommended) - [See guide](./dataset-training-example.md)
-- **Hugging Face Transformers**
-- **Google Colab** (free GPU)
+1. **Prepare a JSONL dataset** (100+ examples)
+2. **Train externally** with Unsloth or Hugging Face Transformers (locally or on Google Colab's free GPU), typically with LoRA/QLoRA
+3. **Export to GGUF** format with llama.cpp
+4. **Import into Ollama**: `bash scripts/import-model.sh my-finetuned ./data/gguf/my-model.gguf`
 
-**Step 3:** Train the model
-```python
-# Use Unsloth or similar library
-# Train with LoRA/QLoRA for efficiency
-# See docs/dataset-training-example.md for complete guide
-```
-
-**Step 4:** Export to GGUF
-```bash
-# Convert trained model to GGUF format
-# Place in ./data/gguf/my-model.gguf
-```
-
-**Step 5:** Import to Ollama
-```bash
-bash scripts/import-model.sh my-finetuned ./data/gguf/my-model.gguf
-```
+**📖 Complete walkthrough with training scripts: [Fine-Tuning Guide](./fine-tuning-guide.md)** (canonical deep-dive). For a concrete worked example, see the [Dataset Training Example](./dataset-training-example.md).
 
 ### Pros
 ✅ Deep learning of patterns
@@ -416,7 +381,8 @@ MESSAGE assistant "Connect the USB-C cable to the charging port on the bottom. A
 - [Essential Concepts](./concepts.md) - Learn the basics
 - [Parameter Guide](./parameter-guide.md) - Optimize your settings
 - [Example Modelfiles](./examples.md) - Ready-to-use templates
-- [Dataset Training Example](./dataset-training-example.md) - Complete fine-tuning guide
+- [Fine-Tuning Guide](./fine-tuning-guide.md) - Complete fine-tuning deep-dive
+- [Dataset Training Example](./dataset-training-example.md) - Worked dataset example
 
 ---
 

@@ -83,6 +83,8 @@ LoRA (Low-Rank Adaptation) allows fine-tuning only a small subset of model param
 - **Composable**: Multiple adapters can be combined
 - **Shareable**: Easy to distribute fine-tuned models
 
+**To train your own LoRA adapters** (with Unsloth or Hugging Face) and convert models to GGUF, see the [Fine-Tuning Guide](./fine-tuning-guide.md) — the canonical deep-dive. This section covers only how to **use** existing adapters with Ollama.
+
 ### Using Multiple Adapters
 
 While Ollama supports one adapter per model, you can create multiple model variants:
