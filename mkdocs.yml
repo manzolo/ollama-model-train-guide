@@ -1,0 +1,57 @@
+site_name: Ollama Model Training Guide
+site_description: Docker Compose environment for creating, customizing, and managing Ollama language models
+site_url: https://manzolo.github.io/ollama-model-train-guide/
+repo_url: https://github.com/manzolo/ollama-model-train-guide
+repo_name: manzolo/ollama-model-train-guide
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Concepts (start here): concepts.md
+      - Installation: installation.md
+      - Quick Reference: quick-reference.md
+  - Using the Environment:
+      - Day-to-day Usage: usage.md
+      - Web UI (Chat, Converter, Wizard): chat-ui.md
+      - Example Modelfiles: examples.md
+  - Customizing Models:
+      - Choosing a Method: customization-guide.md
+      - Parameter Guide: parameter-guide.md
+      - Modelfile Reference: modelfile-reference.md
+      - Personal Assistant Guide: personal-model-guide.md
+      - Dataset Training Example: dataset-training-example.md
+      - Fine-Tuning Guide: fine-tuning-guide.md
+  - Operations:
+      - API Usage: api-usage.md
+      - Deployment Guide: deployment-guide.md
+      - Advanced Usage: advanced-usage.md
+      - Troubleshooting: troubleshooting.md
